@@ -1,17 +1,26 @@
-import React, {useState} from 'react'
+import React, { useState } from "react";
 
-export const SearchBoxContext = React.createContext()
+export const GlobalContext = React.createContext();
 
 export const GlobalState = props => {
-const [isSearchOpen, setSearch] = useState(false);
-const [searchQuery, setSearchQuery] = useState(null);
+  const [searchState, setSearchState] = useState("home");
+  // there will be three types of state
+  // home,clicked, searching, completed
+  const [searchResult, setSearchResult] = useState([]);
+  const [currentVideoId, setCurrentVideoId] = useState(null);
 
   return (
-    <SearchBoxContext.Provider
-      value={{isSearchOpen, setSearch}}
+    <GlobalContext.Provider
+      value={{
+        searchState,
+        setSearchState,
+        searchResult,
+        setSearchResult,
+        currentVideoId,
+        setCurrentVideoId
+      }}
     >
       {props.children}
-    </SearchBoxContext.Provider>
-  )
-}
-
+    </GlobalContext.Provider>
+  );
+};

@@ -9,7 +9,7 @@ const AutoSearchResult = ({results, onSearchSelect}) => {
         renderResult = results.map((result, index) =>{
             return(
             <ListItem key={index} onClick={()=> onSearchSelect(result[0])} button>
-            <ListItemIcon style={{paddingLeft: "16px", marginRight: "9px"}}>
+            <ListItemIcon style={{paddingLeft: "16px"}}>
               <Search />
             </ListItemIcon>
             <ListItemText primary={result[0]} />

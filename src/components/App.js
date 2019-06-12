@@ -1,6 +1,7 @@
 import React from "react";
 import SimpleAppBar from "./header/SimpleAppBar";
-import LoginPage from "./LoginPage";
+import MainPlayer from './player/MainPlayer'
+import CurrentSection from './CurrentSection'
 import { GlobalState } from "./GlobalState";
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -20,7 +21,8 @@ function App() {
     <GlobalState>
       <MuiThemeProvider theme={theme}>
         <SimpleAppBar />
-        <LoginPage />
+        <CurrentSection />
+        <MainPlayer/>
       </MuiThemeProvider>
     </GlobalState>
   );

@@ -1,0 +1,4 @@
+/* wanted to zoomed a image little bit so it fits whole */
+.searchThumb img{
+    transform: scale(1.4);
+}
