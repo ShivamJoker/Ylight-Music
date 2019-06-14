@@ -10,7 +10,7 @@
     <button onclick="loadVideo()">Load video</button>
     <div id="ytplayer"></div>
     <script>
-      function loadVideo (){
+      function loadVideo() {
         player.loadVideoById("Ayp719ei-BU");
       }
       // Load the IFrame Player API code asynchronously.
@@ -24,16 +24,14 @@
       function onYouTubePlayerAPIReady() {
         player = new YT.Player("ytplayer", {
           height: "500",
-          width: 700,
+          width: "700",
           videoId: "",
           playerVars: {
             autoplay: 1,
             showinfo: 0,
-            controls: 1,
+            controls: 1
           }
         });
-       
-
       }
     </script>
   </body>

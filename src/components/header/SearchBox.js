@@ -32,13 +32,7 @@ const SearchBox = () => {
     setSearchState("searching");
   };
 
-  const userSearched = () => {
-    // here we are changing the state of ytSearchQuery
-    // and we will useEffect to detect change on it and make api request
-    setYtSearchQuery(searchQuery);
 
-    // also make the search state to be searching
-  };
 
   // for controlled input change
   const onChange = e => {
@@ -77,7 +71,7 @@ const SearchBox = () => {
       searchYt(ytSearchQuery);
     }
     console.log(ytSearchQuery);
-  }, [ytSearchQuery]);
+  }, [ytSearchQuery, setSearchResult, setSearchState]);
 
   // show loading icon while we fetch the results from api
 
