@@ -9,7 +9,10 @@ import { pink } from "@material-ui/core/colors";
 
 const theme = createMuiTheme({
   palette: {
-    primary: pink
+    primary: pink,
+    secondary: {
+      main: '#fafafa',
+    },
   },
   typography: {
     useNextVariants: true

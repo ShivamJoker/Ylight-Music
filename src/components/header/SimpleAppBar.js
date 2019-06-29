@@ -10,7 +10,6 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  CssBaseline,
   Slide
 } from "@material-ui/core/";
 

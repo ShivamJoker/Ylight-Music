@@ -7,7 +7,7 @@ export const GlobalState = props => {
   // there will be three types of state
   // home,clicked, searching, completed
   const [searchResult, setSearchResult] = useState([]);
-  const [currentVideoId, setCurrentVideoId] = useState(null);
+  const [currentVideoSnippet, setCurrentVideoSnippet] = useState({});
 
   return (
     <GlobalContext.Provider
@@ -16,8 +16,9 @@ export const GlobalState = props => {
         setSearchState,
         searchResult,
         setSearchResult,
-        currentVideoId,
-        setCurrentVideoId
+        currentVideoSnippet,
+        setCurrentVideoSnippet,
+        
       }}
     >
       {props.children}

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import { GlobalContext } from "./GlobalState";
 import '../style.css'
 import {
@@ -19,13 +19,22 @@ const entities = new Entities();
 
 const SearchResult = ({ videos }) => {
 
-  const { currentVideoId, setCurrentVideoId } = useContext(GlobalContext);
+  const {  setCurrentVideoId } = useContext(GlobalContext);
+  const {  setMusicArt } = useContext(GlobalContext);
+  const {  setCurrentVideoSnippet } = useContext(GlobalContext);
 
 
 
-  const handleClick = id => {
-    setCurrentVideoId(id)
-    // open youtube in new tab
+  const handleClick = (video) => {
+    // set all the info of current clicked video in this object
+    setCurrentVideoSnippet({
+      id: video.id.videoId,
+      title: entities.decode(video.snippet.title),
+      channelTitle: entities.decode(video.snippet.channelTitle),
+      maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
+      hqThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/hqdefault.jpg`
+      // this is the url of the max resolution of thumbnail 
+    })
   };
 
   let renderResult = "<div>Loading</div>"
@@ -37,13 +46,13 @@ const SearchResult = ({ videos }) => {
         <ListItem
           alignItems="flex-start"
           button
-          onClick={() => handleClick(video.id.videoId)}
+          onClick={() => handleClick(video)}
         >
           <ListItemAvatar>
             <Avatar className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={snippet.title}
-              src={snippet.thumbnails.default.url}
+              src={snippet.thumbnails.high.url}
             />
           </ListItemAvatar>
           <ListItemText
