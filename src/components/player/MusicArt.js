@@ -11,7 +11,7 @@ const MusicArt = ({ data }) => {
   // if its less than 400 width we will use default hq thumbnail
   const checkImg = e => {
     if (e.target.naturalWidth < 400) {
-      e.target.src = data.hqThumbnail;
+      e.target.src = data.sdThumbnail;
     }
   };
 
