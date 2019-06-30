@@ -12,7 +12,7 @@ const bgStyle = {
   backgroundPositionX: "50%",
   marginTop: "50px",
   width: "100vw",
-  height: "55vh"
+  height: "50vh"
 };
 
 const craftedStyle = {
@@ -43,6 +43,10 @@ const LoginPage = () => {
       {showSignIn()}
 
       <div style={bgStyle} />
+      <Typography variant="h5" color="primary" align="center" style={{padding: "10px"}}>
+      Listen to unilimited songs without any ads for free only on Ylight Music
+
+      </Typography>
       <Typography variant="body1" color="primary" style={craftedStyle}>
         Handcrafted by Shivam
       </Typography>
