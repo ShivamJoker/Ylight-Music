@@ -10,6 +10,8 @@ import TimelineController from "./TimelineController";
 import VolumeController from "./VolumeController";
 import getAudioLink from "../../apis/getAudioLink";
 
+import "../../external/saveCountry"
+
 import "../../style.css";
 
 import { GlobalContext } from "../GlobalState";

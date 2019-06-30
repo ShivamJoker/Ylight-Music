@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { Tabs, Tab, withStyles } from "@material-ui/core";
-import { Home, Favorite, VideoLibrary } from "@material-ui/icons/";
+import { Home, Favorite, VideoLibrary, History } from "@material-ui/icons/";
 import LoginPage from "./LoginPage";
 
 import { GlobalContext } from "./GlobalState";
@@ -65,7 +65,7 @@ const CurrentSection = () => {
           <LoginPage />
         </div>
         <div>This is not your home</div>
-        <div>I will fuck you</div>
+        <div>History</div>
       </SwipeableViews>
       <CustomTab
         value={value}
@@ -76,7 +76,7 @@ const CurrentSection = () => {
       >
         <CustomTabs icon={<Home />} aria-label="Home" />
         <CustomTabs icon={<Favorite />} aria-label="Liked" />
-        <CustomTabs icon={<VideoLibrary />} aria-label="Library" />
+        <CustomTabs icon={<History />} aria-label="History" />
       </CustomTab>
     </div>
   );
