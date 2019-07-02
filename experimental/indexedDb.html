@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Include Dexie -->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
+    <script>
+      var db = new Dexie("FriendsAndPetsDatabase");
+
+      db.version(1).stores({
+        users: "++id, &videoId, title, channel, rating",
+      });
+    //   db.open().catch(function(e) {
+    //     console.error("Open failed: " + e.stack);
+    //   });
+
+    //   db.transaction("rw", db.users, function() {
+        db.users.add({
+          name: "Zlatan",
+          username: "ibra",
+          email: ["zlatan@ibrahimovic.se", "zlatan.ibrahimovic@gmail.com"],
+          address: {
+            city: "Malmö",
+            country: "Sweden"
+          }
+        });
+
+        db.users
+    //       .where("email")
+    //       .startsWith("zlatan")
+    //       .or("address.city")
+    //       .anyOf(["Malmö", "Stockholm", "Barcelona"])
+    //       .each(function(user) {
+    //         console.log("Found user: " + user.name);
+    //       });
+    //   }).catch(function(e) {
+    //     console.error(e.stack);
+    //   });
+    </script>
+  </head>
+</html>

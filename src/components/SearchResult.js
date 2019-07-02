@@ -32,7 +32,7 @@ const SearchResult = ({ videos }) => {
       title: entities.decode(video.snippet.title),
       channelTitle: entities.decode(video.snippet.channelTitle),
       maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
-      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/default.jpg`
+      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
       // this is the url of the max resolution of thumbnail 
     })
   };

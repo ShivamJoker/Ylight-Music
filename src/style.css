@@ -8,3 +8,17 @@
     top: -100vh;
     left: -100vw; */
 }
+
+.pinkLists > div ,.pinkLists svg{
+    color: #e91e63
+}
+.pinkLists > div{
+    margin: 5px;
+    background: #e91d6312;
+    border-radius: 5px;
+    width: auto;
+}
+.pinkLists > div:hover{
+    background: #e91d6423;
+}
+

@@ -15,8 +15,13 @@ const MusicArt = ({ data }) => {
     }
   };
 
+  // double tap to like the song
+  const likeSong = ()=>{
+    console.log(data.id)
+  }
+
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Grid container direction="column" justify="center" alignItems="center" onDoubleClickCapture={likeSong}>
       <div style={bgStyle}>
         <Avatar
           className="searchThumb"

@@ -41,16 +41,24 @@ function HideOnScroll(props) {
   );
 }
 
+
 function SimpleAppBar(props) {
   const { searchState, setSearchState } = useContext(GlobalContext);
+  const { setMenuOpen } = useContext(GlobalContext);
 
   const { classes } = props;
+  
+
+  const setOpenMenu = ()=>{
+    setMenuOpen(true)
+  }
+  
 
   const toggleSearch = () => {
     if (searchState === "home") {
       return (
         <>
-          <IconButton color="inherit" aria-label="Menu">
+          <IconButton color="inherit" aria-label="Menu" onClick={setOpenMenu}>
             <Menu />
           </IconButton>
           <Typography className={classes.title} variant="h6" color="inherit">

@@ -59,26 +59,28 @@ const MainPlayer = () => {
     console.log(currentVideoSnippet.id);
   }, [currentVideoSnippet.id]);
 
-  useEffect(() => {}, [playerState]);
+  useEffect(() => {
+    
+  }, [playerState]);
 
   let playerStyle = {
     position: "fixed",
     right: 0,
-    top: 0,
+    bottom: 0,
     background: "#fff",
     width: "100%",
     height: "100vh",
-    zIndex: 1220,
+    zIndex: 1400,
     display: "inline block",
     overflow: "hidden",
     transition: "all .3s ease"
   };
 
   if (playerState === "minimized") {
-    playerStyle.height = "100px";
+    playerStyle.transform = "translateY(80%)";
     playerStyle.background = "#e91e63";
+    playerStyle.zIndex = 0;
     // playerStyle.bottom = "48px";
-    playerStyle.top = "calc(100vh - 148px)";
     // calculate the top height and we are subtracting 148px becz
     // 48 is the value of menu bar and 100px is minimized height
     // make body overflow scroll 😝

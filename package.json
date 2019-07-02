@@ -8,6 +8,7 @@
     "@material-ui/lab": "^4.0.0-alpha.16",
     "axios": "^0.18.1",
     "axios-jsonp": "^1.0.2",
+    "dexie": "^2.0.4",
     "html-entities": "^1.2.1",
     "material-ui": "^0.20.2",
     "react": "^16.8.6",

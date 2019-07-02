@@ -53,6 +53,8 @@ const SearchBox = () => {
   // when user hits enter then also fetch the data from yt api
   const onSearchSubmit = e => {
     e.preventDefault();
+    console.log(e.target.lastChild)
+    e.target.lastChild.lastChild.blur();
     setSearchState("searching");
     setYtSearchQuery(searchQuery);
   };

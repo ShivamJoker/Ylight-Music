@@ -7,6 +7,7 @@ export const GlobalState = props => {
   // there will be three types of state
   // home,clicked, searching, completed
   const [searchResult, setSearchResult] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [currentVideoSnippet, setCurrentVideoSnippet] = useState({});
 
   return (
@@ -18,7 +19,8 @@ export const GlobalState = props => {
         setSearchResult,
         currentVideoSnippet,
         setCurrentVideoSnippet,
-        
+        menuOpen,
+        setMenuOpen
       }}
     >
       {props.children}

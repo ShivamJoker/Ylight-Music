@@ -13,7 +13,8 @@ const CustomTab = withStyles({
     background: "#e91e63",
     position: "fixed",
     bottom: "0",
-    width: "100%"
+    width: "100%",
+    zIndex: 1300
   },
   indicator: {
     display: "none"

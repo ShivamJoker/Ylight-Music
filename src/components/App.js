@@ -1,6 +1,7 @@
 import React from "react";
 import SimpleAppBar from "./header/SimpleAppBar";
 import MainPlayer from './player/MainPlayer'
+import SwipeMenu from './SwipeMenu'
 import CurrentSection from './CurrentSection'
 import { GlobalState } from "./GlobalState";
 
@@ -26,6 +27,7 @@ function App() {
         <SimpleAppBar />
         <CurrentSection />
         <MainPlayer/>
+        <SwipeMenu/>
       </MuiThemeProvider>
     </GlobalState>
   );

@@ -2,7 +2,6 @@ const country_code = localStorage.getItem("country_code");
 
 const GeoAPI = "https://freegeoip.app/json/";
 
-
 const fetchCountry = async () => {
   const data = await (await fetch(GeoAPI)).json();
 
@@ -11,6 +10,8 @@ const fetchCountry = async () => {
 };
 
 if (!country_code) {
-    // if country is not set then only set it
-    fetchCountry()
+  // if country is not set then only set it
+  fetchCountry();
 }
+
+
