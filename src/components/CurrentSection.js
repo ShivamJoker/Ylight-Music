@@ -4,6 +4,9 @@ import { Tabs, Tab, withStyles } from "@material-ui/core";
 import { Home, Favorite, VideoLibrary, History } from "@material-ui/icons/";
 import LoginPage from "./LoginPage";
 
+
+import HomePage from './sections/HomePage'
+
 import { GlobalContext } from "./GlobalState";
 import SearchResult from "./SearchResult";
 
@@ -64,6 +67,7 @@ const CurrentSection = () => {
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <div>
           <LoginPage />
+          <HomePage/>
         </div>
         <div>This is not your home</div>
         <div>History</div>

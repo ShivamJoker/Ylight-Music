@@ -32,8 +32,6 @@ const SearchBox = () => {
     setSearchState("searching");
   };
 
-
-
   // for controlled input change
   const onChange = e => {
     setSearchQuery(e.target.value);
@@ -53,7 +51,7 @@ const SearchBox = () => {
   // when user hits enter then also fetch the data from yt api
   const onSearchSubmit = e => {
     e.preventDefault();
-    console.log(e.target.lastChild)
+    console.log(e.target.lastChild);
     e.target.lastChild.lastChild.blur();
     setSearchState("searching");
     setYtSearchQuery(searchQuery);
@@ -63,7 +61,11 @@ const SearchBox = () => {
   useEffect(() => {
     const searchYt = async data => {
       const res = await youtubeSearch.get("/search", {
-        params: { q: data }
+        params: {
+          q: data,
+          type: "video", // search for videos only
+          videoCategoryId: "10" // 10 is category for songs
+        }
       });
       setSearchResult(res.data.items);
       setSearchState("completed");

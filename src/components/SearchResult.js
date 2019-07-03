@@ -19,8 +19,6 @@ const entities = new Entities();
 
 const SearchResult = ({ videos }) => {
 
-  const {  setCurrentVideoId } = useContext(GlobalContext);
-  const {  setMusicArt } = useContext(GlobalContext);
   const {  setCurrentVideoSnippet } = useContext(GlobalContext);
 
 
