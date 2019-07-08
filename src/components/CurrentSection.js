@@ -11,7 +11,6 @@ import { GlobalContext } from "./GlobalState";
 import SearchResult from "./SearchResult";
 import { getHistory, getLikedSongs } from "../external/saveSong";
 
-
 import youtubeSearch from "../apis/youtubeSearch";
 
 // custom styling the tab menus
@@ -45,7 +44,6 @@ const CustomTabs = withStyles({
   selected: {}
 })(Tab);
 
-
 const playlistsIds = {
   LatestSongs: "PLFgquLnL59akA2PflFpeQG9L01VFg90wS",
   RomanticSongs: "PL64G6j8ePNureM8YCKy5nRFyzYf8I2noy",
@@ -56,8 +54,6 @@ const playlistsIds = {
 };
 
 const CurrentSection = () => {
-
-
   const { searchState } = useContext(GlobalContext);
   const { searchResult } = useContext(GlobalContext);
   const { currentVideoSnippet } = useContext(GlobalContext);
@@ -126,14 +122,13 @@ const CurrentSection = () => {
     }
   }
 
-
   useEffect(() => {
     const fetchSongs = async () => {
       setSongsHistory(await getHistory());
       setSongsLiked(await getLikedSongs());
     };
     fetchSongs();
-    console.log("songs updated from fetched history")
+    console.log("songs updated from fetched history");
   }, [currentVideoSnippet, value]);
 
   return (
@@ -141,8 +136,8 @@ const CurrentSection = () => {
       {checkUserSearched()}
 
       <br />
-      {/* <LoginPage /> */}
-      {value === 0 && <HomePage songObj={songObj}/>}
+      {value === 0 && <LoginPage />}
+      {/* {value === 0 && <HomePage songObj={songObj}/>} */}
 
       {value === 1 && <RenderDatabase songs={songsLikedState} />}
 
