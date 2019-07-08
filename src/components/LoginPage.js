@@ -40,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <div style={showLogin}>
-      {showSignIn()}
+      {/* {showSignIn()} */}
 
       <div style={bgStyle} />
       <Typography variant="h5" color="primary" align="center" style={{padding: "10px"}}>
