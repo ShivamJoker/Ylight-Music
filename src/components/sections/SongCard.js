@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../GlobalState";
 
 import {
   Card,
@@ -12,6 +13,7 @@ import {
 const useStyles = makeStyles({
   card: {
     width: 300,
+    height: 236,
     display: "inline-block",
     margin: "10px",
     whiteSpace: "pre-wrap"
@@ -20,34 +22,74 @@ const useStyles = makeStyles({
     height: 160
   }
 });
-const MediaCard = ({ songs }) => {
+const MediaCard = ({ songs, categotyTitle }) => {
+  const { setCurrentVideoSnippet } = useContext(GlobalContext);
+
+  const handleClick = video => {
+    // set all the info of current clicked video in this object
+
+    if (!video.snippet.resourceId) {
+      setCurrentVideoSnippet({
+        id: video.id,
+        title: video.snippet.title,
+        channelTitle: video.snippet.channelTitle,
+        maxThumbnail: `https://img.youtube.com/vi/${
+          video.id
+        }/maxresdefault.jpg`,
+        sdThumbnail: `https://img.youtube.com/vi/${video.id}/sddefault.jpg`
+        // this is the url of the max resolution of thumbnail
+      });
+    } else {
+      setCurrentVideoSnippet({
+        id: video.snippet.resourceId.videoId,
+        title: video.snippet.title,
+        channelTitle: video.snippet.channelTitle,
+        maxThumbnail: `https://img.youtube.com/vi/${
+          video.snippet.resourceId.videoId
+        }/maxresdefault.jpg`,
+        sdThumbnail: `https://img.youtube.com/vi/${
+          video.snippet.resourceId.videoId
+        }/sddefault.jpg`
+        // this is the url of the max resolution of thumbnail
+      });
+    }
+
+    console.log(video);
+  };
+
   const classes = useStyles();
-  
 
-  const renderCards = songs.map(song => {
+  console.log("card re rendered");
+
+  if (songs) {
+    const renderCards = songs.map(song => {
+      return (
+        <Card className={classes.card} key={song.id}>
+          <CardActionArea onClick={() => handleClick(song)}>
+            <CardMedia
+              className={classes.media}
+              image={song.snippet.thumbnails.high.url}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="body2" component="p">
+                {song.snippet.title.slice(0, 70) + " ..."}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      );
+    });
     return (
-      <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image={song.snippet.thumbnails.high.url}
-          />
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant="h6"
-              component="p"
-              color="textSecondary"
-            >
-              {song.snippet.title.slice(0, 40) + "..."}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      <>
+        <Typography variant="h5" style={{ marginLeft: "15px" }}>
+          {categotyTitle}
+        </Typography>
+        <div className={"cardSlider"}>{renderCards}</div>
+      </>
     );
-  });
-
-  return <>{renderCards}</>;
+  } else {
+    return <div>Loading</div>;
+  }
 };
 
 export default MediaCard;

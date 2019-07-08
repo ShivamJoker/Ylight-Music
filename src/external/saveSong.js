@@ -1,33 +1,78 @@
 import Dexie from "dexie";
-// Define your database
 
-var db = new Dexie("Song_Database");
+// Define your database
+const db = new Dexie("Song_Database");
+
+// create new databse
+// our schema is of storing a song
 db.version(1).stores({
-  songs: "videoId, rating, title, channel"
+  songs:
+    "&videoId, rating, title, channelTitle, timestamp, playbackTimes, [rating+timestamp]"
 });
 
-//
-// Put some data into it
-//
-db.songs
-  .put({ videoId: "123", channel: "boy boy" })
-  .then(function() {
-    // Then when data is stored, read from it
-    console.log("Song added");
-  })
-  .catch(function(error) {
-    // Finally don't forget to catch any error
-    // that could have happened anywhere in the
-    console.log("Ooops: " + error);
+// object  of every new song
+const videoObj = {
+  videoId: "3dfds45s63",
+  timestamp: Date.now(),
+  title: "2 new sample video is here",
+  playbackTimes: 1,
+  rating: "none"
+};
+
+const data = {
+  id: "a11",
+  title: "hello bro",
+  channelTitle: "fuck me"
+};
+
+// add or update song on play
+export const updatePlayingSong = async data => {
+  const videoObj = {
+    videoId: data.id,
+    timestamp: Date.now(),
+    title: data.title,
+    channelTitle: data.channelTitle,
+    playbackTimes: 1,
+    rating: "none"
+  };
+
+  const song = await db.songs.get({ videoId: data.id });
+  // if song exists we will just update the timestamp and the playback
+  if (song) {
+    db.songs.update(data.id, {
+      timestamp: Date.now(),
+      playbackTimes: song.playbackTimes + 1
+    });
+    console.log("song updated");
+    return song.rating;
+    // return the rating
+  } else {
+    // we will add a new song
+    console.log("song added");
+    db.songs.add(videoObj);
+  }
+};
+
+// like or dislike a song on database
+export const rateSong = (id, rating) => {
+  db.songs.update(id, {
+    rating: rating
   });
-db.songs
-  .put({ id: "123", channel: "boy boy" })
-  .then(function() {
-    // Then when data is stored, read from it
-    console.log("Song added");
-  })
-  .catch(function(error) {
-    // Finally don't forget to catch any error
-    // that could have happened anywhere in the
-    console.log("Ooops: " + error);
-  });
+};
+
+export const getHistory = async () => {
+  const songsByTimeStamp = await db.songs
+    .orderBy("timestamp")
+    .reverse()
+    .toArray();
+  return songsByTimeStamp;
+};
+
+export const getLikedSongs = async () => {
+  const likedSongs = await db.songs
+    .where("[rating+timestamp]")
+    .between(["liked", Dexie.minKey], ["liked", Dexie.maxKey])
+    .reverse()
+    .toArray();
+  return likedSongs;
+};

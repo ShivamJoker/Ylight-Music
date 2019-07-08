@@ -1,24 +1,53 @@
 /* wanted to zoomed a image little bit so it fits whole */
-.searchThumb img{
-    transform: scale(1.4);
+.searchThumb img {
+  transform: scale(1.4);
 }
 
-.youtubeIframe{
-    /* position: absolute;
+.youtubeIframe {
+  /* position: absolute;
     top: -100vh;
     left: -100vw; */
 }
 
-.pinkLists > div ,.pinkLists svg{
-    color: #e91e63
+.pinkLists > div,
+.pinkLists svg {
+  color: #e91e63;
 }
-.pinkLists > div{
-    margin: 5px;
-    background: #e91d6312;
-    border-radius: 5px;
-    width: auto;
+.pinkLists > div {
+  margin: 5px;
+  background: #e91d6312;
+  border-radius: 5px;
+  width: auto;
 }
-.pinkLists > div:hover{
-    background: #e91d6423;
+.pinkLists > div:hover {
+  background: #e91d6423;
+}
+
+.cardSlider {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+.cardSlider::-webkit-scrollbar {
+    display: none;
+}
+
+/* style for the heart shown on music art  */
+
+svg.songHeart {
+    position: absolute;
+    top: 10px;
+
+    font-size: 4em;
+    color: #e91d63;
+    transition: all .3s cubic-bezier(0.82, 0.33, 0, 1.46);
+}
+
+svg.songHeart.right {
+    right: -8px;
+}
+
+svg.songHeart.left {
+    left: -8px;
 }
 

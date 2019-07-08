@@ -13,10 +13,12 @@
     "material-ui": "^0.20.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-pose": "^4.0.8",
     "react-scripts": "3.0.1",
     "react-swipeable": "^5.3.0",
     "react-swipeable-views": "^0.13.3",
-    "react-youtube": "^7.9.0"
+    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-window": "^1.8.4"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState, useRef } from "react";
 import { Grid } from "@material-ui/core";
-import { useSwipeable, Swipeable } from "react-swipeable";
+import { useSwipeable } from "react-swipeable";
 
 import PlayPauseButton from "./PlayPauseButton";
 import NextButton from "./NextButton";
@@ -9,8 +9,9 @@ import MusicArt from "./MusicArt";
 import TimelineController from "./TimelineController";
 import VolumeController from "./VolumeController";
 import getAudioLink from "../../apis/getAudioLink";
+import { updatePlayingSong } from "../../external/saveSong";
 
-import "../../external/saveCountry"
+import "../../external/saveCountry";
 
 import "../../style.css";
 
@@ -32,6 +33,7 @@ const MainPlayer = () => {
   // maximized, minimized, playlist
 
   const [minimized, setMinimized] = useState(true);
+  const [rating, setRating] = useState("none");
 
   const body = document.querySelector("body");
 
@@ -57,11 +59,15 @@ const MainPlayer = () => {
       getAudio(currentVideoSnippet.id);
     }
     console.log(currentVideoSnippet.id);
+    // set rating to none when we load new song
+    setRating("none");
   }, [currentVideoSnippet.id]);
 
-  useEffect(() => {
-    
-  }, [playerState]);
+  // useEffect(() => {
+  //   if (audioState === "playing") {
+  //     updatePlayingSong(currentVideoSnippet);
+  //   }
+  // }, [audioState, currentVideoSnippet]);
 
   let playerStyle = {
     position: "fixed",
@@ -92,7 +98,6 @@ const MainPlayer = () => {
     body.style.overflow = "hidden";
   }
 
-
   const expandPlayer = () => {
     if (playerState === "minimized") {
       setPlayerState("maximized");
@@ -102,6 +107,13 @@ const MainPlayer = () => {
 
   const timeUpdate = () => {
     setCurrentTime(audioPlayer.current.currentTime);
+  };
+
+  const updateSongDB = async () => {
+    const rating = await updatePlayingSong(currentVideoSnippet);
+    //  it will update song on db and return the rating
+    setRating(rating);
+    console.log(rating);
   };
 
   const swipeHandler = useSwipeable({
@@ -115,9 +127,8 @@ const MainPlayer = () => {
     if (playerState === "maximized") {
       return (
         <>
-
           <VolumeController player={player} setPlayerState={setPlayerState} />
-          <MusicArt data={currentVideoSnippet} />
+          <MusicArt data={currentVideoSnippet} rating={rating} />
           <TimelineController currentTime={currentTime} player={player} />
           <Grid
             container
@@ -144,10 +155,18 @@ const MainPlayer = () => {
             justify="space-evenly"
             alignItems="center"
           >
-            <PlayPauseButton player={player} minimized={minimized} audioState={audioState} />
+            <PlayPauseButton
+              player={player}
+              minimized={minimized}
+              audioState={audioState}
+            />
             <NextButton minimized={minimized} />
           </Grid>
-          <TimelineController currentTime={currentTime} player={player} minimized={minimized}/>
+          <TimelineController
+            currentTime={currentTime}
+            player={player}
+            minimized={minimized}
+          />
         </>
       );
     }
@@ -161,7 +180,10 @@ const MainPlayer = () => {
         <audio
           src=""
           onTimeUpdate={timeUpdate}
-          onLoadStart={() => setAudioState("loading")}
+          onLoadStart={() => {
+            setAudioState("loading");
+          }}
+          onLoadedData={updateSongDB}
           // onCanPlay={() => setAudioState("loaded")}
           onPlay={() => setAudioState("playing")}
           onPlaying={() => setAudioState("playing")}

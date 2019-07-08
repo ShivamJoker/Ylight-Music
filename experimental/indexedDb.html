@@ -5,37 +5,81 @@
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
     <script>
-      var db = new Dexie("FriendsAndPetsDatabase");
-
+      var db = new Dexie("Song_Database");
       db.version(1).stores({
-        users: "++id, &videoId, title, channel, rating",
+        songs:
+          "&videoId, rating, title, channel, timestamp, playbackTimes, [rating+timestamp]"
       });
-    //   db.open().catch(function(e) {
-    //     console.error("Open failed: " + e.stack);
-    //   });
 
-    //   db.transaction("rw", db.users, function() {
-        db.users.add({
-          name: "Zlatan",
-          username: "ibra",
-          email: ["zlatan@ibrahimovic.se", "zlatan.ibrahimovic@gmail.com"],
-          address: {
-            city: "Malmö",
-            country: "Sweden"
-          }
+      const videoObj = {
+        videoId: "3dfds45s63",
+        timestamp: Date.now(),
+        title: "2 new sample video is here",
+        playbackTimes: 3,
+        rating: "liked"
+      };
+
+      db.songs.put(videoObj);
+
+      db.songs
+        .get({ videoId: "3dfds45s63" }, song => {
+          console.log(song);
+        })
+        .catch(err => {
+          console.log("Song doesnt exsist so we are ading it");
         });
 
-        db.users
-    //       .where("email")
-    //       .startsWith("zlatan")
-    //       .or("address.city")
-    //       .anyOf(["Malmö", "Stockholm", "Barcelona"])
-    //       .each(function(user) {
-    //         console.log("Found user: " + user.name);
-    //       });
-    //   }).catch(function(e) {
-    //     console.error(e.stack);
-    //   });
+      async function get() {
+        const fullSongList = await db.songs
+          .where("playbackTimes")
+          // .above(0)
+          // .where("[rating+timestamp]")
+          // .between(["liked", Dexie.minKey], ["liked", Dexie.maxKey])
+          // .orderBy("timestamp")
+          // .orderBy("playbackTimes")
+          // .reverse()
+          .toArray();
+        console.log(fullSongList);
+        const result = await db.songs.get({ videoId: "xclv456k" });
+        console.log(result);
+        if (result) {
+          const upVid = {
+            videoId: "xclv456k",
+            timestamp: Date.now(),
+            playbackTimes: result.playbackTimes + 1
+          };
+          // db.songs.put(upVid);
+        }
+      }
+
+      // get();
+
+      //   db.open().catch(function(e) {
+      //     console.error("Open failed: " + e.stack);
+      //   });
+
+      //   db.transaction("rw", db.users, function() {
+      // db.users.add({
+      //   name: "Zlatan",
+      //   username: "ibra",
+      //   email: ["zlatan@ibrahimovic.se", "zlatan.ibrahimovic@gmail.com"],
+      //   address: {
+      //     city: "Malmö",
+      //     country: "Sweden"
+      //   }
+      // });
+
+      // db.users
+      //       .where("email")
+      //       .startsWith("zlatan")
+      //       .or("address.city")
+      //       .anyOf(["Malmö", "Stockholm", "Barcelona"])
+      //       .each(function(user) {
+      //         console.log("Found user: " + user.name);
+      //       });
+      //   }).catch(function(e) {
+      //     console.error(e.stack);
+      //   });
     </script>
   </head>
 </html>

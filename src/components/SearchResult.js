@@ -1,8 +1,11 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
+import posed from "react-pose";
+import { FixedSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
+
 import { GlobalContext } from "./GlobalState";
-import '../style.css'
+import "../style.css";
 import {
-  List,
   ListItem,
   Typography,
   ListItemAvatar,
@@ -11,43 +14,63 @@ import {
   ListItemText
 } from "@material-ui/core";
 
-
 const Entities = require("html-entities").XmlEntities;
 
 const entities = new Entities();
 
+const ItemsContainer = posed.div({
+  open: {
+    x: "0%",
+    delayChildren: 200,
+    staggerChildren: 50
+  }
+  // closed: { x: '-100%', delay: 300 }
+});
+
+const Item = posed.div({
+  open: { y: 0, opacity: 1 },
+  closed: { y: 20, opacity: 0 }
+});
 
 const SearchResult = ({ videos }) => {
+  const [isOpen, setisOpen] = React.useState(false);
 
-  const {  setCurrentVideoSnippet } = useContext(GlobalContext);
+  const { setCurrentVideoSnippet } = useContext(GlobalContext);
 
-
-
-  const handleClick = (video) => {
+  const handleClick = video => {
     // set all the info of current clicked video in this object
     setCurrentVideoSnippet({
       id: video.id.videoId,
       title: entities.decode(video.snippet.title),
       channelTitle: entities.decode(video.snippet.channelTitle),
-      maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
-      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
-      // this is the url of the max resolution of thumbnail 
-    })
+      maxThumbnail: `https://img.youtube.com/vi/${
+        video.id.videoId
+      }/maxresdefault.jpg`,
+      sdThumbnail: `https://img.youtube.com/vi/${
+        video.id.videoId
+      }/sddefault.jpg`
+      // this is the url of the max resolution of thumbnail
+    });
   };
 
-  let renderResult = "<div>Loading</div>"
+  React.useEffect(() => {
+    setTimeout(() => {
+      setisOpen(true);
+    }, 0);
+  }, []);
 
-  renderResult = videos.map(video => {
+  const renderResult = videos.map(video => {
     const { snippet } = video;
     return (
-      <React.Fragment key={video.id.videoId}>
+      <Item key={video.id.videoId}>
         <ListItem
           alignItems="flex-start"
           button
           onClick={() => handleClick(video)}
         >
           <ListItemAvatar>
-            <Avatar className="searchThumb"
+            <Avatar
+              className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={snippet.title}
               src={snippet.thumbnails.high.url}
@@ -69,11 +92,15 @@ const SearchResult = ({ videos }) => {
           />
         </ListItem>
         <Divider />
-      </React.Fragment>
+      </Item>
     );
   });
 
-  return <List>{renderResult}</List>;
+  return (
+    <ItemsContainer pose={isOpen ? "open" : "closed"}>
+      {renderResult}
+    </ItemsContainer>
+  );
 };
 
 export default SearchResult;

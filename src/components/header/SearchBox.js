@@ -108,6 +108,7 @@ const SearchBox = () => {
     console.log("Function ran");
   };
 
+  
   return (
     <>
       <IconButton
@@ -132,10 +133,18 @@ const SearchBox = () => {
           }}
         />
       </form>
+      {/* {console.log(document.getElementById("navbar").getBoundingClientRect())} */}
       <Popper
-        style={{ width: "100%", height: "100%", background: "#fff" }}
+        style={{ width: "100%", height: "92%", background: "#fff" }}
         open={isPopperOpen}
         anchorEl={document.getElementById("navbar")}
+        popperOptions={{
+          modifiers: {
+            preventOverflow: {
+              padding: 0
+            }
+          }
+        }}
         placement="bottom"
       >
         {popperResult}
