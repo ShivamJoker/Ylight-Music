@@ -8,6 +8,7 @@ import PreviousButton from "./PreviousButton";
 import MusicArt from "./MusicArt";
 import TimelineController from "./TimelineController";
 import VolumeController from "./VolumeController";
+import RelatedVideos from "../RelatedVideos";
 import getAudioLink from "../../apis/getAudioLink";
 import { updatePlayingSong } from "../../external/saveSong";
 
@@ -18,15 +19,18 @@ import "../../style.css";
 import { GlobalContext } from "../GlobalState";
 
 const MainPlayer = () => {
-  const { currentVideoSnippet, setCurrentVideoSnippet } = useContext(
-    GlobalContext
-  );
+  const {
+    currentVideoSnippet,
+    setCurrentVideoSnippet,
+    relatedVideos
+  } = useContext(GlobalContext);
 
   const [audioState, setAudioState] = useState(null);
   // there will be 4 states
   // loading, loaded, playing, paused
 
   const [currentTime, setCurrentTime] = useState(0);
+  const [songIndex, setSongIndex] = useState(0);
 
   const [playerState, setPlayerState] = useState(null);
   // there will be 3 states
@@ -58,10 +62,61 @@ const MainPlayer = () => {
     if (currentVideoSnippet.id) {
       getAudio(currentVideoSnippet.id);
     }
-    console.log(currentVideoSnippet.id);
+
+    if (currentVideoSnippet.id) {
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = new window.MediaMetadata({
+          title: currentVideoSnippet.title,
+          artist: currentVideoSnippet.channelTitle,
+          artwork: [
+            {
+              src: currentVideoSnippet.sdThumbnail,
+              sizes: "512x512",
+              type: "image/png"
+            }
+          ]
+        });
+        navigator.mediaSession.setActionHandler("play", function() {
+          /* Code excerpted. */
+          audioPlayer.current.play();
+        });
+        navigator.mediaSession.setActionHandler("pause", function() {
+          /* Code excerpted. */
+          audioPlayer.current.pause();
+        });
+        navigator.mediaSession.setActionHandler("previoustrack", function() {
+          /* Code excerpted. */
+        });
+        navigator.mediaSession.setActionHandler("nexttrack", function() {
+          playNext()
+        });
+      }
+    }
+
     // set rating to none when we load new song
     setRating("none");
-  }, [currentVideoSnippet.id]);
+    console.log("initial render");
+  }, [currentVideoSnippet]);
+
+  const playNext = () => {
+    const video = relatedVideos[songIndex];
+    console.log(songIndex)
+    setCurrentVideoSnippet({
+      id: video.id.videoId,
+      title: video.snippet.title,
+      channelTitle: video.snippet.channelTitle,
+      maxThumbnail: `https://img.youtube.com/vi/${
+        video.id.videoId
+      }/maxresdefault.jpg`,
+      sdThumbnail: `https://img.youtube.com/vi/${
+        video.id.videoId
+      }/sddefault.jpg`
+      // this is the url of the max resolution of thumbnail
+    });
+    setSongIndex(songIndex + 1);
+
+
+  };
 
   // useEffect(() => {
   //   if (audioState === "playing") {
@@ -130,6 +185,7 @@ const MainPlayer = () => {
           <VolumeController player={player} setPlayerState={setPlayerState} />
           <MusicArt data={currentVideoSnippet} rating={rating} />
           <TimelineController currentTime={currentTime} player={player} />
+          <RelatedVideos />
           <Grid
             container
             direction="row"
@@ -138,7 +194,7 @@ const MainPlayer = () => {
           >
             <PreviousButton />
             <PlayPauseButton player={player} audioState={audioState} />
-            <NextButton />
+            <NextButton onPlayNext={playNext}/>
           </Grid>
         </>
       );
@@ -188,6 +244,7 @@ const MainPlayer = () => {
           onPlay={() => setAudioState("playing")}
           onPlaying={() => setAudioState("playing")}
           onPause={() => setAudioState("paused")}
+          onEnded={playNext}
           autoPlay
           ref={audioPlayer}
         />

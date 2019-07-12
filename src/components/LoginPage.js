@@ -21,7 +21,7 @@ const craftedStyle = {
   width: "100%",
   textAlign: "center",
   letterSpacing: 0,
-  marginTop: "40px"
+  marginTop: "10px"
 };
 
 const LoginPage = () => {
@@ -43,8 +43,8 @@ const LoginPage = () => {
       {/* {showSignIn()} */}
 
       <div style={bgStyle} />
-      <Typography variant="h5" color="primary" align="center" style={{padding: "10px"}}>
-      Listen to unilimited songs without any ads for free only on Ylight Music
+      <Typography variant="h6" color="primary" align="center" style={{padding: "10px"}}>
+      Listen to unlimited songs without any ads for free only on Ylight Music
 
       </Typography>
       <Typography variant="body1" color="primary" style={craftedStyle}>

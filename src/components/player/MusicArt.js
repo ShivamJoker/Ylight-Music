@@ -94,7 +94,7 @@ const MusicArt = ({ data, rating }) => {
     } else {
       setHeartStyle({ transform: "scale(0)" });
     }
-    console.log(rating);
+
   }, [rating]);
 
   // if we find the channel name is before the song title we will remove it
@@ -102,7 +102,7 @@ const MusicArt = ({ data, rating }) => {
   const shortTitle = data => {
     const re = new RegExp(data.channelTitle + " - | : ", "g");
 
-    return data.title.replace(re, "").slice(0, 30) + "...";
+    return data.title.replace(re, "").slice(0, 25) + "...";
   };
 
   return (

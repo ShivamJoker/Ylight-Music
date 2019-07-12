@@ -4,6 +4,8 @@ import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import { GlobalContext } from "./GlobalState";
+
+import youtubeSearch from "../apis/youtubeSearch";
 import "../style.css";
 import {
   ListItem,
@@ -35,7 +37,9 @@ const Item = posed.div({
 const SearchResult = ({ videos }) => {
   const [isOpen, setisOpen] = React.useState(false);
 
-  const { setCurrentVideoSnippet } = useContext(GlobalContext);
+  const { setCurrentVideoSnippet, setRelatedVideos } = useContext(
+    GlobalContext
+  );
 
   const handleClick = video => {
     // set all the info of current clicked video in this object
@@ -51,6 +55,16 @@ const SearchResult = ({ videos }) => {
       }/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
+    const searchRelated = async () => {
+      const res = await youtubeSearch.get("/search", {
+        params: {
+          relatedToVideoId: video.id.videoId,
+          maxResults: 20
+        }
+      });
+      setRelatedVideos(res.data.items);
+    };
+    searchRelated();
   };
 
   React.useEffect(() => {

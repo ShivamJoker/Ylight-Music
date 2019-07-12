@@ -63,8 +63,7 @@ const SearchBox = () => {
       const res = await youtubeSearch.get("/search", {
         params: {
           q: data,
-          type: "video", // search for videos only
-          videoCategoryId: "10" // 10 is category for songs
+          maxResults: 15
         }
       });
       setSearchResult(res.data.items);
