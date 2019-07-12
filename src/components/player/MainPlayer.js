@@ -17,6 +17,8 @@ import "../../external/saveCountry";
 import "../../style.css";
 
 import { GlobalContext } from "../GlobalState";
+let songIndex = 0;
+
 
 const MainPlayer = () => {
   const {
@@ -30,7 +32,7 @@ const MainPlayer = () => {
   // loading, loaded, playing, paused
 
   const [currentTime, setCurrentTime] = useState(0);
-  const [songIndex, setSongIndex] = useState(0);
+  
 
   const [playerState, setPlayerState] = useState(null);
   // there will be 3 states
@@ -113,7 +115,8 @@ const MainPlayer = () => {
       }/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
-    setSongIndex(songIndex + 1);
+    // keep increasing the song index 
+    songIndex++;
 
 
   };
