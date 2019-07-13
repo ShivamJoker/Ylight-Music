@@ -50,7 +50,7 @@ const RenderDatabase = ({ songs }) => {
               className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={song.title}
-              src={`https://img.youtube.com/vi/${song.videoId}/sddefault.jpg`}
+              src={`https://img.youtube.com/vi/${song.videoId}/maxresdefault.jpg`}
             />
           </ListItemAvatar>
           <ListItemText

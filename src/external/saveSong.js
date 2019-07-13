@@ -60,8 +60,8 @@ export const rateSong = async (id, rating, audioEl) => {
   xhr.open("GET", "https://cors-anywhere.herokuapp.com/" + audioEl.src);
   xhr.responseType = "blob";
   xhr.onload = e => {
-    console.log(xhr.response);
-    console.log("download completed");
+    
+    alert("download completed");
     db.songs.update(id, {
       audio: xhr.response
     });
