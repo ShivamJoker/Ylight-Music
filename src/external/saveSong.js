@@ -54,7 +54,20 @@ export const updatePlayingSong = async data => {
 };
 
 // like or dislike a song on database
-export const rateSong = (id, rating) => {
+export const rateSong = async (id, rating, audioEl) => {
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("GET", "https://cors-anywhere.herokuapp.com/" + audioEl.src);
+  xhr.responseType = "blob";
+  xhr.onload = e => {
+    console.log(xhr.response);
+    console.log("download completed");
+    db.songs.update(id, {
+      audio: xhr.response
+    });
+  };
+  xhr.send();
+
   db.songs.update(id, {
     rating: rating
   });

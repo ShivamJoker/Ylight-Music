@@ -37,7 +37,7 @@ const ArtContainer = posed.div({
   }
 });
 
-const MusicArt = ({ data, rating }) => {
+const MusicArt = ({ data, rating, audioEl }) => {
   const swipeUpHandler = useSwipeable({
     onSwipedUp: e => {
       dislikeSong();
@@ -71,7 +71,7 @@ const MusicArt = ({ data, rating }) => {
 
   // double tap to like the song
   const likeSong = () => {
-    rateSong(data.id, "liked");
+
     // run the like function to like provided with song id and rating
     setHeartStyle({ transform: "scale(0)" });
     setTimeout(() => {
@@ -94,7 +94,6 @@ const MusicArt = ({ data, rating }) => {
     } else {
       setHeartStyle({ transform: "scale(0)" });
     }
-
   }, [rating]);
 
   // if we find the channel name is before the song title we will remove it
@@ -114,6 +113,7 @@ const MusicArt = ({ data, rating }) => {
       onClick={e => {
         if (isDblTouchTap(e)) {
           likeSong();
+    rateSong(data.id, "liked", audioEl);
         }
         // call the like song function on double tap
       }}

@@ -25,6 +25,7 @@ const RenderDatabase = ({ songs }) => {
     // set all the info of current clicked video in this object
     setCurrentVideoSnippet({
       id: song.videoId,
+      audio: song.audio,
       title: song.title,
       channelTitle: song.channelTitle,
       maxThumbnail: `https://img.youtube.com/vi/${

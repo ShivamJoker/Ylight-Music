@@ -58,10 +58,16 @@ const MainPlayer = () => {
 
       // set the audio data
       audioPlayer.current.src = res.data;
-      audioPlayer.current.load();
+      // audioPlayer.current.load();
     };
+    if (currentVideoSnippet.audio) {
+      console.log("yes its downloaded we will play from local file")
+       // maximize the player every time id changes
+       setPlayerState("maximized");
+       setAudioState("loading");
+      audioPlayer.current.src = window.URL.createObjectURL(currentVideoSnippet.audio);
 
-    if (currentVideoSnippet.id) {
+    }else if (currentVideoSnippet.id) {
       getAudio(currentVideoSnippet.id);
     }
 
@@ -186,7 +192,7 @@ const MainPlayer = () => {
       return (
         <>
           <VolumeController player={player} setPlayerState={setPlayerState} />
-          <MusicArt data={currentVideoSnippet} rating={rating} />
+          <MusicArt data={currentVideoSnippet} rating={rating} audioEl={player}/>
           <TimelineController currentTime={currentTime} player={player} />
           <RelatedVideos />
           <Grid
