@@ -8,6 +8,7 @@ import PreviousButton from "./PreviousButton";
 import MusicArt from "./MusicArt";
 import TimelineController from "./TimelineController";
 import VolumeController from "./VolumeController";
+import MiniMusicArt from './MiniMusicArt'
 import RelatedVideos from "../RelatedVideos";
 import getAudioLink from "../../apis/getAudioLink";
 import { updatePlayingSong } from "../../external/saveSong";
@@ -142,12 +143,11 @@ const MainPlayer = () => {
     height: "100vh",
     zIndex: 1400,
     display: "inline block",
-    overflow: "hidden",
     transition: "all .3s ease"
   };
 
   if (playerState === "minimized") {
-    playerStyle.transform = "translateY(80%)";
+    playerStyle.transform = "translateY(calc(100% - 106px))";
     playerStyle.background = "#e91e63";
     playerStyle.zIndex = 0;
     // playerStyle.bottom = "48px";
@@ -214,7 +214,7 @@ const MainPlayer = () => {
     if (playerState === "minimized") {
       return (
         <>
-          <Grid
+          {/* <Grid
             container
             direction="row"
             justify="space-evenly"
@@ -226,7 +226,12 @@ const MainPlayer = () => {
               audioState={audioState}
             />
             <NextButton minimized={minimized} />
-          </Grid>
+          </Grid> */}
+          <MiniMusicArt
+          // we are making an object for props we will pass it to play pause button through mini music art
+          playPause={{player: player, minimized:minimized, audioState: audioState}}
+          data={currentVideoSnippet}
+          />
           <TimelineController
             currentTime={currentTime}
             player={player}

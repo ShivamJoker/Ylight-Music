@@ -36,7 +36,7 @@ const MiniSlider = withStyles({
   root: {
     height: 4,
     position: "relative",
-    bottom: "-6px",
+    bottom: "16px",
     color: "#FFFDFD",
     padding: 0
   },

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { IconButton, CircularProgress } from "@material-ui/core/";
-import { PauseCircleFilled, PlayCircleFilled, Pause, PlayArrow } from "@material-ui/icons/";
+import {
+  PauseCircleFilled,
+  PlayCircleFilled,
+  Pause,
+  PlayArrow
+} from "@material-ui/icons/";
 
 const PlayPauseButton = ({ player, audioState, minimized }) => {
   const togglePlayPause = e => {
@@ -16,12 +21,12 @@ const PlayPauseButton = ({ player, audioState, minimized }) => {
     if (audioState === "playing") {
       // if the state will be minimized then we will return the nromal pause button
       if (minimized) {
-        return <Pause style={{ fontSize: "4em" }} />;
+        return <Pause style={{ fontSize: "3em", opacity: ".8" }} />;
       }
       return <PauseCircleFilled style={{ fontSize: "4em" }} color="primary" />;
     } else if (audioState === "paused" || audioState === "loaded") {
       if (minimized) {
-        return <PlayArrow style={{ fontSize: "4em" }} />;
+        return <PlayArrow style={{ fontSize: "3em", opacity: ".8" }} />;
       }
       return <PlayCircleFilled style={{ fontSize: "4em" }} color="primary" />;
     } else if (audioState === "loading") {
@@ -32,7 +37,7 @@ const PlayPauseButton = ({ player, audioState, minimized }) => {
   return (
     <IconButton
       size="small"
-      color={minimized ? 'secondary': 'primary'}
+      color={minimized ? "secondary" : "primary"}
       aria-label="Pause"
       onClick={togglePlayPause}
       disableFocusRipple={true}
