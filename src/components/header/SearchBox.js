@@ -1,4 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
+
 import {
   InputBase,
   IconButton,
@@ -13,7 +15,7 @@ import suggestSearch from "../../apis/suggestSearch";
 import AutoSearchResult from "./AutoSearchResult";
 import youtubeSearch from "../../apis/youtubeSearch";
 
-const SearchBox = () => {
+const SearchBox = ({ history }) => {
   const { setSearchResult } = useContext(GlobalContext);
   const { searchState, setSearchState } = useContext(GlobalContext);
 
@@ -24,6 +26,8 @@ const SearchBox = () => {
 
   // toggle popper
   const [isPopperOpen, setPopper] = useState(true);
+
+  console.log("search box re rendered");
 
   // get back the selected search data
   const onSearchSelect = result => {
@@ -73,8 +77,21 @@ const SearchBox = () => {
     if (ytSearchQuery && ytSearchQuery !== "") {
       searchYt(ytSearchQuery);
     }
-    console.log(ytSearchQuery);
+    // console.log(ytSearchQuery);
   }, [ytSearchQuery, setSearchResult, setSearchState]);
+
+  useEffect(() => {
+    // Listen for changes to the current location.
+    const unlisten = history.listen(location => {
+      // location is an object like window.location
+      const path = location.pathname;
+      if (path.slice(1, 7) === "search" || path.slice(1, 5) === "song") {
+        setSearchState("searched");
+      } else {
+        setSearchState("home");
+      }
+    });
+  }, [history, setSearchState]);
 
   // show loading icon while we fetch the results from api
 
@@ -107,11 +124,13 @@ const SearchBox = () => {
     console.log("Function ran");
   };
 
-  
   return (
     <>
       <IconButton
-        onClick={() => setSearchState("home")}
+        onClick={() => {
+          setSearchState("home");
+          history.goBack();
+        }}
         color="inherit"
         aria-label="Menu"
       >
@@ -132,7 +151,7 @@ const SearchBox = () => {
           }}
         />
       </form>
-      {/* {console.log(document.getElementById("navbar").getBoundingClientRect())} */}
+
       <Popper
         style={{ width: "100%", height: "92%", background: "#fff" }}
         open={isPopperOpen}
@@ -152,4 +171,4 @@ const SearchBox = () => {
   );
 };
 
-export default SearchBox;
+export default withRouter(SearchBox);

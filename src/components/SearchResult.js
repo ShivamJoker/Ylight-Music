@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import posed from "react-pose";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { motion, useCycle } from "framer-motion";
+import { Link } from 'react-router-dom';
 
 import { GlobalContext } from "./GlobalState";
 
@@ -20,22 +19,34 @@ const Entities = require("html-entities").XmlEntities;
 
 const entities = new Entities();
 
-const ItemsContainer = posed.div({
+const liVariants = {
   open: {
-    x: "0%",
-    delayChildren: 200,
-    staggerChildren: 50
+    y: 0,
+    opacity: 1,
+    transition: {
+      y: { stiffness: 1000, velocity: -100 }
+    }
+  },
+  closed: {
+    y: 50,
+    opacity: 0,
+    transition: {
+      y: { stiffness: 1000 }
+    }
   }
-  // closed: { x: '-100%', delay: 300 }
-});
+};
 
-const Item = posed.div({
-  open: { y: 0, opacity: 1 },
-  closed: { y: 20, opacity: 0 }
-});
+const ulVariants = {
+  open: {
+    transition: { staggerChildren: 0.18, delayChildren: 0.5 }
+  },
+  closed: {
+    transition: { staggerChildren: 0.15, staggerDirection: -1 }
+  }
+};
 
 const SearchResult = ({ videos }) => {
-  const [isOpen, setisOpen] = React.useState(false);
+  const [isOpen, setisOpen] = useCycle(false, true);
 
   const { setCurrentVideoSnippet, setRelatedVideos } = useContext(
     GlobalContext
@@ -59,7 +70,7 @@ const SearchResult = ({ videos }) => {
       const res = await youtubeSearch.get("/search", {
         params: {
           relatedToVideoId: video.id.videoId,
-          maxResults: 20
+          maxResults: 10
         }
       });
       setRelatedVideos(res.data.items);
@@ -68,19 +79,19 @@ const SearchResult = ({ videos }) => {
   };
 
   React.useEffect(() => {
-    setTimeout(() => {
       setisOpen(true);
-    }, 0);
   }, []);
 
   const renderResult = videos.map(video => {
     const { snippet } = video;
     return (
-      <Item key={video.id.videoId}>
+      <motion.div variants={liVariants} key={video.id.videoId}>
         <ListItem
           alignItems="flex-start"
           button
           onClick={() => handleClick(video)}
+          component={Link}
+          to={`/song/${video.id.videoId}`}
         >
           <ListItemAvatar>
             <Avatar
@@ -106,14 +117,18 @@ const SearchResult = ({ videos }) => {
           />
         </ListItem>
         <Divider />
-      </Item>
+      </motion.div>
     );
   });
 
   return (
-    <ItemsContainer pose={isOpen ? "open" : "closed"}>
+    <motion.div
+      variants={ulVariants}
+      // animate={isOpen ? "open" : "closed"}
+      initial={true}
+    >
       {renderResult}
-    </ItemsContainer>
+    </motion.div>
   );
 };
 

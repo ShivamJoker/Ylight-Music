@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { FixedSizeList as FixedList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import {
   List,
@@ -14,11 +15,7 @@ import {
 
 import { GlobalContext } from "./GlobalState";
 
-
-
-
 const RenderDatabase = ({ songs }) => {
-
   const { setCurrentVideoSnippet } = useContext(GlobalContext);
 
   const handleClick = song => {
@@ -36,7 +33,6 @@ const RenderDatabase = ({ songs }) => {
     });
   };
 
-
   const renderResult = songs.map(song => {
     return (
       <div key={song.videoId}>
@@ -44,13 +40,17 @@ const RenderDatabase = ({ songs }) => {
           alignItems="flex-start"
           button
           onClick={() => handleClick(song)}
+          component={Link}
+          to={`/song/${song.videoId}`}
         >
           <ListItemAvatar>
             <Avatar
               className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={song.title}
-              src={`https://img.youtube.com/vi/${song.videoId}/maxresdefault.jpg`}
+              src={`https://img.youtube.com/vi/${
+                song.videoId
+              }/maxresdefault.jpg`}
             />
           </ListItemAvatar>
           <ListItemText
@@ -68,17 +68,12 @@ const RenderDatabase = ({ songs }) => {
             }
           />
         </ListItem>
-    <Divider />
+        <Divider />
       </div>
     );
   });
 
-  return (
-    <List>
-    {renderResult}
-    </List>
-  );
-
+  return <List>{renderResult}</List>;
 };
 
 export default RenderDatabase;

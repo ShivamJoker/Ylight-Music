@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
-import SwipeableViews from "react-swipeable-views";
+import { BrowserRouter as Router, withRouter, Route, Link } from "react-router-dom";
+import { createBrowserHistory } from "history";
+
 import { Tabs, Tab, withStyles } from "@material-ui/core";
 import { Home, Favorite, VideoLibrary, History } from "@material-ui/icons/";
 import LoginPage from "./LoginPage";
@@ -12,6 +14,8 @@ import SearchResult from "./SearchResult";
 import { getHistory, getLikedSongs } from "../external/saveSong";
 
 import youtubeSearch from "../apis/youtubeSearch";
+
+// const history = createBrowserHistory();
 
 // custom styling the tab menus
 const CustomTab = withStyles({
@@ -53,7 +57,8 @@ const playlistsIds = {
   Reggaeton: "PLS_oEMUyvA728OZPmF9WPKjsGtfC75LiN"
 };
 
-const CurrentSection = () => {
+const CurrentSection = ({history}) => {
+
   const { searchState } = useContext(GlobalContext);
   const { searchResult } = useContext(GlobalContext);
   const { currentVideoSnippet } = useContext(GlobalContext);
@@ -87,40 +92,40 @@ const CurrentSection = () => {
       return res.data.items;
     };
 
-    getTrendingMusic().then(data => {
-      setSongObj(prevState => {
-        return { ...prevState, ...{ trending: data } };
-      });
-    });
+    // getTrendingMusic().then(data => {
+    //   setSongObj(prevState => {
+    //     return { ...prevState, ...{ trending: data } };
+    //   });
+    // });
 
-    getPlayListItems(playlistsIds.LatestSongs).then(data => {
-      setSongObj(prevState => {
-        return { ...prevState, ...{ latestSongs: data } };
-      });
-    });
+    // getPlayListItems(playlistsIds.LatestSongs).then(data => {
+    //   setSongObj(prevState => {
+    //     return { ...prevState, ...{ latestSongs: data } };
+    //   });
+    // });
 
-    getPlayListItems(playlistsIds.RomanticSongs).then(data => {
-      setSongObj(prevState => {
-        return { ...prevState, ...{ romanticSongs: data } };
-      });
-    });
+    // getPlayListItems(playlistsIds.RomanticSongs).then(data => {
+    //   setSongObj(prevState => {
+    //     return { ...prevState, ...{ romanticSongs: data } };
+    //   });
+    // });
 
-    getPlayListItems(playlistsIds.TopBolloywood).then(data => {
-      setSongObj(prevState => {
-        return { ...prevState, ...{ topBolloywood: data } };
-      });
-    });
+    // getPlayListItems(playlistsIds.TopBolloywood).then(data => {
+    //   setSongObj(prevState => {
+    //     return { ...prevState, ...{ topBolloywood: data } };
+    //   });
+    // });
   }, []);
 
   function handleChange(event, newValue) {
     setValue(newValue);
   }
 
-  function checkUserSearched() {
+  useEffect(() => {
     if (searchState === "completed") {
-      return <SearchResult videos={searchResult} />;
+      history.push("/search");
     }
-  }
+  }, [searchState, history]);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -133,29 +138,47 @@ const CurrentSection = () => {
 
   return (
     <div>
-      {checkUserSearched()}
-
       <br />
-      {value === 0 && <LoginPage />}
-      {/* {value === 0 && <HomePage songObj={songObj}/>} */}
-
-      {value === 1 && <RenderDatabase songs={songsLikedState} />}
-
-      {value === 2 && <RenderDatabase songs={songsHistoryState} />}
+      <Route exact path="/" component={LoginPage} />
+      <Route
+        path="/search"
+        render={props => <SearchResult videos={searchResult} />}
+      />
+      <Route
+        path="/liked"
+        render={props => <RenderDatabase songs={songsLikedState} {...props} />}
+      />
+      <Route
+        path="/history"
+        render={props => <RenderDatabase songs={songsHistoryState} />}
+      />
+      <Route path="/privacy" component={"Your privacy page is here"} />
 
       <CustomTab
         value={value}
         onChange={handleChange}
+        variant="fullWidth"
         indicatorColor="primary"
         textColor="primary"
-        variant="fullWidth"
       >
-        <CustomTabs icon={<Home />} aria-label="Home" />
-        <CustomTabs icon={<Favorite />} aria-label="Liked" />
-        <CustomTabs icon={<History />} aria-label="History" />
+        <CustomTabs icon={<Home />} aria-label="Home" component={Link} to="/" />
+
+        <CustomTabs
+          icon={<Favorite />}
+          aria-label="Liked"
+          component={Link}
+          to="/liked"
+        />
+
+        <CustomTabs
+          icon={<History />}
+          aria-label="History"
+          component={Link}
+          to="/history"
+        />
       </CustomTab>
     </div>
   );
 };
 
-export default CurrentSection;
+export default withRouter(CurrentSection);

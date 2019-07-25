@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
-import posed from "react-pose";
+import { motion } from "framer-motion";
 import { Avatar, Grid, Typography } from "@material-ui/core";
 import { FavoriteTwoTone } from "@material-ui/icons";
 import circleSvg from "../../images/dottedCircle.svg";
@@ -25,17 +25,6 @@ function isDblTouchTap(event) {
 }
 
 let initialPosition;
-
-const ArtContainer = posed.div({
-  draggable: true,
-  // init: { scale: 1 },
-  // drag: { scale: 1.1},
-  dragEnd: {
-    x: 0,
-    y: 0,
-    transition: { type: "spring" }
-  }
-});
 
 const MusicArt = ({ data, rating, audioEl }) => {
   const swipeUpHandler = useSwipeable({
@@ -71,7 +60,6 @@ const MusicArt = ({ data, rating, audioEl }) => {
 
   // double tap to like the song
   const likeSong = () => {
-
     // run the like function to like provided with song id and rating
     setHeartStyle({ transform: "scale(0)" });
     setTimeout(() => {
@@ -113,12 +101,20 @@ const MusicArt = ({ data, rating, audioEl }) => {
       onClick={e => {
         if (isDblTouchTap(e)) {
           likeSong();
-    rateSong(data.id, "liked", audioEl);
+          rateSong(data.id, "liked", audioEl);
         }
         // call the like song function on double tap
       }}
     >
-      <ArtContainer style={artContainerStyle} {...swipeUpHandler}>
+      <motion.div
+        className="box"
+        drag
+        dragElastic={true}
+        dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }}
+        dragConstraints={{ left: 0, right: 0 ,top: 0, bottom: 0}}
+        style={artContainerStyle}
+        {...swipeUpHandler}
+      >
         <FavoriteTwoTone className={"songHeart left"} style={heartStyle} />
         <FavoriteTwoTone className={"songHeart right"} style={heartStyle} />
         <Avatar
@@ -132,7 +128,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
           src={data.maxThumbnail}
           imgProps={{ onLoad: e => checkImg(e) }}
         />
-      </ArtContainer>
+      </motion.div>
       <br />
       <Typography color="primary" variant="h5">
         {shortTitle(data)}

@@ -55,19 +55,23 @@ export const updatePlayingSong = async data => {
 
 // like or dislike a song on database
 export const rateSong = async (id, rating, audioEl) => {
-  var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", "https://cors-anywhere.herokuapp.com/" + audioEl.src);
-  xhr.responseType = "blob";
-  xhr.onload = e => {
-    
-    alert("download completed");
-    db.songs.update(id, {
-      audio: xhr.response
-    });
-  };
-  xhr.send();
+  // if user likes the song then only download it
+  if (rating === "liked") {
+    var xhr = new XMLHttpRequest();
 
+    xhr.open("GET", "https://cors-anywhere.herokuapp.com/" + audioEl.src);
+    xhr.responseType = "blob";
+    xhr.onload = e => {
+      
+      alert("download completed");
+      db.songs.update(id, {
+        audio: xhr.response
+      });
+    };
+    xhr.send();
+  }
+ 
   db.songs.update(id, {
     rating: rating
   });
@@ -76,6 +80,7 @@ export const rateSong = async (id, rating, audioEl) => {
 export const getHistory = async () => {
   const songsByTimeStamp = await db.songs
     .orderBy("timestamp")
+    .limit(15)
     .reverse()
     .toArray();
   return songsByTimeStamp;

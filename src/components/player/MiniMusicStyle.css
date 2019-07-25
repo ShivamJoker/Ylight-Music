@@ -36,21 +36,21 @@
 
 div.details {
   color: #fff;
-  margin: 5px;
+  margin: 5px 8px;
 }
 
 
 div.buttons {
   position: fixed;
   right: 0;
-  top: 0;
+  top: 50%;
   color: #fff;
-  margin-top: 5px;
+  transform: translateY(-50%);
 }
 div.buttons svg{
-  font-size: 2.8em;
-  margin-right: 5px;
-  margin-left: 8px;
+  font-size: 2.4em;
+  margin-right: 8px;
+  margin-left: 10px;
 }
 .mainArt {
   width: 70px;

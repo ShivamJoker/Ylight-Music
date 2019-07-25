@@ -11,7 +11,7 @@ const MiniMuiscArt = ({playPause, data}) => {
     <div className={"mainContainer"}>
       <div className={"overflow-hidden"}>
         <div className="details">
-        <Typography variant="body1">{data.title.slice(0, 20)}</Typography>
+        <Typography variant="body1">{data.title.slice(0, 14)}</Typography>
         <Typography variant="body2">{data.channelTitle}</Typography>
         </div>
         <div className="buttons">

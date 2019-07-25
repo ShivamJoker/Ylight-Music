@@ -1,6 +1,6 @@
 /* wanted to zoomed a image little bit so it fits whole */
 .searchThumb img {
-  transform: scale(1.4);
+  /* transform: scale(1.4); */
 }
 
 .youtubeIframe {
@@ -51,3 +51,32 @@ svg.songHeart.left {
     left: -8px;
 }
 
+/* style for the playlist of related videos */
+
+.RelatedVideoContainer {
+  background: #e91d63;
+  overflow: auto;
+  height: 100%;
+}
+
+div.RelatedVideoContainer * {
+  color: #fff;
+}
+
+
+.playlistHeader {
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  background: #e91d63;
+  z-index: 1;
+  box-shadow: #06060640 0px 2px 3px;
+}
+
+.playlistHeader h5 {
+  margin-right: 50px;
+}
+
+.playlistHeader svg{
+  font-size: 1.8em;
+}
