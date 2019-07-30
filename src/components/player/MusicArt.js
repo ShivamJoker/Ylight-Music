@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useSwipeable } from "react-swipeable";
 import { motion } from "framer-motion";
 import { Avatar, Grid, Typography } from "@material-ui/core";
@@ -59,20 +59,21 @@ const MusicArt = ({ data, rating, audioEl }) => {
   };
 
   // double tap to like the song
-  const likeSong = () => {
+  const likeSong = useCallback(() => {
     // run the like function to like provided with song id and rating
     setHeartStyle({ transform: "scale(0)" });
     setTimeout(() => {
       setHeartStyle({ transform: "scale(1)" });
     }, 300);
-  };
-  const dislikeSong = () => {
+  },[setHeartStyle]);
+
+  const dislikeSong = useCallback(()=> {
     rateSong(data.id, "disliked");
     setHeartStyle({ transform: "scale(0)" });
     setTimeout(() => {
       setHeartStyle({ transform: "scale(1)", color: "#2d3436" });
     }, 300);
-  };
+  },[setHeartStyle, data.id]);
 
   React.useEffect(() => {
     if (rating === "liked") {
@@ -82,7 +83,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
     } else {
       setHeartStyle({ transform: "scale(0)" });
     }
-  }, [rating]);
+  }, [rating, likeSong, dislikeSong, setHeartStyle, ]);
 
   // if we find the channel name is before the song title we will remove it
   //using the regex

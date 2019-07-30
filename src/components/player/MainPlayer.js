@@ -3,6 +3,7 @@ import { Grid } from "@material-ui/core";
 import { useSwipeable } from "react-swipeable";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import { motion } from "framer-motion";
 
 import PlayPauseButton from "./PlayPauseButton";
 import NextButton from "./NextButton";
@@ -71,8 +72,6 @@ const MainPlayer = () => {
       // audioPlayer.current.load();
     };
 
-
-
     if (currentVideoSnippet.audio) {
       console.log("yes its downloaded we will play from local file");
       // maximize the player every time id changes
@@ -119,7 +118,7 @@ const MainPlayer = () => {
     setRating("none");
     console.log("initial render");
 
-    console.log(currentVideoSnippet)
+    console.log(currentVideoSnippet);
   }, [currentVideoSnippet]);
 
   const playNext = () => {
@@ -189,6 +188,7 @@ const MainPlayer = () => {
 
   const maximizePlaylist = () => {
     setPlayerState("playlist");
+    console.log("Maximize the playlist")
   };
 
   const timeUpdate = () => {
@@ -222,17 +222,19 @@ const MainPlayer = () => {
 
   useEffect(() => {
     // Listen for changes to the current location.
-    const unlisten = history.listen((location) => {
+    const unlisten = history.listen(location => {
       // location is an object like window.location
       if (location.pathname.slice(1, 5) === "song") {
-        setPlayerState("maximized");
+        // setPlayerState("maximized");
       } else {
-        setPlayerState("minimized");
+        // setPlayerState("minimized");
       }
-      console.log(history.entries);
-      
     });
   }, []);
+
+  useEffect(() => {
+    console.log(playerState)
+  }, [playerState])
 
   const returnMaximizedPlayer = () => {
     if (playerState === "maximized" || playerState === "playlist") {
@@ -265,19 +267,6 @@ const MainPlayer = () => {
     if (playerState === "minimized") {
       return (
         <>
-          {/* <Grid
-            container
-            direction="row"
-            justify="space-evenly"
-            alignItems="center"
-          >
-            <PlayPauseButton
-              player={player}
-              minimized={minimized}
-              audioState={audioState}
-            />
-            <NextButton minimized={minimized} />
-          </Grid> */}
           <MiniMusicArt
             // we are making an object for props we will pass it to play pause button through mini music art
             playPause={{
@@ -306,7 +295,7 @@ const MainPlayer = () => {
       })
       .then(res => {
         const item = res.data.items[0];
-        console.log(currentVideoSnippet)
+        console.log(currentVideoSnippet);
         setCurrentVideoSnippet({
           id: item.id,
           title: item.snippet.title,
@@ -314,14 +303,11 @@ const MainPlayer = () => {
           maxThumbnail: `https://img.youtube.com/vi/${
             item.id
           }/maxresdefault.jpg`,
-          sdThumbnail: `https://img.youtube.com/vi/${
-            item.id
-          }/sddefault.jpg`
+          sdThumbnail: `https://img.youtube.com/vi/${item.id}/sddefault.jpg`
           // this is the url of the max resolution of thumbnail
         });
       });
   };
-
 
   const renderWholePlayer = props => {
     // console.log(match.params.songId);
@@ -331,7 +317,13 @@ const MainPlayer = () => {
       fetchAndSetCurrentVideoSnippet(props.match.params.songId); // math will give the song id from
     }
     return (
-      <div style={playerStyle} onClick={expandPlayer} {...swipeHandler}>
+      <div
+        // drag="y"
+        // dragConstraints={{ top: 0, bottom: 600 }}
+        style={playerStyle}
+        onClick={expandPlayer}
+        {...swipeHandler}
+      >
         {returnMaximizedPlayer()}
         {returnMinimizedPlayer()}
         <audio
@@ -356,7 +348,7 @@ const MainPlayer = () => {
   if (currentVideoSnippet.id) {
     return renderWholePlayer();
   } else {
-    console.log("nothing found")
+    console.log("nothing found");
     return (
       <Router>
         <Route path="/song/:songId" component={renderWholePlayer} />

@@ -35,7 +35,7 @@ const shuffle = arry =>
     [...arry]
   );
 
-const RelatedVideos = ({ id, onMaximizePlaylist }) => {
+const RelatedVideos = ({ onMaximizePlaylist }) => {
   const {
     relatedVideos,
     setRelatedVideos,

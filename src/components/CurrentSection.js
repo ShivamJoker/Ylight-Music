@@ -1,9 +1,20 @@
 import React, { useContext, useState, useEffect } from "react";
-import { BrowserRouter as Router, withRouter, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  withRouter,
+  Route,
+  Link
+} from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 import { Tabs, Tab, withStyles } from "@material-ui/core";
-import { Home, Favorite, VideoLibrary, History } from "@material-ui/icons/";
+import {
+  Home,
+  Favorite,
+  VideoLibrary,
+  History,
+  GetApp
+} from "@material-ui/icons/";
 import LoginPage from "./LoginPage";
 import RenderDatabase from "./RenderDatabase";
 
@@ -57,8 +68,7 @@ const playlistsIds = {
   Reggaeton: "PLS_oEMUyvA728OZPmF9WPKjsGtfC75LiN"
 };
 
-const CurrentSection = ({history}) => {
-
+const CurrentSection = ({ history }) => {
   const { searchState } = useContext(GlobalContext);
   const { searchResult } = useContext(GlobalContext);
   const { currentVideoSnippet } = useContext(GlobalContext);
@@ -136,22 +146,45 @@ const CurrentSection = ({history}) => {
     console.log("songs updated from fetched history");
   }, [currentVideoSnippet, value]);
 
+
+  // the set tab value will keep the tab active on their route
+  // there are 4 tabs so there will be 3 indexes 
   return (
     <div>
       <br />
-      <Route exact path="/" component={LoginPage} />
+      <Route exact path="/" 
+       render={props => {
+        setValue(0);
+        return <LoginPage/>;
+      }}
+      />
       <Route
         path="/search"
         render={props => <SearchResult videos={searchResult} />}
       />
       <Route
         path="/liked"
-        render={props => <RenderDatabase songs={songsLikedState} {...props} />}
+        render={props => {
+          setValue(1);
+          return <RenderDatabase songs={songsLikedState} {...props} />;
+        }}
+      />
+      <Route
+        path="/downloads"
+        render={props => {
+          setValue(2);
+          return <RenderDatabase songs={songsHistoryState} />;
+        }}
       />
       <Route
         path="/history"
-        render={props => <RenderDatabase songs={songsHistoryState} />}
+        render={props => {
+          setValue(3);
+
+          return <RenderDatabase songs={songsHistoryState} />;
+        }}
       />
+
       <Route path="/privacy" component={"Your privacy page is here"} />
 
       <CustomTab
@@ -170,6 +203,12 @@ const CurrentSection = ({history}) => {
           to="/liked"
         />
 
+        <CustomTabs
+          icon={<GetApp />}
+          aria-label="Downloads"
+          component={Link}
+          to="/downloads"
+        />
         <CustomTabs
           icon={<History />}
           aria-label="History"

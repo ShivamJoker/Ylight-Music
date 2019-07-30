@@ -5,6 +5,7 @@ import SimpleAppBar from "./header/SimpleAppBar";
 import MainPlayer from "./player/MainPlayer";
 import SwipeMenu from "./SwipeMenu";
 import CurrentSection from "./CurrentSection";
+import ShowDownloadMessage from './ShowDownloadMessage'
 import { GlobalState } from "./GlobalState";
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -32,6 +33,7 @@ function App() {
           <MainPlayer />
           <SwipeMenu />
         </Router>
+        <ShowDownloadMessage/>
       </MuiThemeProvider>
     </GlobalState>
   );

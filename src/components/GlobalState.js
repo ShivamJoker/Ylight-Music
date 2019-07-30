@@ -9,6 +9,7 @@ export const GlobalState = props => {
   const [searchResult, setSearchResult] = useState([]);
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isDownloadOpen, setDownloadOpen] = useState(false);
   const [currentVideoSnippet, setCurrentVideoSnippet] = useState({});
 
   return (
@@ -24,6 +25,8 @@ export const GlobalState = props => {
         setMenuOpen,
         relatedVideos,
         setRelatedVideos,
+        isDownloadOpen,
+        setDownloadOpen
       }}
     >
       {props.children}

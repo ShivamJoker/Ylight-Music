@@ -7,23 +7,10 @@ const db = new Dexie("Song_Database");
 // our schema is of storing a song
 db.version(1).stores({
   songs:
-    "&videoId, rating, title, channelTitle, timestamp, playbackTimes, [rating+timestamp]"
+    "&videoId, timestamp, playbackTimes, [rating+timestamp]"
 });
 
-// object  of every new song
-const videoObj = {
-  videoId: "3dfds45s63",
-  timestamp: Date.now(),
-  title: "2 new sample video is here",
-  playbackTimes: 1,
-  rating: "none"
-};
 
-const data = {
-  id: "a11",
-  title: "hello bro",
-  channelTitle: "fuck me"
-};
 
 // add or update song on play
 export const updatePlayingSong = async data => {
@@ -54,24 +41,9 @@ export const updatePlayingSong = async data => {
 };
 
 // like or dislike a song on database
-export const rateSong = async (id, rating, audioEl) => {
-
+export const rateSong = async (id, rating) => {
   // if user likes the song then only download it
-  if (rating === "liked") {
-    var xhr = new XMLHttpRequest();
 
-    xhr.open("GET", "https://cors-anywhere.herokuapp.com/" + audioEl.src);
-    xhr.responseType = "blob";
-    xhr.onload = e => {
-      
-      alert("download completed");
-      db.songs.update(id, {
-        audio: xhr.response
-      });
-    };
-    xhr.send();
-  }
- 
   db.songs.update(id, {
     rating: rating
   });
@@ -88,9 +60,49 @@ export const getHistory = async () => {
 
 export const getLikedSongs = async () => {
   const likedSongs = await db.songs
-    .where("[rating+timestamp]")
+    .where("[rating+timestamp]") //this will filter song based on time and liked
     .between(["liked", Dexie.minKey], ["liked", Dexie.maxKey])
     .reverse()
     .toArray();
   return likedSongs;
 };
+
+export const downloadSong = async (id, url) => {
+  console.log("song started to download");
+  try {
+    const song = await getSongBlob(url);
+    db.songs.update(id, {
+      audio: song
+    });
+    return "downloaded";
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteSongAudio = async id => {
+  await db.songs.update(id, {
+    audio: undefined
+  });;
+  return "song deleted"
+};
+
+function getSongBlob(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://server.ylight.xyz/proxy/" + url);
+    xhr.responseType = "blob";
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status >= 200 && status < 300) {
+        resolve(xhr.response);
+      } else {
+        reject({
+          status: status,
+          statusText: xhr.statusText
+        });
+      }
+    };
+    xhr.send();
+  });
+}

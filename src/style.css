@@ -1,7 +1,57 @@
-/* wanted to zoomed a image little bit so it fits whole */
-.searchThumb img {
-  /* transform: scale(1.4); */
+.render-list-container{
+  position: relative;
 }
+
+/* this is overlay so that when people will click on this the song wont play */
+.download-container{
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  cursor: cell;
+}
+
+.download-container .badge-container{
+  height: 18px;
+  width: 18px;
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  background: #636e72;
+  background: #ec407a;
+  display: block;
+  border-radius: 50%;
+  top: 16px;
+  left: 14px;
+  overflow: hidden;
+      display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download-container img {
+  width: 12px;
+}
+
+/* we will add this class when download starts */
+.downloading-animation img{
+  transform: translateY(-18px);
+  animation: cubic-bezier(0.55, 0.09, 0.68, 0.53) animate-drop 1s infinite;
+}
+
+
+
+
+
+
+@keyframes animate-drop {
+  100%{
+    transform: translateY(18px)
+  }
+}
+
 
 .youtubeIframe {
   /* position: absolute;
@@ -29,26 +79,26 @@
   white-space: nowrap;
 }
 .cardSlider::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* style for the heart shown on music art  */
 
 svg.songHeart {
-    position: absolute;
-    top: 10px;
+  position: absolute;
+  top: 10px;
 
-    font-size: 4em;
-    color: #e91d63;
-    transition: all .3s cubic-bezier(0.82, 0.33, 0, 1.46);
+  font-size: 4em;
+  color: #e91d63;
+  transition: all 0.3s cubic-bezier(0.82, 0.33, 0, 1.46);
 }
 
 svg.songHeart.right {
-    right: -8px;
+  right: -8px;
 }
 
 svg.songHeart.left {
-    left: -8px;
+  left: -8px;
 }
 
 /* style for the playlist of related videos */
@@ -63,7 +113,6 @@ div.RelatedVideoContainer * {
   color: #fff;
 }
 
-
 .playlistHeader {
   padding: 15px;
   position: sticky;
@@ -77,6 +126,6 @@ div.RelatedVideoContainer * {
   margin-right: 50px;
 }
 
-.playlistHeader svg{
+.playlistHeader svg {
   font-size: 1.8em;
 }
