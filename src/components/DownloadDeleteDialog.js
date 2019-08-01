@@ -42,7 +42,7 @@ const DownloadDeleteDialog = ({ isOpen, handleCancel, handleDelete }) => {
           <Button onClick={handleCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete(`${checkBox}`)} color="primary">
+          <Button onClick={ ()=> handleDelete(checkBox)} color="primary">
             Delete
           </Button>
         </DialogActions>

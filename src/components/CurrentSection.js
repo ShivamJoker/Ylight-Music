@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import {
   BrowserRouter as Router,
   withRouter,
@@ -22,11 +22,15 @@ import HomePage from "./sections/HomePage";
 
 import { GlobalContext } from "./GlobalState";
 import SearchResult from "./SearchResult";
-import { getHistory, getLikedSongs } from "../external/saveSong";
+import {
+  getHistory,
+  getLikedSongs,
+  getDownloadedSongs
+} from "../external/saveSong";
 
 import youtubeSearch from "../apis/youtubeSearch";
-
-// const history = createBrowserHistory();
+import { db } from "../external/saveSong";
+// import the db from save song
 
 // custom styling the tab menus
 const CustomTab = withStyles({
@@ -75,6 +79,7 @@ const CurrentSection = ({ history }) => {
 
   const [songsHistoryState, setSongsHistory] = useState([]);
   const [songsLikedState, setSongsLiked] = useState([]);
+  const [songsDownloadedState, setSongsDownloaded] = useState([]);
   const [value, setValue] = useState(0);
 
   // for home playlist
@@ -137,26 +142,49 @@ const CurrentSection = ({ history }) => {
     }
   }, [searchState, history]);
 
-  useEffect(() => {
-    const fetchSongs = async () => {
-      setSongsHistory(await getHistory());
-      setSongsLiked(await getLikedSongs());
-    };
-    fetchSongs();
-    console.log("songs updated from fetched history");
-  }, [currentVideoSnippet, value]);
+  const fetchSongs = async val => {
+    //it's same as the orders of our tabs
+    switch (val) {
+      case 1:
+        setSongsLiked(await getLikedSongs());
+        break;
 
+      case 2:
+        setSongsDownloaded(await getDownloadedSongs());
+        break;
+
+      case 3:
+        setSongsHistory(await getHistory());
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    fetchSongs(value);
+  }, [value, fetchSongs]);
+
+  useEffect(() => {
+    db.songs.hook("updating", function(mod, pKey, obj, trans) {
+      console.log(pKey, obj);
+      fetchSongs(value);
+    });
+  }, []);
 
   // the set tab value will keep the tab active on their route
-  // there are 4 tabs so there will be 3 indexes 
+  // there are 4 tabs so there will be 3 indexes
   return (
     <div>
       <br />
-      <Route exact path="/" 
-       render={props => {
-        setValue(0);
-        return <LoginPage/>;
-      }}
+      <Route
+        exact
+        path="/"
+        render={props => {
+          setValue(0);
+          return <LoginPage />;
+        }}
       />
       <Route
         path="/search"
@@ -173,7 +201,7 @@ const CurrentSection = ({ history }) => {
         path="/downloads"
         render={props => {
           setValue(2);
-          return <RenderDatabase songs={songsHistoryState} />;
+          return <RenderDatabase songs={songsDownloadedState} />;
         }}
       />
       <Route

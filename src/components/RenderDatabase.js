@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FixedSizeList as FixedList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -28,8 +28,25 @@ import { downloadSong, deleteSongAudio } from "../external/saveSong";
 let currentId;
 
 const RenderDatabase = ({ songs }) => {
-  const { setCurrentVideoSnippet, setDownloadOpen } = useContext(GlobalContext);
+  const { setCurrentVideoSnippet, setSnackbarMsg } = useContext(GlobalContext);
   const [deleteDialogState, setDeleteDialogState] = useState(false);
+  const [dontAskPopup, setDontAskPopup] = useState(null);
+
+  useEffect(() => {
+    //convert string to bool
+    const popupLocalState = localStorage.getItem("dontAskPopup") === "true";
+    setDontAskPopup(popupLocalState);
+    // for popup settings
+  }, []);
+
+  const disablePopup = () => {
+    localStorage.setItem("dontAskPopup", true);
+    setDontAskPopup(true);
+  };
+
+  useEffect(() => {
+    console.log("dont ask state", dontAskPopup);
+  }, [dontAskPopup]);
 
   const handleClick = song => {
     // set all the info of current clicked video in this object
@@ -59,21 +76,30 @@ const RenderDatabase = ({ songs }) => {
     // after the downloading is done we will remove the downloading class
     targetElement.classList.remove("downloading-animation");
     targetElement.firstElementChild.innerHTML = ` <img src=${CompletedTick} alt="downloading completed icon"/>`;
-    // set the download glboal state to true
-
-    setDownloadOpen(true);
+    // set the snackbar message
+    setSnackbarMsg("Song Downloaded");
     console.log("song status", status);
   };
 
-  const deleteTheSong = async (e, checkBox) => {
-    // const deleted = await deleteSongAudio(id);
+  const deleteTheSong = async checkBox => {
+    const deleted = await deleteSongAudio(currentId);
+    setDeleteDialogState(false);
+    setSnackbarMsg("Deleted Successfully")
+
     console.log(currentId, checkBox);
+    // we will set it to localstorage the popup option
+    if (checkBox) {
+      disablePopup();
+    }
   };
 
   // hadnling download dialog
   const handleRemoveSong = id => {
     currentId = id;
-    setDeleteDialogState(true);
+    // when user clicks on the download badge we will check the state
+    // then delete the song without showing the popup if dontAskPopup is true
+    // and delete the song by calling deleteTheSong
+    dontAskPopup ? deleteTheSong() : setDeleteDialogState(true);
   };
 
   const renderResult = songs.map((song, index) => {
@@ -135,11 +161,15 @@ const RenderDatabase = ({ songs }) => {
 
   return (
     <List>
-      <DownloadDeleteDialog
-        isOpen={deleteDialogState}
-        handleCancel={() => setDeleteDialogState(false)} // we will just hide the dialog on cancel
-        handleDelete={() => deleteTheSong}
-      />
+      {/* we will render this component only if popup is false */}
+      {dontAskPopup ? null : (
+        <DownloadDeleteDialog
+          isOpen={deleteDialogState}
+          handleCancel={() => setDeleteDialogState(false)} // we will just hide the dialog on cancel
+          handleDelete={deleteTheSong} //if user wants to delete the song we will just do it
+        />
+      )}
+
       {renderResult}
     </List>
   );
