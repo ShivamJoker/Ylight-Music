@@ -7,7 +7,7 @@ export const db = new Dexie("Song_Database");
 // our schema is of storing a song
 db.version(1).stores({
   songs:
-    "&videoId, timestamp, playbackTimes, [rating+timestamp], [isDownloaded+timestamp]"
+    "&videoId, timestamp, playbackTimes, [rating+timestamp], [downloadState+timestamp]"
 });
 
 // add or update song on play
@@ -66,19 +66,21 @@ export const getLikedSongs = async () => {
 
 export const getDownloadedSongs = async () => {
   const downloadedSongs = await db.songs
-    .where("[isDownloaded+timestamp]") //this will filter song based on time and liked
-    .between(["yes", Dexie.minKey], ["yes", Dexie.maxKey])
+    .where("[downloadState+timestamp]") //this will filter song based on time and liked
+    .between(["downloaded", Dexie.minKey], ["downloaded", Dexie.maxKey])
     .reverse()
     .toArray();
   return downloadedSongs;
 };
 
 export const downloadSong = async (id, url) => {
-  console.log("song started to download");
   try {
+    db.songs.update(id, {
+      downloadState: "downloading"
+    });
     const song = await getSongBlob(url);
     db.songs.update(id, {
-      isDownloaded: "yes",
+      downloadState: "downloaded",
       audio: song
     });
     return "downloaded";
@@ -90,6 +92,7 @@ export const downloadSong = async (id, url) => {
 export const deleteSongAudio = async id => {
   await db.songs.where({ videoId: id }).modify(x => {
     delete x.audio;
+    delete x.downloadState;
   });
   return "song deleted";
 };

@@ -64,9 +64,6 @@ const RenderDatabase = ({ songs }) => {
   };
 
   const handleDownload = async (id, event) => {
-    const targetElement = event.currentTarget;
-    // add class to parent element to make downloading animtion
-    targetElement.classList.add("downloading-animation");
     const res = await getAudioLink.get("/song", {
       params: { id: id }
     });
@@ -74,8 +71,6 @@ const RenderDatabase = ({ songs }) => {
     // the download song function takes id and the url
     const status = await downloadSong(id, res.data);
     // after the downloading is done we will remove the downloading class
-    targetElement.classList.remove("downloading-animation");
-    targetElement.firstElementChild.innerHTML = ` <img src=${CompletedTick} alt="downloading completed icon"/>`;
     // set the snackbar message
     setSnackbarMsg("Song Downloaded");
     console.log("song status", status);
@@ -84,7 +79,7 @@ const RenderDatabase = ({ songs }) => {
   const deleteTheSong = async checkBox => {
     const deleted = await deleteSongAudio(currentId);
     setDeleteDialogState(false);
-    setSnackbarMsg("Deleted Successfully")
+    setSnackbarMsg("Deleted Successfully");
 
     console.log(currentId, checkBox);
     // we will set it to localstorage the popup option
@@ -101,6 +96,14 @@ const RenderDatabase = ({ songs }) => {
     // and delete the song by calling deleteTheSong
     dontAskPopup ? deleteTheSong() : setDeleteDialogState(true);
   };
+
+  const returnAnimatedClass = song =>{
+    if (song.downloadState === "downloading") {
+      return "downloading-animation";
+    } else {
+      return "none";
+    }
+  }
 
   const renderResult = songs.map((song, index) => {
     return (
@@ -149,6 +152,7 @@ const RenderDatabase = ({ songs }) => {
           <div className="badge-container">
             {/* if there is audio file then we will show tick mark icon */}
             <img
+              className={returnAnimatedClass(song)}
               src={song.audio ? CompletedTick : DownloadIcon}
               alt="downloading icon"
             />

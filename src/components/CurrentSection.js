@@ -142,7 +142,7 @@ const CurrentSection = ({ history }) => {
     }
   }, [searchState, history]);
 
-  const fetchSongs = async val => {
+  const fetchSongs = useCallback(async val => {
     //it's same as the orders of our tabs
     switch (val) {
       case 1:
@@ -160,7 +160,7 @@ const CurrentSection = ({ history }) => {
       default:
         break;
     }
-  };
+  }, [value]);
 
   useEffect(() => {
     fetchSongs(value);
@@ -171,7 +171,7 @@ const CurrentSection = ({ history }) => {
       console.log(pKey, obj);
       fetchSongs(value);
     });
-  }, []);
+  }, [fetchSongs]);
 
   // the set tab value will keep the tab active on their route
   // there are 4 tabs so there will be 3 indexes

@@ -36,7 +36,7 @@
 }
 
 /* we will add this class when download starts */
-.downloading-animation img{
+.downloading-animation {
   transform: translateY(-18px);
   animation: cubic-bezier(0.55, 0.09, 0.68, 0.53) animate-drop 1s infinite;
 }
