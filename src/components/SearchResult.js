@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { motion, useCycle } from "framer-motion";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import { GlobalContext } from "./GlobalState";
 
@@ -38,10 +38,10 @@ const liVariants = {
 
 const ulVariants = {
   open: {
-    transition: { staggerChildren: 0.18, delayChildren: 0.5 }
+    transition: { staggerChildren: 0.07, delayChildren: 0.2 }
   },
   closed: {
-    transition: { staggerChildren: 0.15, staggerDirection: -1 }
+    transition: { staggerChildren: 0.05, staggerDirection: -1 }
   }
 };
 
@@ -66,20 +66,12 @@ const SearchResult = ({ videos }) => {
       }/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
-    const searchRelated = async () => {
-      const res = await youtubeSearch.get("/search", {
-        params: {
-          relatedToVideoId: video.id.videoId,
-          maxResults: 10
-        }
-      });
-      setRelatedVideos(res.data.items);
-    };
-    searchRelated();
   };
 
   React.useEffect(() => {
+    setTimeout(() => {
       setisOpen(true);
+    }, 1000);
   }, []);
 
   const renderResult = videos.map(video => {
@@ -90,8 +82,8 @@ const SearchResult = ({ videos }) => {
           alignItems="flex-start"
           button
           onClick={() => handleClick(video)}
-          component={Link}
-          to={`/song/${video.id.videoId}`}
+          // component={Link}
+          // to={{pathname: "/play", search:`?id=${video.id.videoId}`}}
         >
           <ListItemAvatar>
             <Avatar
@@ -124,8 +116,8 @@ const SearchResult = ({ videos }) => {
   return (
     <motion.div
       variants={ulVariants}
-      // animate={isOpen ? "open" : "closed"}
-      initial={true}
+      initial={false}
+      animate={isOpen ? "open" : "closed"}
     >
       {renderResult}
     </motion.div>

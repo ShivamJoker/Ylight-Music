@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import {
@@ -16,7 +17,8 @@ import {
   LibraryMusic,
   Shuffle,
   Repeat,
-  KeyboardArrowUp
+  KeyboardArrowUp,
+  KeyboardArrowDown
 } from "@material-ui/icons";
 
 import { GlobalContext } from "./GlobalState";
@@ -35,7 +37,7 @@ const shuffle = arry =>
     [...arry]
   );
 
-const RelatedVideos = ({ onMaximizePlaylist }) => {
+const RelatedVideos = ({ toggleMaxPlaylist, setPlaylist, playerState }) => {
   const {
     relatedVideos,
     setRelatedVideos,
@@ -65,30 +67,29 @@ const RelatedVideos = ({ onMaximizePlaylist }) => {
       }/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
+    setPlaylist();
   };
 
   if (relatedVideos.length > 1) {
     renderResult = relatedVideos.map(song => {
       return (
-        <motion.li
-          key={song.id.videoId}
-          positionTransition={spring}
-          
-        >
-
-        <ListItem
-          // key={song.id.videoId}
-          button
-          onClick={() => handleClick(song)}
-        >
-          <ListItemIcon>
-            <MusicVideo style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={song.snippet.title.slice(0, 40)}
-            secondary={song.snippet.channelTitle.slice(0, 40)}
-          />
-        </ListItem>
+        <motion.li key={song.id.videoId} positionTransition={spring}>
+          <ListItem
+            // key={song.id.videoId}
+            button
+            onClick={() => handleClick(song)}
+            // component={Link}
+            // replace
+            // to={{ pathname: "/play", search: `?id=${song.id.videoId}` }}
+          >
+            <ListItemIcon>
+              <MusicVideo style={{ color: "#fff" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary={song.snippet.title.slice(0, 40)}
+              secondary={song.snippet.channelTitle.slice(0, 40)}
+            />
+          </ListItem>
         </motion.li>
       );
     });
@@ -96,8 +97,16 @@ const RelatedVideos = ({ onMaximizePlaylist }) => {
     return "Loading the playlist";
   }
 
+  const returnPlaylistExpandBtn = () => {
+    if (playerState === "playlist") {
+      return <KeyboardArrowDown onClick={toggleMaxPlaylist} />;
+    } else {
+      return <KeyboardArrowUp onClick={toggleMaxPlaylist} />;
+    }
+  };
+
   return (
-    <div className={"RelatedVideoContainer"}>
+    <div className="RelatedVideoContainer">
       <Grid
         className={"playlistHeader"}
         container
@@ -106,14 +115,12 @@ const RelatedVideos = ({ onMaximizePlaylist }) => {
         justify="space-between"
       >
         <LibraryMusic />
-        <Typography variant="h5">Coming Next</Typography>
+        <Typography variant="h6">Coming Next</Typography>
         <Shuffle onClick={handleShuffleClick} />
         <Repeat />
-        <KeyboardArrowUp onClick={onMaximizePlaylist} />
+        {returnPlaylistExpandBtn()}
       </Grid>
-      <List dense={true}>
-       {renderResult}
-      </List>
+      <List dense={true}>{renderResult}</List>
     </div>
   );
 };

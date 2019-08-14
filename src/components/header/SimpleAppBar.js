@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-
+import { withRouter } from "react-router-dom";
 import { GlobalContext } from "../GlobalState";
 
 import SearchBox from "./SearchBox";
@@ -41,18 +41,31 @@ function HideOnScroll(props) {
   );
 }
 
-
 function SimpleAppBar(props) {
   const { searchState, setSearchState } = useContext(GlobalContext);
   const { setMenuOpen } = useContext(GlobalContext);
 
-  const { classes } = props;
-  
+  const setOpenMenu = () => {
+    setMenuOpen(true);
+  };
 
-  const setOpenMenu = ()=>{
-    setMenuOpen(true)
-  }
-  
+  React.useEffect(() => {
+    // if the page is on search we will change the search state
+    const changeAppBar = () => {
+      const path = props.history.location.pathname;
+      if (path === "/search") {
+        setSearchState("searching");
+      } else {
+        setSearchState("home");
+      }
+      console.log("history change detected in app bar");
+    };
+
+    changeAppBar();
+    const unlisten = props.history.listen(location => {
+      changeAppBar();
+    });
+  }, [setSearchState, props.history]);
 
   const toggleSearch = () => {
     if (searchState === "home") {
@@ -61,7 +74,7 @@ function SimpleAppBar(props) {
           <IconButton color="inherit" aria-label="Menu" onClick={setOpenMenu}>
             <Menu />
           </IconButton>
-          <Typography className={classes.title} variant="h6" color="inherit">
+          <Typography variant="h6" color="inherit" style={styles.title}>
             Ylight Music
           </Typography>
           <IconButton
@@ -89,8 +102,4 @@ function SimpleAppBar(props) {
   );
 }
 
-SimpleAppBar.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(SimpleAppBar);
+export default withRouter(SimpleAppBar);

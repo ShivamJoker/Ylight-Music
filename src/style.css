@@ -53,23 +53,18 @@
 }
 
 
-.youtubeIframe {
-  /* position: absolute;
-    top: -100vh;
-    left: -100vw; */
-}
 
-.pinkLists > div,
+.pinkLists > a,
 .pinkLists svg {
   color: #e91e63;
 }
-.pinkLists > div {
+.pinkLists > a {
   margin: 5px;
   background: #e91d6312;
   border-radius: 5px;
   width: auto;
 }
-.pinkLists > div:hover {
+.pinkLists > a:hover {
   background: #e91d6423;
 }
 
@@ -106,7 +101,8 @@ svg.songHeart.left {
 .RelatedVideoContainer {
   background: #e91d63;
   overflow: auto;
-  height: 100%;
+  height: calc(100% - 200px); 
+  /* half of the portion will be taken by player */
 }
 
 div.RelatedVideoContainer * {
@@ -114,7 +110,7 @@ div.RelatedVideoContainer * {
 }
 
 .playlistHeader {
-  padding: 15px;
+  padding: 7px 15px;
   position: sticky;
   top: 0;
   background: #e91d63;
@@ -122,10 +118,10 @@ div.RelatedVideoContainer * {
   box-shadow: #06060640 0px 2px 3px;
 }
 
-.playlistHeader h5 {
+.playlistHeader h6 {
   margin-right: 50px;
 }
 
 .playlistHeader svg {
-  font-size: 1.8em;
+  /* font-size: 1.8em; */
 }

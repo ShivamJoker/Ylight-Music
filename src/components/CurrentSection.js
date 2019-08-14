@@ -3,10 +3,10 @@ import {
   BrowserRouter as Router,
   withRouter,
   Route,
-  Link
+  Link,
+  Switch
 } from "react-router-dom";
-import { createBrowserHistory } from "history";
-
+import { AnimatePresence } from "framer-motion";
 import { Tabs, Tab, withStyles } from "@material-ui/core";
 import {
   Home,
@@ -19,6 +19,7 @@ import LoginPage from "./LoginPage";
 import RenderDatabase from "./RenderDatabase";
 
 import HomePage from "./sections/HomePage";
+import FeedbackForm from './sections/FeedbackForm'
 
 import { GlobalContext } from "./GlobalState";
 import SearchResult from "./SearchResult";
@@ -28,7 +29,6 @@ import {
   getDownloadedSongs
 } from "../external/saveSong";
 
-import youtubeSearch from "../apis/youtubeSearch";
 import { db } from "../external/saveSong";
 // import the db from save song
 
@@ -63,16 +63,7 @@ const CustomTabs = withStyles({
   selected: {}
 })(Tab);
 
-const playlistsIds = {
-  LatestSongs: "PLFgquLnL59akA2PflFpeQG9L01VFg90wS",
-  RomanticSongs: "PL64G6j8ePNureM8YCKy5nRFyzYf8I2noy",
-  EdmSongs: "PLw-VjHDlEOgs658kAHR_LAaILBXb-s6Q5",
-  TopBolloywood: "PLcRN7uK9CFpPkvCc-08tWOQo6PAg4u0lA",
-  TopPop: "PLDcnymzs18LU4Kexrs91TVdfnplU3I5zs",
-  Reggaeton: "PLS_oEMUyvA728OZPmF9WPKjsGtfC75LiN"
-};
-
-const CurrentSection = ({ history }) => {
+const CurrentSection = ({ history, location }) => {
   const { searchState } = useContext(GlobalContext);
   const { searchResult } = useContext(GlobalContext);
   const { currentVideoSnippet } = useContext(GlobalContext);
@@ -80,71 +71,17 @@ const CurrentSection = ({ history }) => {
   const [songsHistoryState, setSongsHistory] = useState([]);
   const [songsLikedState, setSongsLiked] = useState([]);
   const [songsDownloadedState, setSongsDownloaded] = useState([]);
-  const [value, setValue] = useState(0);
-
-  // for home playlist
-  const [songObj, setSongObj] = useState({});
-
-  useEffect(() => {
-    const getTrendingMusic = async () => {
-      const res = await youtubeSearch.get("videos", {
-        params: {
-          chart: "mostPopular",
-          videoCategoryId: "10",
-          regionCode: localStorage.getItem("country_code")
-        }
-      });
-
-      return res.data.items;
-    };
-
-    const getPlayListItems = async data => {
-      const res = await youtubeSearch.get("playlistItems", {
-        params: {
-          playlistId: data
-        }
-      });
-      return res.data.items;
-    };
-
-    // getTrendingMusic().then(data => {
-    //   setSongObj(prevState => {
-    //     return { ...prevState, ...{ trending: data } };
-    //   });
-    // });
-
-    // getPlayListItems(playlistsIds.LatestSongs).then(data => {
-    //   setSongObj(prevState => {
-    //     return { ...prevState, ...{ latestSongs: data } };
-    //   });
-    // });
-
-    // getPlayListItems(playlistsIds.RomanticSongs).then(data => {
-    //   setSongObj(prevState => {
-    //     return { ...prevState, ...{ romanticSongs: data } };
-    //   });
-    // });
-
-    // getPlayListItems(playlistsIds.TopBolloywood).then(data => {
-    //   setSongObj(prevState => {
-    //     return { ...prevState, ...{ topBolloywood: data } };
-    //   });
-    // });
-  }, []);
+  const [tabValue, setTabValue] = useState(0);
+  const [updateCount, setUpdateCount] = useState(0);
+  const [redirectState, setRedirectState] = useState(null);
 
   function handleChange(event, newValue) {
-    setValue(newValue);
+    setTabValue(newValue);
   }
 
-  useEffect(() => {
-    if (searchState === "completed") {
-      history.push("/search");
-    }
-  }, [searchState, history]);
-
-  const fetchSongs = useCallback(async val => {
+  const fetchSongs = useCallback(async () => {
     //it's same as the orders of our tabs
-    switch (val) {
+    switch (tabValue) {
       case 1:
         setSongsLiked(await getLikedSongs());
         break;
@@ -160,30 +97,51 @@ const CurrentSection = ({ history }) => {
       default:
         break;
     }
-  }, [value]);
+  }, [tabValue]);
 
   useEffect(() => {
-    fetchSongs(value);
-  }, [value, fetchSongs]);
+    fetchSongs();
+  }, [tabValue, fetchSongs]);
 
   useEffect(() => {
-    db.songs.hook("updating", function(mod, pKey, obj, trans) {
-      console.log(pKey, obj);
-      fetchSongs(value);
+    fetchSongs();
+    console.log("fetching the songs");
+  }, [updateCount, fetchSongs]);
+
+  useEffect(() => {
+    db.on("changes", () => {
+      setUpdateCount(c => c + 1);
     });
-  }, [fetchSongs]);
 
+    const isThisNewUser = localStorage.getItem("isThisNew");
+    if (isThisNewUser === "no") {
+      setRedirectState(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    // we will redirect everytime user comes to root page
+    if (redirectState && history.location.pathname === "/") {
+      history.replace("/home");
+    }
+  }, [setRedirectState, history, redirectState]);
+
+  // we will load the homepage with all the playlists
+  const continueToHome = () => {
+    localStorage.setItem("isThisNew", "no");
+    history.replace("/home");
+  };
   // the set tab value will keep the tab active on their route
   // there are 4 tabs so there will be 3 indexes
   return (
     <div>
       <br />
+
       <Route
         exact
         path="/"
         render={props => {
-          setValue(0);
-          return <LoginPage />;
+          return <LoginPage continueToHome={continueToHome} />;
         }}
       />
       <Route
@@ -191,38 +149,56 @@ const CurrentSection = ({ history }) => {
         render={props => <SearchResult videos={searchResult} />}
       />
       <Route
+        path="/home"
+        render={props => {
+          setTabValue(0);
+          return <HomePage />;
+        }}
+      />
+      {/* <AnimatePresence exitBeforeEnter initial={false}> */}
+      {/* <Switch key={location.pathname}> */}
+      <Route
         path="/liked"
         render={props => {
-          setValue(1);
+          setTabValue(1);
           return <RenderDatabase songs={songsLikedState} {...props} />;
         }}
       />
       <Route
         path="/downloads"
         render={props => {
-          setValue(2);
+          setTabValue(2);
           return <RenderDatabase songs={songsDownloadedState} />;
         }}
       />
       <Route
         path="/history"
         render={props => {
-          setValue(3);
+          setTabValue(3);
 
           return <RenderDatabase songs={songsHistoryState} />;
         }}
       />
+      {/* </Switch> */}
+      {/* </AnimatePresence> */}
 
-      <Route path="/privacy" component={"Your privacy page is here"} />
+      <Route path="/privacy" component={"<div>Your privacy page is here</div>"} />
+
+      <Route path="/feedback" component={FeedbackForm} />
 
       <CustomTab
-        value={value}
+        value={tabValue}
         onChange={handleChange}
         variant="fullWidth"
         indicatorColor="primary"
         textColor="primary"
       >
-        <CustomTabs icon={<Home />} aria-label="Home" component={Link} to="/" />
+        <CustomTabs
+          icon={<Home />}
+          aria-label="Home"
+          component={Link}
+          to="/home"
+        />
 
         <CustomTabs
           icon={<Favorite />}

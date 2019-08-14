@@ -65,15 +65,15 @@ const MusicArt = ({ data, rating, audioEl }) => {
     setTimeout(() => {
       setHeartStyle({ transform: "scale(1)" });
     }, 300);
-  },[setHeartStyle]);
+  }, [setHeartStyle]);
 
-  const dislikeSong = useCallback(()=> {
+  const dislikeSong = useCallback(() => {
     rateSong(data.id, "disliked");
     setHeartStyle({ transform: "scale(0)" });
     setTimeout(() => {
       setHeartStyle({ transform: "scale(1)", color: "#2d3436" });
     }, 300);
-  },[setHeartStyle, data.id]);
+  }, [setHeartStyle, data.id]);
 
   React.useEffect(() => {
     if (rating === "liked") {
@@ -83,7 +83,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
     } else {
       setHeartStyle({ transform: "scale(0)" });
     }
-  }, [rating, likeSong, dislikeSong, setHeartStyle, ]);
+  }, [rating, likeSong, dislikeSong, setHeartStyle]);
 
   // if we find the channel name is before the song title we will remove it
   //using the regex
@@ -99,6 +99,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
       direction="column"
       justify="center"
       alignItems="center"
+      style={{ marginTop: "40px" }}
       onClick={e => {
         if (isDblTouchTap(e)) {
           likeSong();
@@ -112,7 +113,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
         drag
         dragElastic={true}
         dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }}
-        dragConstraints={{ left: 0, right: 0 ,top: 0, bottom: 0}}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
         style={artContainerStyle}
         {...swipeUpHandler}
       >

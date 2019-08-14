@@ -17,6 +17,7 @@ const DownloadDeleteDialog = ({ isOpen, handleCancel, handleDelete }) => {
   return (
     <div>
       <Dialog
+        style={{ zIndex: 1500 }}
         open={isOpen}
         onClose={handleCancel}
         aria-labelledby="alert-dialog-title"
@@ -42,7 +43,7 @@ const DownloadDeleteDialog = ({ isOpen, handleCancel, handleDelete }) => {
           <Button onClick={handleCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={ ()=> handleDelete(checkBox)} color="primary">
+          <Button onClick={() => handleDelete(checkBox)} color="primary">
             Delete
           </Button>
         </DialogActions>

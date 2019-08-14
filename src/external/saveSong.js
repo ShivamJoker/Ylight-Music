@@ -1,4 +1,5 @@
 import Dexie from "dexie";
+import 'dexie-observable';
 
 // Define your database
 export const db = new Dexie("Song_Database");
@@ -9,6 +10,8 @@ db.version(1).stores({
   songs:
     "&videoId, timestamp, playbackTimes, [rating+timestamp], [downloadState+timestamp]"
 });
+
+db.version(2).stores({});
 
 // add or update song on play
 export const updatePlayingSong = async data => {

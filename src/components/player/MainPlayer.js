@@ -1,8 +1,14 @@
 import React, { useEffect, useContext, useState, useRef } from "react";
 import { Grid } from "@material-ui/core";
 import { useSwipeable } from "react-swipeable";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import AudioSpectrum from "react-audio-spectrum";
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  withRouter
+} from "react-router-dom";
 import { motion } from "framer-motion";
 
 import PlayPauseButton from "./PlayPauseButton";
@@ -10,7 +16,7 @@ import NextButton from "./NextButton";
 import PreviousButton from "./PreviousButton";
 import MusicArt from "./MusicArt";
 import TimelineController from "./TimelineController";
-import VolumeController from "./VolumeController";
+import TopBar from "./TopBar";
 import MiniMusicArt from "./MiniMusicArt";
 import RelatedVideos from "../RelatedVideos";
 import getAudioLink from "../../apis/getAudioLink";
@@ -27,20 +33,22 @@ let songIndex = 0;
 // window.onbeforeunload = function() {
 //   return 'You have unsaved changes!';
 // }
-const history = createBrowserHistory();
 
-const MainPlayer = () => {
+const MainPlayer = ({ location, history }) => {
+  let params = new URLSearchParams(location.search);
+
   const {
     currentVideoSnippet,
     setCurrentVideoSnippet,
+    setRelatedVideos,
     relatedVideos
   } = useContext(GlobalContext);
 
+  const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
+  //
   const [audioState, setAudioState] = useState(null);
   // there will be 4 states
   // loading, loaded, playing, paused
-
-  const [currentTime, setCurrentTime] = useState(0);
 
   const [playerState, setPlayerState] = useState(null);
   // there will be 3 states
@@ -68,8 +76,12 @@ const MainPlayer = () => {
       });
 
       // set the audio data
-      audioPlayer.current.src = res.data;
+      audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
       // audioPlayer.current.load();
+      // audioPlayer.current.play();
+      // var audioContext = new AudioContext();
+      // var track = audioContext.createMediaElementSource(audioPlayer.current);
+      // track.connect(audioContext.destination);
     };
 
     if (currentVideoSnippet.audio) {
@@ -112,16 +124,46 @@ const MainPlayer = () => {
           playNext();
         });
       }
+      const searchRelated = async () => {
+        const res = await youtubeSearch.get("/search", {
+          params: {
+            relatedToVideoId: currentVideoSnippet.id,
+            maxResults: 10
+          }
+        });
+        setRelatedVideos(res.data.items);
+      };
+
+      // if the click is not from playlist then only we will search for realated video
+      if (!isItFromPlaylist) {
+        console.log("searching for related vids");
+        // if player is in playlist mode we will just replace history else push it
+        if (location.pathname !== "/play") {
+          // prevent duplicating history
+          history.push(`/play?id=${currentVideoSnippet.id}`);
+        }
+
+        searchRelated();
+      } else {
+        history.replace(`/play?id=${currentVideoSnippet.id}`);
+      }
+      console.log(currentVideoSnippet);
     }
 
     // set rating to none when we load new song
     setRating("none");
     console.log("initial render");
+  }, [currentVideoSnippet, setIsItFromPlaylist]);
 
-    console.log(currentVideoSnippet);
-  }, [currentVideoSnippet]);
+  useEffect(() => {
+    console.log("from playlist", isItFromPlaylist);
+
+    setIsItFromPlaylist(false);
+  }, [isItFromPlaylist]);
 
   const playNext = () => {
+    // also set this is from playlist
+    setIsItFromPlaylist(true);
     const video = relatedVideos[songIndex];
     console.log(songIndex);
     setCurrentVideoSnippet({
@@ -130,7 +172,7 @@ const MainPlayer = () => {
       channelTitle: video.snippet.channelTitle,
       maxThumbnail: `https://img.youtube.com/vi/${
         video.id.videoId
-      }/maxresdefault.jpg`,
+      }/hqdefault.jpg`,
       sdThumbnail: `https://img.youtube.com/vi/${
         video.id.videoId
       }/sddefault.jpg`
@@ -140,11 +182,7 @@ const MainPlayer = () => {
     songIndex++;
   };
 
-  // useEffect(() => {
-  //   if (audioState === "playing") {
-  //     updatePlayingSong(currentVideoSnippet);
-  //   }
-  // }, [audioState, currentVideoSnippet]);
+  console.log("this is from player");
 
   let playerStyle = {
     position: "fixed",
@@ -175,24 +213,27 @@ const MainPlayer = () => {
   }
 
   if (playerState === "playlist") {
-    playerStyle.transform = "translateY(-390px)";
+    playerStyle.transform = "translateY(-418px)";
   }
 
   const expandPlayer = () => {
     if (playerState === "minimized") {
       setPlayerState("maximized");
       setMinimized(true);
+      history.push({
+        pathname: "/play",
+        search: `?id=${currentVideoSnippet.id}`
+      });
     }
-    history.push(`/song/${currentVideoSnippet.id}`);
   };
 
-  const maximizePlaylist = () => {
-    setPlayerState("playlist");
-    console.log("Maximize the playlist")
-  };
-
-  const timeUpdate = () => {
-    setCurrentTime(audioPlayer.current.currentTime);
+  const toggleMaxPlaylist = () => {
+    if (playerState === "playlist") {
+      setPlayerState("maximized");
+    } else {
+      setPlayerState("playlist");
+    }
+    console.log("Maximize the playlist");
   };
 
   const updateSongDB = async () => {
@@ -202,10 +243,35 @@ const MainPlayer = () => {
     console.log(rating);
   };
 
-  const swipeHandler = useSwipeable({
+  let initPosition = 0;
+  const containerRef = useRef(null)
+ 
+  const swipeHandlerMaximized = useSwipeable({
     onSwipedDown: e => {
       setPlayerState("minimized");
       history.goBack();
+    },
+    onSwiping: e => {
+      // console.log(e);
+      // getting the event for touches to extract the position
+      if (initPosition === 0) {
+        initPosition = e.event.changedTouches[0].screenY;
+      }
+
+      const screenY = e.event.changedTouches[0].screenY;
+      let positionDifference = Math.round(screenY - initPosition);
+      if (positionDifference < 1) {
+        positionDifference = 0;
+      }
+      console.log(positionDifference);
+      const containerRefStyle = containerRef.current.style
+      containerRefStyle.transform = `translateY(${positionDifference}px)`;
+      containerRefStyle.transition = "none"
+      console.log(containerRef)
+    },
+    onSwiped: e =>{
+      initPosition = 0;
+      // we will make the initial position 0 again after user leaves the screen
     },
     onSwipedUp: e => {
       if (playerState === "minimized") {
@@ -224,47 +290,70 @@ const MainPlayer = () => {
     // Listen for changes to the current location.
     const unlisten = history.listen(location => {
       // location is an object like window.location
-      if (location.pathname.slice(1, 5) === "song") {
-        // setPlayerState("maximized");
+      if (location.pathname === "/play") {
+        setPlayerState("maximized");
       } else {
-        // setPlayerState("minimized");
+        setPlayerState("minimized");
+        console.log("set player state to minimized");
       }
+      console.log(history);
     });
-  }, []);
+  }, [history]);
 
   useEffect(() => {
-    console.log(playerState)
-  }, [playerState])
+    console.log(playerState);
+  }, [playerState]);
 
   const returnMaximizedPlayer = () => {
     if (playerState === "maximized" || playerState === "playlist") {
       return (
         <>
-          <VolumeController player={player} setPlayerState={setPlayerState} />
-          <MusicArt
-            data={currentVideoSnippet}
-            rating={rating}
-            audioEl={player}
-          />
-          <TimelineController currentTime={currentTime} player={player} />
           <Grid
             container
-            direction="row"
-            justify="space-evenly"
-            alignItems="center"
+            direction="column"
+            style={{
+              height: " calc(100vh - 46px)",
+              justifyContent: "space-evenly"
+            }}
           >
-            <PreviousButton />
-            <PlayPauseButton player={player} audioState={audioState} />
-            <NextButton onPlayNext={playNext} />
+            <TopBar
+              song={currentVideoSnippet}
+              player={player}
+              setPlayerState={setPlayerState}
+            />
+            <div {...swipeHandlerMaximized}>
+              <MusicArt
+                data={currentVideoSnippet}
+                rating={rating}
+                audioEl={player}
+              />
+            </div>
+            <TimelineController audioState={audioState} player={player} />
+
+            <Grid
+              container
+              direction="row"
+              justify="space-evenly"
+              alignItems="center"
+              style={{ maxWidth: "290px", height: "80px", margin: "0 auto" }}
+            >
+              <PreviousButton />
+              <PlayPauseButton player={player} audioState={audioState} />
+              <NextButton onPlayNext={playNext} />
+            </Grid>
           </Grid>
-          <RelatedVideos onMaximizePlaylist={maximizePlaylist} />
+          <RelatedVideos
+            toggleMaxPlaylist={toggleMaxPlaylist}
+            setPlaylist={() => setIsItFromPlaylist(true)}
+            playerState={playerState}
+          />
         </>
       );
     }
   };
 
   const returnMinimizedPlayer = () => {
-    if (playerState === "minimized") {
+    if (playerState === "minimized" && currentVideoSnippet.id) {
       return (
         <>
           <MiniMusicArt
@@ -277,7 +366,7 @@ const MainPlayer = () => {
             data={currentVideoSnippet}
           />
           <TimelineController
-            currentTime={currentTime}
+            audioState={audioState}
             player={player}
             minimized={minimized}
           />
@@ -314,24 +403,26 @@ const MainPlayer = () => {
 
     // if there is no current sinppet we will make it
     if (!currentVideoSnippet.id) {
-      fetchAndSetCurrentVideoSnippet(props.match.params.songId); // math will give the song id from
+      fetchAndSetCurrentVideoSnippet(params.get("id")); // math will give the song id from
     }
     return (
       <div
         // drag="y"
         // dragConstraints={{ top: 0, bottom: 600 }}
+        ref={containerRef}
         style={playerStyle}
         onClick={expandPlayer}
-        {...swipeHandler}
       >
         {returnMaximizedPlayer()}
         {returnMinimizedPlayer()}
         <audio
           src=""
-          onTimeUpdate={timeUpdate}
+          crossOrigin="anonymous"
+          // onTimeUpdate={timeUpdate}
           onLoadStart={() => {
             setAudioState("loading");
           }}
+          id="audio-element"
           onLoadedData={updateSongDB}
           // onCanPlay={() => setAudioState("loaded")}
           onPlay={() => setAudioState("playing")}
@@ -349,12 +440,8 @@ const MainPlayer = () => {
     return renderWholePlayer();
   } else {
     console.log("nothing found");
-    return (
-      <Router>
-        <Route path="/song/:songId" component={renderWholePlayer} />
-      </Router>
-    );
+    return <Route path="/play" component={renderWholePlayer} />;
   }
 };
 
-export default MainPlayer;
+export default withRouter(MainPlayer);

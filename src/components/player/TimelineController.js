@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { withStyles, Typography, Grid } from "@material-ui/core/";
-import Slider from "@material-ui/lab/Slider";
+import React, { useState, useEffect } from "react";
+import { withStyles, Typography, Grid, Slider } from "@material-ui/core/";
 import { PauseCircleFilled } from "@material-ui/icons/";
 
 const PrettoSlider = withStyles({
@@ -62,11 +61,29 @@ const formatTime = secs => {
   return `${minutes}:${seconds}`;
 };
 
-const TimelineController = ({ currentTime, player, minimized }) => {
+const TimelineController = ({ audioState, player, minimized }) => {
   const [value, setValue] = useState(50);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    if (player) {
+      setCurrentTime(player.currentTime);
+    }
+    // we will update the time of player every 800ms
+    let setTimeInterval;
+    if (audioState === "playing") {
+      setTimeInterval = setInterval(() => {
+        setCurrentTime(player.currentTime);
+      }, 800);
+    } else {
+      clearInterval(setTimeInterval);
+    }
+    return () => clearInterval(setTimeInterval);
+  }, [audioState, player]);
 
   const handleChange = (event, newValue) => {
     player.currentTime = newValue;
+    setCurrentTime(newValue);
   };
 
   const showDuration = () => {
@@ -84,10 +101,7 @@ const TimelineController = ({ currentTime, player, minimized }) => {
   // condition rendering
   if (minimized) {
     return (
-      <MiniSlider
-          value={currentTime}
-          max={player ? player.duration : 0}
-        />
+      <MiniSlider value={currentTime} max={player ? player.duration : 0} />
     );
   } else {
     return (
@@ -106,7 +120,6 @@ const TimelineController = ({ currentTime, player, minimized }) => {
           onChange={handleChange}
           max={player ? player.duration : 0}
         />
-        
       </div>
     );
   }

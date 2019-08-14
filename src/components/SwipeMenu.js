@@ -12,16 +12,13 @@ import {
   withStyles
 } from "@material-ui/core";
 import { AccountCircle, Feedback, Info } from "@material-ui/icons";
+import { Link } from "react-router-dom";
 
 import gIcon from "../images/google.svg";
 
-
 import { GlobalContext } from "./GlobalState";
 
-
 const SwipeMenu = () => {
-
-
   const largeAvator = {
     width: "50px",
     height: "50px",
@@ -29,11 +26,7 @@ const SwipeMenu = () => {
     background: "#e91e63"
   };
 
-
-  const openPrivacy = ()=>{
-    window.open("./privacy")
-  }
-
+ 
   const { menuOpen, setMenuOpen } = useContext(GlobalContext);
 
   return (
@@ -72,19 +65,19 @@ const SwipeMenu = () => {
         <Divider />
 
         <List component="nav" className={"pinkLists"}>
-          <ListItem button>
+
+          <ListItem button component={Link} to="/feedback">
             <ListItemIcon>
               <Feedback />
             </ListItemIcon>
             <ListItemText primary="Feedback" />
           </ListItem>
-            <ListItem button onClick={openPrivacy}>
-              <ListItemIcon>
-                <Info />
-              </ListItemIcon>
-              <ListItemText primary="Privacy & Policy" />
-            </ListItem>
-
+          <ListItem button component={Link} to="/privacy">
+            <ListItemIcon>
+              <Info />
+            </ListItemIcon>
+            <ListItemText primary="Privacy & Policy" />
+          </ListItem>
         </List>
       </div>
     </SwipeableDrawer>

@@ -15,7 +15,9 @@ import suggestSearch from "../../apis/suggestSearch";
 import AutoSearchResult from "./AutoSearchResult";
 import youtubeSearch from "../../apis/youtubeSearch";
 
-const SearchBox = ({ history }) => {
+const SearchBox = ({ history, location }) => {
+  let params = new URLSearchParams(location.search);
+
   const { setSearchResult } = useContext(GlobalContext);
   const { searchState, setSearchState } = useContext(GlobalContext);
 
@@ -34,6 +36,17 @@ const SearchBox = ({ history }) => {
     setSearchQuery(result);
     setYtSearchQuery(result);
     setSearchState("searching");
+    history.push({ pathname: "/search", search: `?q=${searchQuery}` });
+  };
+
+  // when user hits enter then also fetch the data from yt api
+  const onSearchSubmit = e => {
+    e.preventDefault();
+    console.log(e.target.lastChild);
+    e.target.lastChild.lastChild.blur();
+    setSearchState("searching");
+    setYtSearchQuery(searchQuery);
+    history.push({ pathname: "/search", search: `?q=${searchQuery}` });
   };
 
   // for controlled input change
@@ -50,15 +63,6 @@ const SearchBox = ({ history }) => {
       }
     });
     setAutoSearch(response.data[1]);
-  };
-
-  // when user hits enter then also fetch the data from yt api
-  const onSearchSubmit = e => {
-    e.preventDefault();
-    console.log(e.target.lastChild);
-    e.target.lastChild.lastChild.blur();
-    setSearchState("searching");
-    setYtSearchQuery(searchQuery);
   };
 
   // get youtube search result from api
@@ -81,17 +85,31 @@ const SearchBox = ({ history }) => {
   }, [ytSearchQuery, setSearchResult, setSearchState]);
 
   useEffect(() => {
+    console.log("search state", searchState);
+  }, [searchState]);
+
+  useEffect(() => {
     // Listen for changes to the current location.
-    const unlisten = history.listen(location => {
-      // location is an object like window.location
-      const path = location.pathname;
-      if (path.slice(1, 7) === "search" || path.slice(1, 5) === "song") {
-        setSearchState("searched");
-      } else {
-        setSearchState("home");
-      }
-    });
-  }, [history, setSearchState]);
+    const query = params.get("q");
+    if (query) {
+      setYtSearchQuery(query);
+      setSearchQuery(query);
+      setSearchState("searching");
+      console.log("changing query to", query);
+    }
+
+    // const unlisten = history.listen(location => {
+    //   // setYtSearchQuery(params.get("q"));
+    //   // we will se the q from params
+    //   // location is an object like window.location
+    //   const path = location.pathname;
+    //   // if (path.slice(1, 7) === "search" || path.slice(1, 5) === "song") {
+    //   //   setSearchState("searched");
+    //   // } else {
+    //   //   setSearchState("home");
+    //   // }
+    // });
+  }, [setSearchState, setYtSearchQuery]);
 
   // show loading icon while we fetch the results from api
 
@@ -129,7 +147,10 @@ const SearchBox = ({ history }) => {
       <IconButton
         onClick={() => {
           setSearchState("home");
-          history.goBack();
+          if (history.location.pathname === "/search") {
+            history.goBack();
+          }
+          // only go back if u have searched something
         }}
         color="inherit"
         aria-label="Menu"

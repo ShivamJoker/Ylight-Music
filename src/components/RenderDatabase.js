@@ -27,8 +27,9 @@ import { downloadSong, deleteSongAudio } from "../external/saveSong";
 
 let currentId;
 
-const RenderDatabase = ({ songs }) => {
-  const { setCurrentVideoSnippet, setSnackbarMsg } = useContext(GlobalContext);
+export const useSongMethods = songId => {
+  const { setSnackbarMsg } = useContext(GlobalContext);
+
   const [deleteDialogState, setDeleteDialogState] = useState(false);
   const [dontAskPopup, setDontAskPopup] = useState(null);
 
@@ -39,6 +40,20 @@ const RenderDatabase = ({ songs }) => {
     // for popup settings
   }, []);
 
+  const handleDownload = async songId => {
+    console.log("here is the id", songId);
+    const res = await getAudioLink.get("/song", {
+      params: { id: songId }
+    });
+    // first we will fetch the song link then we will download it
+    // the download song function takes id and the url
+    const status = await downloadSong(songId, res.data);
+    // after the downloading is done we will remove the downloading class
+    // set the snackbar message
+    setSnackbarMsg("Song Downloaded");
+    console.log("song status", status);
+  };
+
   const disablePopup = () => {
     localStorage.setItem("dontAskPopup", true);
     setDontAskPopup(true);
@@ -47,6 +62,50 @@ const RenderDatabase = ({ songs }) => {
   useEffect(() => {
     console.log("dont ask state", dontAskPopup);
   }, [dontAskPopup]);
+
+  const deleteTheSong = async checkBox => {
+    const deleted = await deleteSongAudio(currentId);
+    setDeleteDialogState(false);
+    setSnackbarMsg("Deleted Successfully");
+
+    console.log(currentId, checkBox);
+    // we will set it to localstorage the popup option
+    if (checkBox) {
+      disablePopup();
+    }
+  };
+
+  // hadnling download dialog
+  const handleRemoveSong = songId => {
+    console.log("handle remove dude");
+    currentId = songId;
+    // when user clicks on the download badge we will check the state
+    // then delete the song without showing the popup if dontAskPopup is true
+    // and delete the song by calling deleteTheSong
+    dontAskPopup ? deleteTheSong() : setDeleteDialogState(true);
+  };
+
+  const deleteDialogComponent = dontAskPopup ? null : (
+    <DownloadDeleteDialog
+      isOpen={deleteDialogState}
+      handleCancel={() => setDeleteDialogState(false)} // we will just hide the dialog on cancel
+      handleDelete={deleteTheSong} //if user wants to delete the song we will just do it
+    />
+  );
+
+  return {
+    handleDownload,
+    handleRemoveSong,
+    deleteTheSong,
+    dontAskPopup,
+    setDeleteDialogState,
+    deleteDialogState,
+    deleteDialogComponent
+  };
+};
+
+const RenderDatabase = ({ songs }) => {
+  const { setCurrentVideoSnippet, setSnackbarMsg } = useContext(GlobalContext);
 
   const handleClick = song => {
     // set all the info of current clicked video in this object
@@ -63,47 +122,38 @@ const RenderDatabase = ({ songs }) => {
     });
   };
 
-  const handleDownload = async (id, event) => {
-    const res = await getAudioLink.get("/song", {
-      params: { id: id }
-    });
-    // first we will fetch the song link then we will download it
-    // the download song function takes id and the url
-    const status = await downloadSong(id, res.data);
-    // after the downloading is done we will remove the downloading class
-    // set the snackbar message
-    setSnackbarMsg("Song Downloaded");
-    console.log("song status", status);
-  };
+  const {
+    handleDownload,
+    handleRemoveSong,
+    deleteTheSong,
+    dontAskPopup,
+    setDeleteDialogState,
+    deleteDialogState,
+    deleteDialogComponent
+  } = useSongMethods();
 
-  const deleteTheSong = async checkBox => {
-    const deleted = await deleteSongAudio(currentId);
-    setDeleteDialogState(false);
-    setSnackbarMsg("Deleted Successfully");
-
-    console.log(currentId, checkBox);
-    // we will set it to localstorage the popup option
-    if (checkBox) {
-      disablePopup();
-    }
-  };
-
-  // hadnling download dialog
-  const handleRemoveSong = id => {
-    currentId = id;
-    // when user clicks on the download badge we will check the state
-    // then delete the song without showing the popup if dontAskPopup is true
-    // and delete the song by calling deleteTheSong
-    dontAskPopup ? deleteTheSong() : setDeleteDialogState(true);
-  };
-
-  const returnAnimatedClass = song =>{
+  const returnAnimatedClass = song => {
     if (song.downloadState === "downloading") {
+      console.log(song.downloadState);
       return "downloading-animation";
     } else {
-      return "none";
+      return "";
     }
-  }
+  };
+
+  const transition = {
+    duration: 1,
+    ease: [0.43, 0.13, 0.23, 0.96]
+  };
+
+  const imageVariants = {
+    exit: { y: "50%", opacity: 0, transition },
+    enter: {
+      y: "0%",
+      opacity: 1,
+      transition
+    }
+  };
 
   const renderResult = songs.map((song, index) => {
     return (
@@ -112,17 +162,15 @@ const RenderDatabase = ({ songs }) => {
           alignItems="flex-start"
           button
           onClick={() => handleClick(song)}
-          component={Link}
-          to={`/song/${song.videoId}`}
+          // component={Link}
+          // to={{ pathname: "/play", search: `?id=${song.videoId}`, state: { modal: true } }}
         >
           <ListItemAvatar>
             <Avatar
               className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={song.title}
-              src={`https://img.youtube.com/vi/${
-                song.videoId
-              }/maxresdefault.jpg`}
+              src={`https://img.youtube.com/vi/${song.videoId}/default.jpg`}
             />
           </ListItemAvatar>
           {/* we will play the song when clicked on title */}
@@ -143,10 +191,10 @@ const RenderDatabase = ({ songs }) => {
         </ListItem>
         <div
           className="download-container"
-          onClick={e =>
+          onClick={() =>
             song.audio
-              ? handleRemoveSong(song.videoId, e)
-              : handleDownload(song.videoId, e)
+              ? handleRemoveSong(song.videoId)
+              : handleDownload(song.videoId)
           }
         >
           <div className="badge-container">
@@ -164,18 +212,18 @@ const RenderDatabase = ({ songs }) => {
   });
 
   return (
-    <List>
-      {/* we will render this component only if popup is false */}
-      {dontAskPopup ? null : (
-        <DownloadDeleteDialog
-          isOpen={deleteDialogState}
-          handleCancel={() => setDeleteDialogState(false)} // we will just hide the dialog on cancel
-          handleDelete={deleteTheSong} //if user wants to delete the song we will just do it
-        />
-      )}
+    <motion.div
+    // initial={{ opacity: 0, scale: .8}}
+    // animate={{ opacity: 1, scale: 1 }}
+    // exit={{ opacity: 0, scale: .8 }}
+    >
+      <List>
+        {/* we will render this component only if popup is false */}
+        {deleteDialogComponent}
 
-      {renderResult}
-    </List>
+        {renderResult}
+      </List>
+    </motion.div>
   );
 };
 

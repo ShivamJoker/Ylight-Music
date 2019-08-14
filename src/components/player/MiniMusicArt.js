@@ -20,7 +20,7 @@ const MiniMuiscArt = ({playPause, data}) => {
         </div>
         <div className={"miniArtContainer"}>
           <div className={"mainArt"}>
-            <img className={"miniArtImg"} src={data.maxThumbnail} alt="music art"/>
+            <img className={"miniArtImg"} src={data.sdThumbnail} alt="music art"/>
           <PlayPauseButton
               player={playPause.player}
               minimized={playPause.minimized}
