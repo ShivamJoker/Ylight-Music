@@ -56,6 +56,7 @@ const MainPlayer = ({ location, history }) => {
 
   const [minimized, setMinimized] = useState(true);
   const [rating, setRating] = useState("none");
+  const [isNextFromMini, setIsNextFromMini] = useState(false);
 
   const body = document.querySelector("body");
 
@@ -67,9 +68,17 @@ const MainPlayer = ({ location, history }) => {
       // audioPlayer.current.src = "";
       // maximize the player every time id changes
       // only if playlist is not open
-      if (playerState !== "playlist") {
+      if (playerState !== "playlist" && !isNextFromMini) {
         setPlayerState("maximized");
+        //
+        console.log("maximizing here yar and state is", playerState);
       }
+
+      setTimeout(() => {
+        setIsNextFromMini(false);
+        // change it back to false
+      }, 200);
+
       setAudioState("loading");
       const res = await getAudioLink.get("/song", {
         params: { id: data }
@@ -87,6 +96,7 @@ const MainPlayer = ({ location, history }) => {
     if (currentVideoSnippet.audio) {
       console.log("yes its downloaded we will play from local file");
       // maximize the player every time id changes
+
       setPlayerState("maximized");
       setAudioState("loading");
       audioPlayer.current.src = window.URL.createObjectURL(
@@ -134,25 +144,29 @@ const MainPlayer = ({ location, history }) => {
         setRelatedVideos(res.data.items);
       };
 
-      // if the click is not from playlist then only we will search for realated video
-      if (!isItFromPlaylist) {
-        console.log("searching for related vids");
-        // if player is in playlist mode we will just replace history else push it
-        if (location.pathname !== "/play") {
-          // prevent duplicating history
-          history.push(`/play?id=${currentVideoSnippet.id}`);
-        }
+      // if its not from the mini next button then only change history
+      if (!isNextFromMini) {
+        console.log("history changed triggered", isNextFromMini)
+        // if the click is not from playlist then only we will search for realated video
+        if (!isItFromPlaylist) {
+          console.log("searching for related vids");
+          // if player is in playlist mode we will just replace history else push it
+          if (location.pathname !== "/play") {
+            // prevent duplicating history
+            history.push(`/play?id=${currentVideoSnippet.id}`);
+          }
 
-        searchRelated();
-      } else {
-        history.replace(`/play?id=${currentVideoSnippet.id}`);
+          searchRelated();
+        } else {
+          history.replace(`/play?id=${currentVideoSnippet.id}`);
+        }
       }
+
       console.log(currentVideoSnippet);
     }
 
     // set rating to none when we load new song
     setRating("none");
-    console.log("initial render");
   }, [currentVideoSnippet, setIsItFromPlaylist]);
 
   useEffect(() => {
@@ -160,6 +174,10 @@ const MainPlayer = ({ location, history }) => {
 
     setIsItFromPlaylist(false);
   }, [isItFromPlaylist]);
+
+  useEffect(() => {
+    console.log("isnext state", isNextFromMini);
+  }, [isNextFromMini]);
 
   const playNext = () => {
     // also set this is from playlist
@@ -181,8 +199,6 @@ const MainPlayer = ({ location, history }) => {
     // keep increasing the song index
     songIndex++;
   };
-
-  console.log("this is from player");
 
   let playerStyle = {
     position: "fixed",
@@ -244,8 +260,8 @@ const MainPlayer = ({ location, history }) => {
   };
 
   let initPosition = 0;
-  const containerRef = useRef(null)
- 
+  const containerRef = useRef(null);
+
   const swipeHandlerMaximized = useSwipeable({
     onSwipedDown: e => {
       setPlayerState("minimized");
@@ -264,12 +280,12 @@ const MainPlayer = ({ location, history }) => {
         positionDifference = 0;
       }
       console.log(positionDifference);
-      const containerRefStyle = containerRef.current.style
+      const containerRefStyle = containerRef.current.style;
       containerRefStyle.transform = `translateY(${positionDifference}px)`;
-      containerRefStyle.transition = "none"
-      console.log(containerRef)
+      containerRefStyle.transition = "none";
+      console.log(containerRef);
     },
-    onSwiped: e =>{
+    onSwiped: e => {
       initPosition = 0;
       // we will make the initial position 0 again after user leaves the screen
     },
@@ -291,7 +307,11 @@ const MainPlayer = ({ location, history }) => {
     const unlisten = history.listen(location => {
       // location is an object like window.location
       if (location.pathname === "/play") {
-        setPlayerState("maximized");
+        // we will only change if its push  otherwise while changing song from playlist changes the state
+        if (history.action !== "REPLACE") {
+          setPlayerState("maximized");
+          console.log("set player state to maximized");
+        }
       } else {
         setPlayerState("minimized");
         console.log("set player state to minimized");
@@ -362,6 +382,11 @@ const MainPlayer = ({ location, history }) => {
               player: player,
               minimized: minimized,
               audioState: audioState
+            }}
+            playNext={(e) => {
+              e.stopPropagation()
+              setIsNextFromMini(true);
+              playNext();
             }}
             data={currentVideoSnippet}
           />

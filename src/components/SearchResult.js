@@ -69,9 +69,10 @@ const SearchResult = ({ videos }) => {
   };
 
   React.useEffect(() => {
+  
     setTimeout(() => {
       setisOpen(true);
-    }, 1000);
+    }, 100);
   }, []);
 
   const renderResult = videos.map(video => {

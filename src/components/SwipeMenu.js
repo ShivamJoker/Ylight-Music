@@ -48,7 +48,7 @@ const SwipeMenu = () => {
           >
             <AccountCircle fontSize="large" />
           </Avatar>
-          <Button
+          {/* <Button
             variant="outlined"
             color="primary"
             //  onClick={handleAuthClick}
@@ -60,7 +60,7 @@ const SwipeMenu = () => {
               style={{ marginRight: "8px" }}
             />
             Sign In
-          </Button>
+          </Button> */}
         </div>
         <Divider />
 

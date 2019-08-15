@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.ylightmusic.app",
+      "sha256_cert_fingerprints": [
+        "DB:64:82:1C:22:B7:94:A5:1C:69:F3:49:98:C4:CA:CB:49:4E:3B:5B:9A:74:FF:3F:60:9D:BB:CE:BC:9A:95:50"
+      ]
+    }
+  }
+]

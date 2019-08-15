@@ -30,6 +30,7 @@ import {
 } from "../external/saveSong";
 
 import { db } from "../external/saveSong";
+import PrivacyPage from "./sections/PrivacyPage";
 // import the db from save song
 
 // custom styling the tab menus
@@ -182,7 +183,7 @@ const CurrentSection = ({ history, location }) => {
       {/* </Switch> */}
       {/* </AnimatePresence> */}
 
-      <Route path="/privacy" component={"<div>Your privacy page is here</div>"} />
+      <Route path="/privacy" component={PrivacyPage} />
 
       <Route path="/feedback" component={FeedbackForm} />
 
