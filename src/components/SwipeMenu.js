@@ -26,7 +26,6 @@ const SwipeMenu = () => {
     background: "#e91e63"
   };
 
- 
   const { menuOpen, setMenuOpen } = useContext(GlobalContext);
 
   return (
@@ -64,8 +63,11 @@ const SwipeMenu = () => {
         </div>
         <Divider />
 
-        <List component="nav" className={"pinkLists"}>
-
+        <List
+          component="nav"
+          className={"pinkLists"}
+          onClick={() => setMenuOpen(false)}
+        >
           <ListItem button component={Link} to="/feedback">
             <ListItemIcon>
               <Feedback />
