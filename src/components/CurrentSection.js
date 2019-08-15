@@ -19,7 +19,7 @@ import LoginPage from "./LoginPage";
 import RenderDatabase from "./RenderDatabase";
 
 import HomePage from "./sections/HomePage";
-import FeedbackForm from './sections/FeedbackForm'
+import FeedbackForm from "./sections/FeedbackForm";
 
 import { GlobalContext } from "./GlobalState";
 import SearchResult from "./SearchResult";
@@ -186,7 +186,8 @@ const CurrentSection = ({ history, location }) => {
       <Route path="/privacy" component={PrivacyPage} />
 
       <Route path="/feedback" component={FeedbackForm} />
-
+      <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
+      {/* if the player is on then return 100px else 50px*/}
       <CustomTab
         value={tabValue}
         onChange={handleChange}
