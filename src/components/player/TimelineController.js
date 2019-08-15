@@ -74,6 +74,7 @@ const TimelineController = ({ audioState, player, minimized }) => {
     if (audioState === "playing") {
       setTimeInterval = setInterval(() => {
         setCurrentTime(player.currentTime);
+        console.log()
       }, 800);
     } else {
       clearInterval(setTimeInterval);

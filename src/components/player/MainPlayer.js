@@ -128,7 +128,7 @@ const MainPlayer = ({ location, history }) => {
           audioPlayer.current.pause();
         });
         navigator.mediaSession.setActionHandler("previoustrack", function() {
-          /* Code excerpted. */
+          playPrevious();
         });
         navigator.mediaSession.setActionHandler("nexttrack", function() {
           playNext();
@@ -146,7 +146,7 @@ const MainPlayer = ({ location, history }) => {
 
       // if its not from the mini next button then only change history
       if (!isNextFromMini) {
-        console.log("history changed triggered", isNextFromMini)
+        console.log("history changed triggered", isNextFromMini);
         // if the click is not from playlist then only we will search for realated video
         if (!isItFromPlaylist) {
           console.log("searching for related vids");
@@ -179,11 +179,7 @@ const MainPlayer = ({ location, history }) => {
     console.log("isnext state", isNextFromMini);
   }, [isNextFromMini]);
 
-  const playNext = () => {
-    // also set this is from playlist
-    setIsItFromPlaylist(true);
-    const video = relatedVideos[songIndex];
-    console.log(songIndex);
+  const setVideoSnippet = video => {
     setCurrentVideoSnippet({
       id: video.id.videoId,
       title: video.snippet.title,
@@ -196,8 +192,42 @@ const MainPlayer = ({ location, history }) => {
       }/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
+  };
+
+  const playNext = () => {
+    // also set this is from playlist
+    setIsItFromPlaylist(true);
+    // find the index of playing song in the playlist
+    const currentIndex = relatedVideos.findIndex(
+      video => video.id.videoId === currentVideoSnippet.id
+    );
+    let video;
+    if (currentIndex === -1) {
+      video = relatedVideos[0]; //if its the first song we will play the first from playlist
+    } else {
+      video = relatedVideos[currentIndex + 1]; //we will play the next song
+    }
+    setVideoSnippet(video);
+
+    console.log(currentIndex);
+
     // keep increasing the song index
-    songIndex++;
+  };
+
+  const playPrevious = () => {
+    // if the player time is greater than 5 sec we will move the time to 0
+    if (player.currentTime > 5) {
+      player.currentTime = 0;
+    } else {
+      const currentIndex = relatedVideos.findIndex(
+        video => video.id.videoId === currentVideoSnippet.id
+      );
+      let video;
+      if (currentIndex !== -1) {
+        video = relatedVideos[currentIndex - 1]; //we will play the next song
+        setVideoSnippet(video);
+      }
+    }
   };
 
   let playerStyle = {
@@ -287,6 +317,7 @@ const MainPlayer = ({ location, history }) => {
     },
     onSwiped: e => {
       initPosition = 0;
+      containerRef.current.style.transition = "all .3s ease";
       // we will make the initial position 0 again after user leaves the screen
     },
     onSwipedUp: e => {
@@ -299,6 +330,12 @@ const MainPlayer = ({ location, history }) => {
         clearTimeout(playTimeout);
         playNext();
       }, 250);
+    }
+  });
+
+  const swipeHandlerMin = useSwipeable({
+    onSwipedUp: e => {
+      expandPlayer();
     }
   });
 
@@ -340,6 +377,7 @@ const MainPlayer = ({ location, history }) => {
               song={currentVideoSnippet}
               player={player}
               setPlayerState={setPlayerState}
+              history={history}
             />
             <div {...swipeHandlerMaximized}>
               <MusicArt
@@ -357,7 +395,7 @@ const MainPlayer = ({ location, history }) => {
               alignItems="center"
               style={{ maxWidth: "290px", height: "80px", margin: "0 auto" }}
             >
-              <PreviousButton />
+              <PreviousButton playPrevious={playPrevious} />
               <PlayPauseButton player={player} audioState={audioState} />
               <NextButton onPlayNext={playNext} />
             </Grid>
@@ -375,7 +413,7 @@ const MainPlayer = ({ location, history }) => {
   const returnMinimizedPlayer = () => {
     if (playerState === "minimized" && currentVideoSnippet.id) {
       return (
-        <>
+        <div {...swipeHandlerMin}>
           <MiniMusicArt
             // we are making an object for props we will pass it to play pause button through mini music art
             playPause={{
@@ -383,8 +421,8 @@ const MainPlayer = ({ location, history }) => {
               minimized: minimized,
               audioState: audioState
             }}
-            playNext={(e) => {
-              e.stopPropagation()
+            playNext={e => {
+              e.stopPropagation();
               setIsNextFromMini(true);
               playNext();
             }}
@@ -395,7 +433,7 @@ const MainPlayer = ({ location, history }) => {
             player={player}
             minimized={minimized}
           />
-        </>
+        </div>
       );
     }
   };

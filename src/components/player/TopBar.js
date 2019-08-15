@@ -29,7 +29,7 @@ const DownloadLoader = withStyles({
   }
 })(LinearProgress);
 
-const TopBar = ({ song, player, setPlayerState }) => {
+const TopBar = ({ song, player, setPlayerState, history }) => {
   const { snackbarMsg } = useContext(GlobalContext);
   const [isSongDownloaded, setSongDownloaded] = useState(false);
   const [isSongDownloading, setSongDownloading] = useState(false);
@@ -63,6 +63,7 @@ const TopBar = ({ song, player, setPlayerState }) => {
   };
 
   const minimizePlayer = () => {
+    history.goBack()
     setPlayerState("minimized");
   };
 
