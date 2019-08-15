@@ -57,7 +57,7 @@ const MainPlayer = ({ location, history }) => {
   const [minimized, setMinimized] = useState(true);
   const [rating, setRating] = useState("none");
   const [isNextFromMini, setIsNextFromMini] = useState(false);
-
+  const [audioURL, setAudioURL] = useState(null);
   const body = document.querySelector("body");
 
   const audioPlayer = useRef();
@@ -86,8 +86,29 @@ const MainPlayer = ({ location, history }) => {
 
       // set the audio data
       audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
-      audioPlayer.current.load();
-      audioPlayer.current.play();
+      // setAudioURL("https://server.ylight.xyz/proxy/" + res.data)
+      // audioPlayer.current.load();
+      // audioPlayer.current.play();
+      var playPromise = audioPlayer.current.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(_ => {
+            // Automatic playback started!
+            // Show playing UI.
+            console.log("audio played auto")
+          })
+          .catch(error => {
+            // Auto-play was prevented
+            // Show paused UI.
+            console.log("playback prevented")
+            setAudioState("paused")
+          });
+      }
+
+      // audioPlayer.current.play();
+      // .catch(err => console.log(err));
+
       // var audioContext = new AudioContext();
       // var track = audioContext.createMediaElementSource(audioPlayer.current);
       // track.connect(audioContext.destination);
@@ -499,7 +520,9 @@ const MainPlayer = ({ location, history }) => {
           }}
           id="audio-element"
           onLoadedData={updateSongDB}
-          // onCanPlay={() => setAudioState("loaded")}
+          onCanPlay={() => {
+            setAudioState("loaded");
+          }}
           onPlay={() => setAudioState("playing")}
           onPlaying={() => setAudioState("playing")}
           onPause={() => setAudioState("paused")}
