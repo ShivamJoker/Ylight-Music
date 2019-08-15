@@ -6,7 +6,8 @@ import "./MiniMusicStyle.css";
 
 const styles = {};
 
-const MiniMuiscArt = ({playPause, data, playNext}) => {
+const MiniMuiscArt = ({playPause, data, playNext, emptyPlayer}) => {
+
   return (
     <div className={"mainContainer"}>
       <div className={"overflow-hidden"}>
@@ -16,7 +17,7 @@ const MiniMuiscArt = ({playPause, data, playNext}) => {
         </div>
         <div className="buttons">
         <SkipNext onClick={playNext}/>
-        <Close/>
+        <Close onClick={emptyPlayer}/>
         </div>
         <div className={"miniArtContainer"}>
           <div className={"mainArt"}>

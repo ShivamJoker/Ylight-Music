@@ -330,6 +330,12 @@ const MainPlayer = ({ location, history }) => {
         clearTimeout(playTimeout);
         playNext();
       }, 250);
+    },
+    onSwipedLeft: e => {
+      const playTimeout = setTimeout(() => {
+        clearTimeout(playTimeout);
+        playPrevious();
+      }, 250);
     }
   });
 
@@ -427,6 +433,10 @@ const MainPlayer = ({ location, history }) => {
               playNext();
             }}
             data={currentVideoSnippet}
+            emptyPlayer={(e)=>{
+              e.stopPropagation();
+              setCurrentVideoSnippet([])
+            }}
           />
           <TimelineController
             audioState={audioState}
