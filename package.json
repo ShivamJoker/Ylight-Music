@@ -25,7 +25,8 @@
     "react-swipeable": "^5.4.0",
     "react-swipeable-views": "^0.13.3",
     "react-virtualized-auto-sizer": "^1.0.2",
-    "react-window": "^1.8.5"
+    "react-window": "^1.8.5",
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -86,8 +86,8 @@ const MainPlayer = ({ location, history }) => {
 
       // set the audio data
       audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
-      // audioPlayer.current.load();
-      // audioPlayer.current.play();
+      audioPlayer.current.load();
+      audioPlayer.current.play();
       // var audioContext = new AudioContext();
       // var track = audioContext.createMediaElementSource(audioPlayer.current);
       // track.connect(audioContext.destination);
@@ -102,6 +102,7 @@ const MainPlayer = ({ location, history }) => {
       audioPlayer.current.src = window.URL.createObjectURL(
         currentVideoSnippet.audio
       );
+      audioPlayer.current.play();
     } else if (currentVideoSnippet.id) {
       getAudio(currentVideoSnippet.id);
     }
@@ -149,7 +150,7 @@ const MainPlayer = ({ location, history }) => {
         console.log("history changed triggered", isNextFromMini);
         // if the click is not from playlist then only we will search for realated video
         if (!isItFromPlaylist) {
-          console.log("searching for related vids");
+          console.log("searching for related vids", relatedVideos);
           // if player is in playlist mode we will just replace history else push it
           if (location.pathname !== "/play") {
             // prevent duplicating history
@@ -170,10 +171,8 @@ const MainPlayer = ({ location, history }) => {
   }, [currentVideoSnippet, setIsItFromPlaylist]);
 
   useEffect(() => {
-    console.log("from playlist", isItFromPlaylist);
-
-    setIsItFromPlaylist(false);
-  }, [isItFromPlaylist]);
+    console.log("related", relatedVideos);
+  }, [relatedVideos]);
 
   useEffect(() => {
     console.log("isnext state", isNextFromMini);
@@ -197,19 +196,22 @@ const MainPlayer = ({ location, history }) => {
   const playNext = () => {
     // also set this is from playlist
     setIsItFromPlaylist(true);
+    console.log("play next related videos", relatedVideos);
     // find the index of playing song in the playlist
     const currentIndex = relatedVideos.findIndex(
       video => video.id.videoId === currentVideoSnippet.id
     );
+    console.log("the current index is", currentIndex);
+
     let video;
+    console.log("hey we will play next song");
     if (currentIndex === -1) {
+      console.log(relatedVideos);
       video = relatedVideos[0]; //if its the first song we will play the first from playlist
     } else {
       video = relatedVideos[currentIndex + 1]; //we will play the next song
     }
     setVideoSnippet(video);
-
-    console.log(currentIndex);
 
     // keep increasing the song index
   };
@@ -433,9 +435,9 @@ const MainPlayer = ({ location, history }) => {
               playNext();
             }}
             data={currentVideoSnippet}
-            emptyPlayer={(e)=>{
+            emptyPlayer={e => {
               e.stopPropagation();
-              setCurrentVideoSnippet([])
+              setCurrentVideoSnippet([]);
             }}
           />
           <TimelineController

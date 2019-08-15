@@ -1,9 +1,9 @@
-.render-list-container{
+.render-list-container {
   position: relative;
 }
 
 /* this is overlay so that when people will click on this the song wont play */
-.download-container{
+.download-container {
   width: 80px;
   height: 80px;
   display: inline-block;
@@ -12,7 +12,7 @@
   cursor: cell;
 }
 
-.download-container .badge-container{
+.download-container .badge-container {
   height: 18px;
   width: 18px;
   font-size: 12px;
@@ -26,9 +26,9 @@
   top: 16px;
   left: 14px;
   overflow: hidden;
-      display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .download-container img {
@@ -41,18 +41,11 @@
   animation: cubic-bezier(0.55, 0.09, 0.68, 0.53) animate-drop 1s infinite;
 }
 
-
-
-
-
-
 @keyframes animate-drop {
-  100%{
-    transform: translateY(18px)
+  100% {
+    transform: translateY(18px);
   }
 }
-
-
 
 .pinkLists > a,
 .pinkLists svg {
@@ -101,7 +94,7 @@ svg.songHeart.left {
 .RelatedVideoContainer {
   background: #e91d63;
   overflow: auto;
-  height: calc(100% - 200px); 
+  height: calc(100% - 200px);
   /* half of the portion will be taken by player */
 }
 
@@ -124,4 +117,9 @@ div.RelatedVideoContainer * {
 
 .playlistHeader svg {
   /* font-size: 1.8em; */
+}
+
+/* hide recaptcha badge */
+div.grecaptcha-badge  {
+  display: none;
 }

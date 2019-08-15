@@ -16,6 +16,7 @@ const FeedbackForm = () => {
   const { setSnackbarMsg } = React.useContext(GlobalContext);
   const [isSending, setIsSending] = React.useState(false);
   const formEl = React.useRef(null);
+
   const submitForm = e => {
     // set state to sending
     setIsSending(true);
@@ -23,7 +24,7 @@ const FeedbackForm = () => {
     const name = formData.get("name");
     const email = formData.get("email");
     const message = formData.get("message");
-    console.log(name, email, message);
+
     e.preventDefault();
 
     const post = {
@@ -130,11 +131,11 @@ const FeedbackForm = () => {
         />
       ) : null}
       <Button
-      style={{marginTop: "10px"}}
+        style={{ marginTop: "10px" }}
         variant="outlined"
         color="primary"
-        onClick={submitForm}
         type="submit"
+        disabled={isSending ? true : false}
       >
         {/* if sending is true then show circular progress */}
         {isSending ? "Sending Feedback" : "Send Feedback"}

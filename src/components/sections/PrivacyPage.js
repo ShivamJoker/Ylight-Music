@@ -1,8 +1,30 @@
 import React from "react";
-// import "../../privacyStyle.css";
+import styled from "styled-components";
+
+const MainComponent = styled.main`
+  * {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    font-size: 1.3em;
+    padding: 30px;
+  }
+
+  div {
+    border: 2px solid rgba(255, 255, 255, 0.781);
+    max-width: 525px;
+    padding: 10px;
+    margin: 0 auto;
+  }
+`;
+
 const PrivacyPage = () => {
   return (
-    <>
+    <MainComponent>
       <header>
         <h1>Our Privacy and Policy </h1>
       </header>
@@ -49,13 +71,10 @@ const PrivacyPage = () => {
             This is an open source project for any issues please contact me
             <br />
           </p>
-          <a href="mailto:singhshivamkr@gmail.com">
-            {" "}
-            ✉️ singhshivamkr@gmail.com
-          </a>
+          <a href="mailto:singhshivamkr@gmail.com">singhshivamkr@gmail.com</a>
         </div>
       </section>
-    </>
+    </MainComponent>
   );
 };
 
