@@ -32,10 +32,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postbuild": "react-snap"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "reactSnap": {
+    "inlineCss": true
   },
   "browserslist": {
     "production": [
@@ -54,6 +58,7 @@
     "eslint-config-airbnb": "^17.1.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3"
+    "eslint-plugin-react": "^7.14.3",
+    "react-snap": "^1.23.0"
   }
 }

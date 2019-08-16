@@ -170,8 +170,8 @@ const RenderDatabase = ({ songs }) => {
               className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={song.title}
+              imgProps={{ loading: "lazy", width: 60, height: 60, intrinsicsize: "60x60"}}
               src={`https://img.youtube.com/vi/${song.videoId}/default.jpg`}
-              imgProps={{ loading: "lazy" }}
             />
           </ListItemAvatar>
           {/* we will play the song when clicked on title */}
