@@ -95,6 +95,7 @@ svg.songHeart.left {
   background: #e91d63;
   overflow: auto;
   height: calc(100% - 200px);
+  min-height: 470px;
   /* half of the portion will be taken by player */
 }
 
@@ -122,4 +123,11 @@ div.RelatedVideoContainer * {
 /* hide recaptcha badge */
 div.grecaptcha-badge  {
   display: none;
+}
+
+/* fix on small screen */
+@media (max-height: 570px){
+  .musicArtContainer{
+    height: 70%;
+  }
 }

@@ -408,7 +408,7 @@ const MainPlayer = ({ location, history }) => {
               setPlayerState={setPlayerState}
               history={history}
             />
-            <div {...swipeHandlerMaximized}>
+            <div {...swipeHandlerMaximized} className="musicArtContainer">
               <MusicArt
                 data={currentVideoSnippet}
                 rating={rating}
