@@ -68,7 +68,9 @@ const MediaCard = ({ songs, categotyTitle }) => {
           <CardActionArea onClick={() => handleClick(song)}>
             <CardMedia
               className={classes.media}
-              image={song.snippet.thumbnails.high.url}
+              component="img"
+              src={song.snippet.thumbnails.high.url}
+              loading="lazy"
             />
             <CardContent>
               <Typography gutterBottom variant="body2" component="p">

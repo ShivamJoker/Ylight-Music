@@ -171,6 +171,7 @@ const RenderDatabase = ({ songs }) => {
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={song.title}
               src={`https://img.youtube.com/vi/${song.videoId}/default.jpg`}
+              imgProps={{ loading: "lazy" }}
             />
           </ListItemAvatar>
           {/* we will play the song when clicked on title */}

@@ -1,4 +1,11 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  Suspense,
+  lazy
+} from "react";
 import {
   BrowserRouter as Router,
   withRouter,
@@ -15,14 +22,8 @@ import {
   History,
   GetApp
 } from "@material-ui/icons/";
-import LoginPage from "./LoginPage";
-import RenderDatabase from "./RenderDatabase";
-
-import HomePage from "./sections/HomePage";
-import FeedbackForm from "./sections/FeedbackForm";
 
 import { GlobalContext } from "./GlobalState";
-import SearchResult from "./SearchResult";
 import {
   getHistory,
   getLikedSongs,
@@ -30,8 +31,15 @@ import {
 } from "../external/saveSong";
 
 import { db } from "../external/saveSong";
-import PrivacyPage from "./sections/PrivacyPage";
 // import the db from save song
+
+// pages
+const LoginPage = lazy(() => import("./LoginPage"));
+const RenderDatabase = lazy(() => import("./RenderDatabase"));
+const SearchResult = lazy(() => import("./SearchResult"));
+const HomePage = lazy(() => import("./sections/HomePage"));
+const FeedbackForm = lazy(() => import("./sections/FeedbackForm"));
+const PrivacyPage = lazy(() => import("./sections/PrivacyPage"));
 
 // custom styling the tab menus
 const CustomTab = withStyles({
@@ -106,7 +114,7 @@ const CurrentSection = ({ history, location }) => {
         break;
     }
   }, [tabValue]);
-// 
+  //
   useEffect(() => {
     fetchSongs();
   }, [tabValue, fetchSongs]);
@@ -158,55 +166,56 @@ const CurrentSection = ({ history, location }) => {
   return (
     <div>
       <br />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Route
+          exact
+          path="/"
+          render={props => {
+            return <LoginPage continueToHome={continueToHome} />;
+          }}
+        />
+        <Route
+          path="/search"
+          render={props => <SearchResult videos={searchResult} />}
+        />
+        <Route
+          path="/home"
+          render={props => {
+            setTabValue(0);
+            return <HomePage />;
+          }}
+        />
+        {/* <AnimatePresence exitBeforeEnter initial={false}> */}
+        {/* <Switch key={location.pathname}> */}
+        <Route
+          path="/liked"
+          render={props => {
+            setTabValue(1);
+            return <RenderDatabase songs={songsLikedState} {...props} />;
+          }}
+        />
+        <Route
+          path="/downloads"
+          render={props => {
+            setTabValue(2);
+            return <RenderDatabase songs={songsDownloadedState} />;
+          }}
+        />
+        <Route
+          path="/history"
+          render={props => {
+            setTabValue(3);
 
-      <Route
-        exact
-        path="/"
-        render={props => {
-          return <LoginPage continueToHome={continueToHome} />;
-        }}
-      />
-      <Route
-        path="/search"
-        render={props => <SearchResult videos={searchResult} />}
-      />
-      <Route
-        path="/home"
-        render={props => {
-          setTabValue(0);
-          return <HomePage />;
-        }}
-      />
-      {/* <AnimatePresence exitBeforeEnter initial={false}> */}
-      {/* <Switch key={location.pathname}> */}
-      <Route
-        path="/liked"
-        render={props => {
-          setTabValue(1);
-          return <RenderDatabase songs={songsLikedState} {...props} />;
-        }}
-      />
-      <Route
-        path="/downloads"
-        render={props => {
-          setTabValue(2);
-          return <RenderDatabase songs={songsDownloadedState} />;
-        }}
-      />
-      <Route
-        path="/history"
-        render={props => {
-          setTabValue(3);
+            return <RenderDatabase songs={songsHistoryState} />;
+          }}
+        />
+        {/* </Switch> */}
+        {/* </AnimatePresence> */}
 
-          return <RenderDatabase songs={songsHistoryState} />;
-        }}
-      />
-      {/* </Switch> */}
-      {/* </AnimatePresence> */}
+        <Route path="/privacy" component={PrivacyPage} />
 
-      <Route path="/privacy" component={PrivacyPage} />
-
-      <Route path="/feedback" component={FeedbackForm} />
+        <Route path="/feedback" component={FeedbackForm} />
+      </Suspense>
       <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
       {/* if the player is on then return 100px else 50px*/}
       <CustomTab
