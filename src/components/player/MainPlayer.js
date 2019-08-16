@@ -96,13 +96,13 @@ const MainPlayer = ({ location, history }) => {
           .then(_ => {
             // Automatic playback started!
             // Show playing UI.
-            console.log("audio played auto")
+            console.log("audio played auto");
           })
           .catch(error => {
             // Auto-play was prevented
             // Show paused UI.
-            console.log("playback prevented")
-            setAudioState("paused")
+            console.log("playback prevented");
+            setAudioState("paused");
           });
       }
 
@@ -181,6 +181,8 @@ const MainPlayer = ({ location, history }) => {
           searchRelated();
         } else {
           history.replace(`/play?id=${currentVideoSnippet.id}`);
+          setIsItFromPlaylist(false);
+
         }
       }
 
@@ -190,6 +192,10 @@ const MainPlayer = ({ location, history }) => {
     // set rating to none when we load new song
     setRating("none");
   }, [currentVideoSnippet, setIsItFromPlaylist]);
+
+  useEffect(() => {
+    console.log("from playlist", isItFromPlaylist);
+  }, [isItFromPlaylist]);
 
   useEffect(() => {
     console.log("related", relatedVideos);
@@ -238,6 +244,8 @@ const MainPlayer = ({ location, history }) => {
   };
 
   const playPrevious = () => {
+    setIsItFromPlaylist(true);
+
     // if the player time is greater than 5 sec we will move the time to 0
     if (player.currentTime > 5) {
       player.currentTime = 0;
@@ -249,6 +257,8 @@ const MainPlayer = ({ location, history }) => {
       if (currentIndex !== -1) {
         video = relatedVideos[currentIndex - 1]; //we will play the next song
         setVideoSnippet(video);
+      } else {
+        player.currentTime = 0;
       }
     }
   };
