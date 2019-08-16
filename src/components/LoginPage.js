@@ -16,13 +16,7 @@ const bgStyle = {
   height: "46vh"
 };
 
-let deferredPrompt;
 
-window.addEventListener("beforeinstallprompt", e => {
-  // Stash the event so it can be triggered later.
-  deferredPrompt = e;
-  deferredPrompt.prompt();
-});
 
 const LoginPage = ({ continueToHome }) => {
   const showSignIn = () => {
