@@ -38,9 +38,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "reactSnap": {
-    "inlineCss": true
-  },
+
   "browserslist": {
     "production": [
       ">0.2%",

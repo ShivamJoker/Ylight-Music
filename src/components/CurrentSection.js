@@ -41,6 +41,8 @@ const HomePage = lazy(() => import("./sections/HomePage"));
 const FeedbackForm = lazy(() => import("./sections/FeedbackForm"));
 const PrivacyPage = lazy(() => import("./sections/PrivacyPage"));
 
+
+
 // custom styling the tab menus
 const CustomTab = withStyles({
   root: {
