@@ -16,7 +16,15 @@ const bgStyle = {
   height: "46vh"
 };
 
-const LoginPage = ({continueToHome}) => {
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", e => {
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+  deferredPrompt.prompt();
+});
+
+const LoginPage = ({ continueToHome }) => {
   const showSignIn = () => {
     // if user has already closed the popup dont show it
     if (localStorage.getItem("signInClosed") !== "true") {
@@ -25,7 +33,13 @@ const LoginPage = ({continueToHome}) => {
   };
 
   return (
-    <Grid style={{height: "80vh"}} container direction="column" justify="space-around" alignItems="center">
+    <Grid
+      style={{ height: "80vh" }}
+      container
+      direction="column"
+      justify="space-around"
+      alignItems="center"
+    >
       {/* {showSignIn()} */}
 
       <div style={bgStyle} />
