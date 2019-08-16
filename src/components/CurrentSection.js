@@ -64,7 +64,7 @@ const CustomTabs = withStyles({
   selected: {}
 })(Tab);
 
-let deferredPrompt;
+let deferredPrompt = undefined;
 
 window.addEventListener("beforeinstallprompt", e => {
   // Stash the event so it can be triggered later.
@@ -138,16 +138,20 @@ const CurrentSection = ({ history, location }) => {
   const continueToHome = () => {
     localStorage.setItem("isThisNew", "no");
     history.replace("/home");
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    deferredPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the A2HS prompt");
-      } else {
-        console.log("User dismissed the A2HS prompt");
-      }
-      deferredPrompt = null;
-    });
+
+    if (deferredPrompt) {
+      // show the prompt to install app
+      deferredPrompt.prompt();
+      // Wait for the user to respond to the prompt
+      deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted the A2HS prompt");
+        } else {
+          console.log("User dismissed the A2HS prompt");
+        }
+        deferredPrompt = null;
+      });
+    }
   };
   // the set tab value will keep the tab active on their route
   // there are 4 tabs so there will be 3 indexes
