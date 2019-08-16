@@ -106,7 +106,7 @@ const CurrentSection = ({ history, location }) => {
         break;
     }
   }, [tabValue]);
-
+// 
   useEffect(() => {
     fetchSongs();
   }, [tabValue, fetchSongs]);
