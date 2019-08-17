@@ -52,7 +52,7 @@ export const rateSong = async (id, rating) => {
 export const getHistory = async () => {
   const songsByTimeStamp = await db.songs
     .orderBy("timestamp")
-    // .limit(50)
+    .limit(20)
     .reverse()
     .toArray();
   return songsByTimeStamp;

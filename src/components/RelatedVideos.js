@@ -37,12 +37,15 @@ const shuffle = arry =>
     [...arry]
   );
 
-const RelatedVideos = ({ toggleMaxPlaylist, setPlaylist, playerState }) => {
-  const {
-    relatedVideos,
-    setRelatedVideos,
-    setCurrentVideoSnippet
-  } = useContext(GlobalContext);
+const RelatedVideos = ({
+  toggleMaxPlaylist,
+  setPlaylist,
+  playerState,
+  relatedVideos,
+  setRelatedVideos
+}) => {
+  
+  const { setCurrentVideoSnippet } = useContext(GlobalContext);
 
   const handleShuffleClick = () => {
     setRelatedVideos(shuffle(relatedVideos));

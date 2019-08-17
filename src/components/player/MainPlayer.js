@@ -33,17 +33,17 @@ let songIndex = 0;
 // window.onbeforeunload = function() {
 //   return 'You have unsaved changes!';
 // }
+let relatedVideosVar;
+
 
 const MainPlayer = ({ location, history }) => {
   let params = new URLSearchParams(location.search);
 
-  const {
-    currentVideoSnippet,
-    setCurrentVideoSnippet,
-    setRelatedVideos,
-    relatedVideos
-  } = useContext(GlobalContext);
+  const { currentVideoSnippet, setCurrentVideoSnippet } = useContext(
+    GlobalContext
+  );
 
+  const [relatedVideos, setRelatedVideos] = useState([]);
   const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
   //
   const [audioState, setAudioState] = useState(null);
@@ -62,6 +62,56 @@ const MainPlayer = ({ location, history }) => {
 
   const audioPlayer = useRef();
   const player = audioPlayer.current;
+  const setupMediaSessions = () => {
+    if ("mediaSession" in navigator) {
+      console.log("navigator setupped");
+      
+      navigator.mediaSession.metadata = new window.MediaMetadata({
+        title: currentVideoSnippet.title,
+        artist: currentVideoSnippet.channelTitle,
+        artwork: [
+          {
+            src: currentVideoSnippet.sdThumbnail,
+            sizes: "512x512",
+            type: "image/png"
+          }
+        ]
+      });
+      navigator.mediaSession.setActionHandler("play", () => {
+        /* Code excerpted. */
+        playAudio();
+      });
+      navigator.mediaSession.setActionHandler("pause", () => {
+        /* Code excerpted. */
+        audioPlayer.current.pause();
+      });
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        playPrevious();
+      });
+      navigator.mediaSession.setActionHandler("nexttrack", () => {
+        playNext();
+
+      });
+    }
+  };
+
+
+  const playAudio = () => {
+    audioPlayer.current
+      .play()
+      .then(_ => {
+        // Automatic playback started!
+        // Show playing UI.
+        console.log("audio played auto");
+        setupMediaSessions();
+      })
+      .catch(error => {
+        // Auto-play was prevented
+        // Show paused UI.
+        console.log("playback prevented");
+        setAudioState("paused");
+      });
+  };
 
   useEffect(() => {
     const getAudio = async data => {
@@ -86,25 +136,11 @@ const MainPlayer = ({ location, history }) => {
 
       // set the audio data
       audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
+      playAudio();
       // setAudioURL("https://server.ylight.xyz/proxy/" + res.data)
-      // audioPlayer.current.load();
-      // audioPlayer.current.play();
-      var playPromise = audioPlayer.current.play();
+      // audioPlayer.current.load()
 
-      if (playPromise !== undefined) {
-        playPromise
-          .then(_ => {
-            // Automatic playback started!
-            // Show playing UI.
-            console.log("audio played auto");
-          })
-          .catch(error => {
-            // Auto-play was prevented
-            // Show paused UI.
-            console.log("playback prevented");
-            setAudioState("paused");
-          });
-      }
+      // audioPlayer.current.play();
 
       // audioPlayer.current.play();
       // .catch(err => console.log(err));
@@ -123,39 +159,12 @@ const MainPlayer = ({ location, history }) => {
       audioPlayer.current.src = window.URL.createObjectURL(
         currentVideoSnippet.audio
       );
-      audioPlayer.current.play();
+      playAudio();
     } else if (currentVideoSnippet.id) {
       getAudio(currentVideoSnippet.id);
     }
 
     if (currentVideoSnippet.id) {
-      if ("mediaSession" in navigator) {
-        navigator.mediaSession.metadata = new window.MediaMetadata({
-          title: currentVideoSnippet.title,
-          artist: currentVideoSnippet.channelTitle,
-          artwork: [
-            {
-              src: currentVideoSnippet.sdThumbnail,
-              sizes: "512x512",
-              type: "image/png"
-            }
-          ]
-        });
-        navigator.mediaSession.setActionHandler("play", function() {
-          /* Code excerpted. */
-          audioPlayer.current.play();
-        });
-        navigator.mediaSession.setActionHandler("pause", function() {
-          /* Code excerpted. */
-          audioPlayer.current.pause();
-        });
-        navigator.mediaSession.setActionHandler("previoustrack", function() {
-          playPrevious();
-        });
-        navigator.mediaSession.setActionHandler("nexttrack", function() {
-          playNext();
-        });
-      }
       const searchRelated = async () => {
         const res = await youtubeSearch.get("/search", {
           params: {
@@ -182,7 +191,6 @@ const MainPlayer = ({ location, history }) => {
         } else {
           history.replace(`/play?id=${currentVideoSnippet.id}`);
           setIsItFromPlaylist(false);
-
         }
       }
 
@@ -198,6 +206,7 @@ const MainPlayer = ({ location, history }) => {
   }, [isItFromPlaylist]);
 
   useEffect(() => {
+    relatedVideosVar = relatedVideos;
     console.log("related", relatedVideos);
   }, [relatedVideos]);
 
@@ -225,22 +234,16 @@ const MainPlayer = ({ location, history }) => {
     setIsItFromPlaylist(true);
     console.log("play next related videos", relatedVideos);
     // find the index of playing song in the playlist
-    const currentIndex = relatedVideos.findIndex(
+    const currentIndex = relatedVideosVar.findIndex(
       video => video.id.videoId === currentVideoSnippet.id
     );
     console.log("the current index is", currentIndex);
 
     let video;
     console.log("hey we will play next song");
-    if (currentIndex === -1) {
-      console.log(relatedVideos);
-      video = relatedVideos[0]; //if its the first song we will play the first from playlist
-    } else {
-      video = relatedVideos[currentIndex + 1]; //we will play the next song
-    }
-    setVideoSnippet(video);
+    video = relatedVideosVar[currentIndex + 1]; //we will play the next song
 
-    // keep increasing the song index
+    setVideoSnippet(video);
   };
 
   const playPrevious = () => {
@@ -250,12 +253,12 @@ const MainPlayer = ({ location, history }) => {
     if (player.currentTime > 5) {
       player.currentTime = 0;
     } else {
-      const currentIndex = relatedVideos.findIndex(
+      const currentIndex = relatedVideosVar.findIndex(
         video => video.id.videoId === currentVideoSnippet.id
       );
       let video;
       if (currentIndex !== -1) {
-        video = relatedVideos[currentIndex - 1]; //we will play the next song
+        video = relatedVideosVar[currentIndex - 1]; //we will play the next song
         setVideoSnippet(video);
       } else {
         player.currentTime = 0;
@@ -443,6 +446,8 @@ const MainPlayer = ({ location, history }) => {
             toggleMaxPlaylist={toggleMaxPlaylist}
             setPlaylist={() => setIsItFromPlaylist(true)}
             playerState={playerState}
+            relatedVideos={relatedVideos}
+            setRelatedVideos={data => setRelatedVideos(data)}
           />
         </>
       );
@@ -522,7 +527,6 @@ const MainPlayer = ({ location, history }) => {
         {returnMaximizedPlayer()}
         {returnMinimizedPlayer()}
         <audio
-          src=""
           crossOrigin="anonymous"
           // onTimeUpdate={timeUpdate}
           onLoadStart={() => {
