@@ -10,6 +10,7 @@ import { GlobalState } from "./GlobalState";
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { pink } from "@material-ui/core/colors";
+import 'typeface-roboto';
 
 const theme = createMuiTheme({
   palette: {

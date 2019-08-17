@@ -41,8 +41,6 @@ const HomePage = lazy(() => import("./sections/HomePage"));
 const FeedbackForm = lazy(() => import("./sections/FeedbackForm"));
 const PrivacyPage = lazy(() => import("./sections/PrivacyPage"));
 
-
-
 // custom styling the tab menus
 const CustomTab = withStyles({
   root: {
@@ -187,8 +185,6 @@ const CurrentSection = ({ history, location }) => {
             return <HomePage />;
           }}
         />
-        {/* <AnimatePresence exitBeforeEnter initial={false}> */}
-        {/* <Switch key={location.pathname}> */}
         <Route
           path="/liked"
           render={props => {
@@ -211,14 +207,12 @@ const CurrentSection = ({ history, location }) => {
             return <RenderDatabase songs={songsHistoryState} />;
           }}
         />
-        {/* </Switch> */}
-        {/* </AnimatePresence> */}
 
         <Route path="/privacy" component={PrivacyPage} />
 
         <Route path="/feedback" component={FeedbackForm} />
+        <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
       </Suspense>
-      <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
       {/* if the player is on then return 100px else 50px*/}
       <CustomTab
         value={tabValue}
