@@ -1,14 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FixedSizeList as FixedList } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  List,
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache
+} from "react-virtualized";
+
+// import { FixedSizeList as FixedList } from "react-window";
+// import AutoSizer from "react-virtualized-auto-sizer";
 import { motion } from "framer-motion";
 
 import CompletedTick from "../images/CompletedTick.svg";
 import DownloadIcon from "../images/DownloadIcon.svg";
 
 import {
-  List,
   ListItem,
   Typography,
   ListItemAvatar,
@@ -24,6 +29,13 @@ import { GlobalContext } from "./GlobalState";
 
 import getAudioLink from "../apis/getAudioLink";
 import { downloadSong, deleteSongAudio } from "../external/saveSong";
+
+const cache = new CellMeasurerCache({
+  minHeight: 50,
+  defaultHeight: 60,
+  fixedWidth: true,
+  // keyMapper: () => 1
+});
 
 let currentId;
 
@@ -104,7 +116,8 @@ export const useSongMethods = songId => {
   };
 };
 
-const RenderDatabase = ({ songs }) => {
+const RenderDatabase = props => {
+  const songs = props.songs;
   const { setCurrentVideoSnippet, setSnackbarMsg } = useContext(GlobalContext);
 
   const handleClick = song => {
@@ -157,7 +170,7 @@ const RenderDatabase = ({ songs }) => {
 
   const renderResult = songs.map((song, index) => {
     return (
-      <div className="render-list-container" key={song.videoId}>
+      <>
         <ListItem
           alignItems="flex-start"
           button
@@ -170,7 +183,6 @@ const RenderDatabase = ({ songs }) => {
               className="searchThumb"
               style={{ width: "60px", height: "60px", marginRight: "15px" }}
               alt={song.title}
-              imgProps={{ loading: "lazy", width: 60, height: 60, intrinsicsize: "60x60"}}
               src={`https://img.youtube.com/vi/${song.videoId}/default.jpg`}
             />
           </ListItemAvatar>
@@ -207,24 +219,47 @@ const RenderDatabase = ({ songs }) => {
             />
           </div>
         </div>
-        <Divider />
-      </div>
+      </>
     );
   });
+  console.log(renderResult);
 
+  const renderRow = ({index, isScrolling, key, parent, style}) => {
+    return (
+      <CellMeasurer
+        key={key}
+        cache={cache}
+        parent={parent}
+        columnIndex={0}
+        rowIndex={index}
+      >
+        {({ measure }) => (
+          <div style={style} className="render-list-container" key={key}>
+            {renderResult[index]}
+            <Divider />
+          </div>
+        )}
+      </CellMeasurer>
+    );
+  };
+
+  console.log(props);
   return (
-    <motion.div
-    // initial={{ opacity: 0, scale: .8}}
-    // animate={{ opacity: 1, scale: 1 }}
-    // exit={{ opacity: 0, scale: .8 }}
-    >
-      <List>
-        {/* we will render this component only if popup is false */}
-        {deleteDialogComponent}
-
-        {renderResult}
-      </List>
-    </motion.div>
+    <AutoSizer>
+      {({ width, height }) => {
+        return (
+          <List
+            {...props}
+            rowCount={songs.length}
+            width={width}
+            height={window.innerHeight}
+            deferredMeasurementCache={cache}
+            rowHeight={cache.rowHeight}
+            rowRenderer={renderRow}
+          />
+        );
+      }}
+    </AutoSizer>
   );
 };
 

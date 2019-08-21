@@ -165,7 +165,6 @@ const CurrentSection = ({ history, location }) => {
   // there are 4 tabs so there will be 3 indexes
   return (
     <div>
-      <br />
       <Suspense fallback={<div>Loading...</div>}>
         <Route
           exact
