@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
-import {
-  List,
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache
-} from "react-virtualized";
+// import {
+//   List,
+//   AutoSizer,
+//   CellMeasurer,
+//   CellMeasurerCache
+// } from "react-virtualized";
 
-// import { FixedSizeList as FixedList } from "react-window";
-// import AutoSizer from "react-virtualized-auto-sizer";
+import { DynamicSizeList as List } from "react-window";
+
+import AutoSizer from "react-virtualized-auto-sizer";
 import { motion } from "framer-motion";
 
 import CompletedTick from "../images/CompletedTick.svg";
@@ -30,12 +31,12 @@ import { GlobalContext } from "./GlobalState";
 import getAudioLink from "../apis/getAudioLink";
 import { downloadSong, deleteSongAudio } from "../external/saveSong";
 
-const cache = new CellMeasurerCache({
-  minHeight: 50,
-  defaultHeight: 60,
-  fixedWidth: true,
-  // keyMapper: () => 1
-});
+// const cache = new CellMeasurerCache({
+//   minHeight: 50,
+//   defaultHeight: 60,
+//   fixedWidth: true
+//   // keyMapper: () => 1
+// });
 
 let currentId;
 
@@ -224,42 +225,26 @@ const RenderDatabase = props => {
   });
   console.log(renderResult);
 
-  const renderRow = ({index, isScrolling, key, parent, style}) => {
-    return (
-      <CellMeasurer
-        key={key}
-        cache={cache}
-        parent={parent}
-        columnIndex={0}
-        rowIndex={index}
-      >
-        {({ measure }) => (
-          <div style={style} className="render-list-container" key={key}>
-            {renderResult[index]}
-            <Divider />
-          </div>
-        )}
-      </CellMeasurer>
-    );
-  };
+  const renderItem = React.forwardRef((row, ref) => (
+    <div ref={ref} style={row.style}>
+      {renderResult[row.index]}
+      <Divider />
+    </div>
+  ));
 
   console.log(props);
   return (
-    <AutoSizer>
-      {({ width, height }) => {
-        return (
-          <List
-            {...props}
-            rowCount={songs.length}
-            width={width}
-            height={window.innerHeight}
-            deferredMeasurementCache={cache}
-            rowHeight={cache.rowHeight}
-            rowRenderer={renderRow}
-          />
-        );
-      }}
-    </AutoSizer>
+    <>
+      {deleteDialogComponent}
+
+      <List
+        height={window.innerHeight - 100}
+        itemCount={songs.length}
+        width={window.innerWidth}
+      >
+        {renderItem}
+      </List>
+    </>
   );
 };
 
