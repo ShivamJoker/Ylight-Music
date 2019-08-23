@@ -35,7 +35,6 @@ let songIndex = 0;
 // }
 let relatedVideosVar;
 
-
 const MainPlayer = ({ location, history }) => {
   let params = new URLSearchParams(location.search);
 
@@ -55,6 +54,7 @@ const MainPlayer = ({ location, history }) => {
   // maximized, minimized, playlist
 
   const [minimized, setMinimized] = useState(true);
+  const [isRepeatOn, setIsRepeatOn] = useState(false);
   const [rating, setRating] = useState("none");
   const [isNextFromMini, setIsNextFromMini] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
@@ -65,7 +65,7 @@ const MainPlayer = ({ location, history }) => {
   const setupMediaSessions = () => {
     if ("mediaSession" in navigator) {
       console.log("navigator setupped");
-      
+
       navigator.mediaSession.metadata = new window.MediaMetadata({
         title: currentVideoSnippet.title,
         artist: currentVideoSnippet.channelTitle,
@@ -90,11 +90,9 @@ const MainPlayer = ({ location, history }) => {
       });
       navigator.mediaSession.setActionHandler("nexttrack", () => {
         playNext();
-
       });
     }
   };
-
 
   const playAudio = () => {
     audioPlayer.current
@@ -325,6 +323,17 @@ const MainPlayer = ({ location, history }) => {
     console.log(rating);
   };
 
+  // this will be fired when song is ended
+  const songEnded = () => {
+    // if repeat is false we will play next else just set the time to 0
+    if (!isRepeatOn) {
+      playNext()
+    } else {
+      audioPlayer.current.currentTime = 0;
+      playAudio()
+    }
+  };
+
   let initPosition = 0;
   const containerRef = useRef(null);
 
@@ -448,6 +457,11 @@ const MainPlayer = ({ location, history }) => {
             playerState={playerState}
             relatedVideos={relatedVideos}
             setRelatedVideos={data => setRelatedVideos(data)}
+            isRepeatOn={isRepeatOn}
+            // this will set the repeat setting 
+            setIsRepeatOn={() => {
+              setIsRepeatOn(!isRepeatOn);
+            }}
           />
         </>
       );
@@ -540,7 +554,7 @@ const MainPlayer = ({ location, history }) => {
           onPlay={() => setAudioState("playing")}
           onPlaying={() => setAudioState("playing")}
           onPause={() => setAudioState("paused")}
-          onEnded={playNext}
+          onEnded={songEnded}
           autoPlay
           ref={audioPlayer}
         />
