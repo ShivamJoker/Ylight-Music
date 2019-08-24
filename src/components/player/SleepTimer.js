@@ -21,14 +21,12 @@ const setSleepTimeToLocalStorage = (time, alwaysOn) => {
 };
 
 const getSleepTimeFromLocalStoarge = () => {
-  const sleepTimerSettings = JSON.parse(
-    localStorage.getItem("sleepTimerSettings")
-  );
-  return sleepTimerSettings;
+  const sleepTimerSettings = localStorage.getItem("sleepTimerSettings");
+  return JSON.parse(sleepTimerSettings);
 };
 
 const removeSleepTimer = () => {
-  localStorage.setItem("sleepTimerSettings", undefined);
+  localStorage.removeItem("sleepTimerSettings");
 };
 
 let timerTimeout;
@@ -73,7 +71,7 @@ function SleepTimer({ player }) {
 
   const handleRemove = () => {
     removeSleepTimer();
-    isTimerSet(false);
+    setIsTimerSet(false);
     setOpen(false);
   };
 
@@ -133,7 +131,9 @@ function SleepTimer({ player }) {
             labelPlacement="end"
             style={{ color: "#e91e63" }}
           />
-          <Button color="primary" onClick={handleRemove}>Remove</Button>
+          <Button color="primary" onClick={handleRemove}>
+            Remove
+          </Button>
 
           <Button color="primary" onClick={handleSetTimer}>
             Set
