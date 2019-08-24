@@ -541,7 +541,6 @@ const MainPlayer = ({ location, history }) => {
         {returnMaximizedPlayer()}
         {returnMinimizedPlayer()}
         <audio
-          crossOrigin="anonymous"
           // onTimeUpdate={timeUpdate}
           onLoadStart={() => {
             setAudioState("loading");
