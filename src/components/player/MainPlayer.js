@@ -270,7 +270,7 @@ const MainPlayer = ({ location, history }) => {
     bottom: 0,
     background: "#fff",
     width: "100%",
-    height: "100vh",
+    height: "100%",
     zIndex: 1400,
     display: "inline block",
     transition: "all .3s ease"

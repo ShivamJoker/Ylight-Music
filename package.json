@@ -16,6 +16,7 @@
     "material-ui": "^0.20.2",
     "react": "^16.9.0",
     "react-audio-spectrum": "0.0.9",
+    "react-circle-slider": "^1.6.2",
     "react-dom": "^16.9.0",
     "react-ga": "^2.6.0",
     "react-pose": "^4.0.8",

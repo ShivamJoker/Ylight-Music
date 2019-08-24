@@ -13,11 +13,13 @@ import {
   GetApp,
   Reply,
   DoneOutline,
-  Done
+  Done,
+  AlarmOff
 } from "@material-ui/icons/";
 import VolumeController from "./VolumeController";
 import { useSongMethods } from "../RenderDatabase";
 import { downloadSong } from "../../external/saveSong";
+import SleepTimer from './SleepTimer'
 import { GlobalContext } from "../GlobalState";
 
 const DownloadLoader = withStyles({
@@ -81,12 +83,14 @@ const TopBar = ({ song, player, setPlayerState, history }) => {
     >
       <VolumeController player={player} />
       {deleteDialogComponent}
-
       <Reply
         style={{ transform: " scaleX(-1) translateY(-2px)" }}
         onClick={shareSong}
         color="primary"
       />
+      
+      <SleepTimer player={player}/>
+
       <div>
         {isSongDownloaded ? (
           <DoneOutline

@@ -1,0 +1,34 @@
+.container {
+    font-family: sans-serif;
+    text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+  }
+  
+  .textContainer {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    line-height: 90px;
+    text-align: center;
+    color: #ec008c;
+  }
+  
+  .textContainer .minute {
+    font-size: 24px;
+    line-height: 20px;
+    background: -webkit-linear-gradient(#ec008c, #fc6767);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  

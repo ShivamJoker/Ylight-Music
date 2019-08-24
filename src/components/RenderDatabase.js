@@ -231,8 +231,6 @@ const RenderDatabase = props => {
       <Divider />
     </div>
   ));
-
-  console.log(props);
   return (
     <>
       {deleteDialogComponent}
