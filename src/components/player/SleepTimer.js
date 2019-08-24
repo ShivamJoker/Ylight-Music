@@ -73,6 +73,7 @@ function SleepTimer({ player }) {
 
   const handleRemove = () => {
     removeSleepTimer();
+    isTimerSet(false);
     setOpen(false);
   };
 
@@ -132,7 +133,7 @@ function SleepTimer({ player }) {
             labelPlacement="end"
             style={{ color: "#e91e63" }}
           />
-          <Button color="primary">Remove</Button>
+          <Button color="primary" onClick={handleRemove}>Remove</Button>
 
           <Button color="primary" onClick={handleSetTimer}>
             Set
