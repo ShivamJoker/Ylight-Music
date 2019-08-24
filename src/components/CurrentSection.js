@@ -207,6 +207,15 @@ const CurrentSection = ({ history, location }) => {
             return <RenderDatabase songs={songsHistoryState} />;
           }}
         />
+        <Route
+          path="/app"
+          render={props => {
+            window.location.replace(
+              "https://play.google.com/store/apps/details?id=com.ylightmusic.app"
+            );
+            return <div>Redirecting you to play store</div>;
+          }}
+        />
 
         <Route path="/privacy" component={PrivacyPage} />
 
