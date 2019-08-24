@@ -27,6 +27,10 @@ const getSleepTimeFromLocalStoarge = () => {
   return sleepTimerSettings;
 };
 
+const removeSleepTimer = () => {
+  localStorage.setItem("sleepTimerSettings", undefined);
+};
+
 let timerTimeout;
 
 function SleepTimer({ player }) {
@@ -35,8 +39,8 @@ function SleepTimer({ player }) {
   const [checkbox, setCheckbox] = useState(false);
   const [isTimerSet, setIsTimerSet] = useState(false);
 
-  const setTimer = (time) => {
-    console.log("timer has been set with time", time)
+  const setTimer = time => {
+    console.log("timer has been set with time", time);
     clearTimeout(timerTimeout);
     setIsTimerSet(true);
     timerTimeout = setTimeout(() => {
@@ -64,7 +68,12 @@ function SleepTimer({ player }) {
     //   then also set a set timeout
     // if there is any timer already clear it
     setOpen(false);
-    setTimer();
+    setTimer(sliderValue);
+  };
+
+  const handleRemove = () => {
+    removeSleepTimer();
+    setOpen(false);
   };
 
   return (
