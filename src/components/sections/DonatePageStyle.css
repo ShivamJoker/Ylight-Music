@@ -1,0 +1,31 @@
+.patreonBtn{
+    height: 35px;
+    width: 180px;
+    background: rgb(232, 91, 70);
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 5px;
+    border-radius: 50px;
+    color: #ffffff;
+    margin: 20px auto;
+}
+
+.paypalBtn{
+
+    padding: 7px;
+    width: 180px;
+    background: #eee;
+    border-radius: 50px;
+    text-align: center;
+    margin: 20px auto;
+}
+
+.patreonBtn svg{
+    width: 25px;
+    fill: #ffffff;
+}
+
+a {
+    text-decoration: none;
+}

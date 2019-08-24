@@ -40,6 +40,7 @@ const SearchResult = lazy(() => import("./SearchResult"));
 const HomePage = lazy(() => import("./sections/HomePage"));
 const FeedbackForm = lazy(() => import("./sections/FeedbackForm"));
 const PrivacyPage = lazy(() => import("./sections/PrivacyPage"));
+const DonatePage = lazy(() => import("./sections/DonatePage"));
 
 // custom styling the tab menus
 const CustomTab = withStyles({
@@ -210,6 +211,7 @@ const CurrentSection = ({ history, location }) => {
         <Route path="/privacy" component={PrivacyPage} />
 
         <Route path="/feedback" component={FeedbackForm} />
+        <Route path="/donate" component={DonatePage} />
         <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
       </Suspense>
       {/* if the player is on then return 100px else 50px*/}
