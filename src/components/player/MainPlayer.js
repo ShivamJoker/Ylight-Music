@@ -112,6 +112,7 @@ const MainPlayer = ({ location, history }) => {
   };
 
   useEffect(() => {
+    console.log("state changed triggedred");
     const getAudio = async data => {
       // audioPlayer.current.src = "";
       // maximize the player every time id changes
@@ -135,13 +136,6 @@ const MainPlayer = ({ location, history }) => {
       // set the audio data
       audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
       playAudio();
-      // setAudioURL("https://server.ylight.xyz/proxy/" + res.data)
-      // audioPlayer.current.load()
-
-      // audioPlayer.current.play();
-
-      // audioPlayer.current.play();
-      // .catch(err => console.log(err));
 
       // var audioContext = new AudioContext();
       // var track = audioContext.createMediaElementSource(audioPlayer.current);
@@ -199,6 +193,12 @@ const MainPlayer = ({ location, history }) => {
     setRating("none");
   }, [currentVideoSnippet, setIsItFromPlaylist]);
 
+  const [justState, setJustState] = useState(1);
+
+  useEffect(() => {
+    console.log(justState);
+  }, [justState]);
+
   useEffect(() => {
     console.log("from playlist", isItFromPlaylist);
   }, [isItFromPlaylist]);
@@ -211,6 +211,16 @@ const MainPlayer = ({ location, history }) => {
   useEffect(() => {
     console.log("isnext state", isNextFromMini);
   }, [isNextFromMini]);
+
+  const setAudioSrcAndPlay = async id => {
+    const res = await getAudioLink.get("/song", {
+      params: { id: id }
+    });
+
+    // set the audio data
+    audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
+    playAudio();
+  };
 
   const setVideoSnippet = video => {
     setCurrentVideoSnippet({
@@ -225,6 +235,11 @@ const MainPlayer = ({ location, history }) => {
       }/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
+
+    // if window is minimized then only we will run this function
+    if (document.hidden) {
+      setAudioSrcAndPlay(video.id.videoId);
+    }
   };
 
   const playNext = () => {
@@ -327,10 +342,10 @@ const MainPlayer = ({ location, history }) => {
   const songEnded = () => {
     // if repeat is false we will play next else just set the time to 0
     if (!isRepeatOn) {
-      playNext()
+      playNext();
     } else {
       audioPlayer.current.currentTime = 0;
-      playAudio()
+      playAudio();
     }
   };
 
@@ -458,7 +473,7 @@ const MainPlayer = ({ location, history }) => {
             relatedVideos={relatedVideos}
             setRelatedVideos={data => setRelatedVideos(data)}
             isRepeatOn={isRepeatOn}
-            // this will set the repeat setting 
+            // this will set the repeat setting
             setIsRepeatOn={() => {
               setIsRepeatOn(!isRepeatOn);
             }}
