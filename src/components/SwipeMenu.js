@@ -11,7 +11,14 @@ import {
   ListItemText,
   withStyles
 } from "@material-ui/core";
-import { AccountCircle, Feedback, Info, FreeBreakfast } from "@material-ui/icons";
+
+import {
+  AccountCircle,
+  Feedback,
+  Info,
+  FreeBreakfast,
+  People
+} from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
 import gIcon from "../images/google.svg";
@@ -74,17 +81,23 @@ const SwipeMenu = () => {
             </ListItemIcon>
             <ListItemText primary="Feedback" />
           </ListItem>
-          <ListItem button component={Link} to="/privacy">
-            <ListItemIcon>
-              <Info />
-            </ListItemIcon>
-            <ListItemText primary="Privacy & Policy" />
-          </ListItem>
           <ListItem button component={Link} to="/donate">
             <ListItemIcon>
               <FreeBreakfast />
             </ListItemIcon>
             <ListItemText primary="Donate & Support" />
+          </ListItem>
+          <ListItem button component={Link} to="/contributors">
+            <ListItemIcon>
+              <People />
+            </ListItemIcon>
+            <ListItemText primary="Contributors" />
+          </ListItem>
+          <ListItem button component={Link} to="/privacy">
+            <ListItemIcon>
+              <Info />
+            </ListItemIcon>
+            <ListItemText primary="Privacy & Policy" />
           </ListItem>
         </List>
       </div>
