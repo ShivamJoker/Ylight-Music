@@ -82,7 +82,7 @@ const ContributorsPage = () => {
           <Typography>Helped in writing code</Typography>
         </Grid>
         <Divider className={classes.divider} />
-        <Typography variant="h5">Small Contributors</Typography>
+        <Typography variant="h5">Other Contributors</Typography>
 
         <Grid container className={classes.miniContainer}>
           <Grid container alignItems="center">
