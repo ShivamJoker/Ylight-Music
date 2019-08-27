@@ -9,7 +9,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  withStyles
+  withStyles,
+  Link as MaterialLink
 } from "@material-ui/core";
 
 import {
@@ -22,6 +23,7 @@ import {
 import { Link } from "react-router-dom";
 
 import gIcon from "../images/google.svg";
+import githubIcon from "../images/github.svg";
 
 import { GlobalContext } from "./GlobalState";
 
@@ -92,6 +94,17 @@ const SwipeMenu = () => {
               <People />
             </ListItemIcon>
             <ListItemText primary="Contributors" />
+          </ListItem>
+          <ListItem
+            button
+            component={MaterialLink}
+            target="blank"
+            href="https://github.com/ShivamJoker/Ylight-Music-Client"
+          >
+            <ListItemIcon>
+              <img width="24" src={githubIcon} alt="github icon" />
+            </ListItemIcon>
+            <ListItemText primary="Github" />
           </ListItem>
           <ListItem button component={Link} to="/privacy">
             <ListItemIcon>
