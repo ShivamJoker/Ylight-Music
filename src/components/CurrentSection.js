@@ -16,7 +16,13 @@ import {
 } from "react-router-dom";
 
 import { AnimatePresence } from "framer-motion";
-import { Tabs, Tab, withStyles } from "@material-ui/core";
+import {
+  Tabs,
+  Tab,
+  withStyles,
+  Grid,
+  CircularProgress
+} from "@material-ui/core";
 import {
   Home,
   Favorite,
@@ -95,6 +101,17 @@ const CurrentSection = ({ history, location }) => {
   const [updateCount, setUpdateCount] = useState(0);
   const [redirectState, setRedirectState] = useState(null);
 
+  const circularLoader = (
+    <Grid
+      style={{ height: "100vh" }}
+      container
+      justify="center"
+      alignItems="center"
+    >
+      <CircularProgress />
+    </Grid>
+  );
+
   function handleChange(event, newValue) {
     setTabValue(newValue);
   }
@@ -169,7 +186,7 @@ const CurrentSection = ({ history, location }) => {
   // there are 4 tabs so there will be 3 indexes
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={circularLoader}>
         <Route
           exact
           path="/"

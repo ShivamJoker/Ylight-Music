@@ -48,7 +48,7 @@ const ulVariants = {
 const SearchResult = ({ videos }) => {
   const [isOpen, setisOpen] = useCycle(false, true);
 
-  const { setCurrentVideoSnippet, setRelatedVideos } = useContext(
+  const { setCurrentVideoSnippet } = useContext(
     GlobalContext
   );
 
@@ -69,14 +69,14 @@ const SearchResult = ({ videos }) => {
   };
 
   React.useEffect(() => {
-  
-    setTimeout(() => {
-      setisOpen(true);
-    }, 100);
+    setTimeout(() => {}, 100);
+    console.log("isopen cycle", isOpen);
+    setisOpen(true);
   }, []);
 
   const renderResult = videos.map(video => {
     const { snippet } = video;
+    console.log("render result times")
     return (
       <motion.div variants={liVariants} key={video.id.videoId}>
         <ListItem

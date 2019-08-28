@@ -7,7 +7,9 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  Typography
+  Typography,
+  LinearProgress,
+  Container
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -90,7 +92,11 @@ const MediaCard = ({ songs, categotyTitle }) => {
       </>
     );
   } else {
-    return <div>Loading</div>;
+    return (
+      <Container style={{ height: "25vh" }}>
+        <LinearProgress color="primary" />
+      </Container>
+    );
   }
 };
 
