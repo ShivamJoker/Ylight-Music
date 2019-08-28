@@ -9,7 +9,8 @@ import {
   ListItemIcon,
   ListItemText,
   Grid,
-  Divider
+  Divider,
+  LinearProgress
 } from "@material-ui/core";
 
 import {
@@ -101,7 +102,7 @@ const RelatedVideos = ({
       );
     });
   } else {
-    return "Loading the playlist";
+    return <LinearProgress/>;
   }
 
   const returnPlaylistExpandBtn = () => {
