@@ -5,7 +5,7 @@
   "background_color": "#FFF",
   "display": "standalone",
   "orientation": "portrait",
-  "Scope": "/",
+  "Scope": "https://ylight.xyz/",
   "start_url": "/",
   "icons": [
     {
