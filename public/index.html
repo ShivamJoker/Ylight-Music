@@ -17,122 +17,43 @@
       Ylight Music - Listen to unlimited songs for free without any ads
     </title>
   </head>
+
   <style>
-    .cssload-main {
+    .full-page-loader {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
       position: absolute;
-      content: "";
-      left: 50%;
-      transform: translate(-100%, -240%);
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
     }
 
-    .cssload-main * {
-      font-size: 62px;
+    .full-page-loader > img {
+      animation: 1.8s infinite heartbeat;
     }
 
-    .cssload-heart {
-      animation: cssload-heart 2.88s cubic-bezier(0.75, 0, 0.5, 1) infinite
-        normal;
-      top: 50%;
-      content: "";
-      left: 50%;
-      position: absolute;
-    }
-
-    .cssload-heartL {
-      width: 1em;
-      height: 1em;
-      border: 1px solid #e91e63;
-      background-color: #e91e63;
-      content: "";
-      position: absolute;
-      display: block;
-      border-radius: 100%;
-      animation: cssload-heartL 2.88s cubic-bezier(0.75, 0, 0.5, 1) infinite
-        normal;
-      transform: translate(-28px, -27px);
-    }
-
-    .cssload-heartR {
-      width: 1em;
-      height: 1em;
-      border: 1px solid #e91e63;
-      background-color: #e91e63;
-      content: "";
-      position: absolute;
-      display: block;
-      border-radius: 100%;
-      transform: translate(28px, -27px);
-      animation: cssload-heartR 2.88s cubic-bezier(0.75, 0, 0.5, 1) infinite
-        normal;
-    }
-
-    .cssload-square {
-      width: 1em;
-      height: 1em;
-      border: 1px solid #e91e63;
-      background-color: #e91e63;
-      position: relative;
-      display: block;
-      content: "";
-      transform: scale(1) rotate(-45deg);
-      animation: cssload-square 2.88s cubic-bezier(0.75, 0, 0.5, 1) infinite
-        normal;
-    }
-
-    .cssload-shadow {
-      top: 97px;
-      left: 50%;
-      content: "";
-      position: relative;
-      display: block;
-      bottom: -0.5em;
-      width: 1em;
-      height: 0.24em;
-      background-color: rgb(215, 215, 215);
-      border: 1px solid rgb(215, 215, 215);
-      border-radius: 50%;
-      animation: cssload-shadow 2.88s cubic-bezier(0.75, 0, 0.5, 1) infinite
-        normal;
-    }
-
-    @keyframes cssload-square {
+    @keyframes heartbeat {
+      0% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(1.05);
+      }
       50% {
-        border-radius: 100%;
-        transform: scale(0.5) rotate(-45deg);
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(1.05);
       }
       100% {
-        transform: scale(1) rotate(-45deg);
-      }
-    }
-
-    @keyframes cssload-heart {
-      50% {
-        transform: rotate(360deg);
-      }
-      100% {
-        transform: rotate(720deg);
-      }
-    }
-
-    @keyframes cssload-heartL {
-      60% {
-        transform: scale(0.4);
-      }
-    }
-
-    @keyframes cssload-heartR {
-      40% {
-        transform: scale(0.4);
-      }
-    }
-
-    @keyframes cssload-shadow {
-      50% {
-        transform: scale(0.5);
-        border-color: rgb(228, 228, 228);
+        transform: scale(1);
       }
     }
   </style>
+
   <body style="margin: 0">
     <noscript>
       <h1>
@@ -140,13 +61,12 @@
       </h1>
     </noscript>
     <div id="root">
-      <div class="cssload-main">
-        <div class="cssload-heart">
-          <span class="cssload-heartL"></span>
-          <span class="cssload-heartR"></span>
-          <span class="cssload-square"></span>
-        </div>
-        <div class="cssload-shadow"></div>
+      <div class="full-page-loader">
+        <img
+          width="250"
+          src="%PUBLIC_URL%/icons/icon-512x512.png"
+          alt="Ylight Logo"
+        />
       </div>
     </div>
   </body>
