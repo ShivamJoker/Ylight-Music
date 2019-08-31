@@ -17,5 +17,9 @@
 ### Please support me on patreon 
 [![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=7063971)
 
+## I would like to thank
++ [Will Adams](https://github.com/bushblade)
++ [Reactiflux members](https://discord.gg/Ff8Jt8v)
+
 ## Patrons
 + Razvan
