@@ -31,16 +31,16 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.dark .pinkLists > a, .dark .pinkLists svg{
-    color: #fff;
-    fill: #fff;
-
+.dark .pinkLists > a,
+.dark .pinkLists svg {
+  color: #fff;
+  fill: #fff;
 }
 
 .dark .pinkLists > a {
-    background: #dedede12;
+  background: #dedede12;
 }
 
 .wholePlayer {
-    background: #e91e63;
+  background: #e91e63;
 }

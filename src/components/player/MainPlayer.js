@@ -283,7 +283,7 @@ const MainPlayer = ({ location, history }) => {
     position: "fixed",
     right: 0,
     bottom: 0,
-    
+    background: "#fff",
     width: "100%",
     height: "100%",
     zIndex: 1400,
@@ -294,6 +294,7 @@ const MainPlayer = ({ location, history }) => {
   if (playerState === "minimized") {
     playerStyle.transform = "translateY(calc(100% - 106px))";
     playerStyle.zIndex = 0;
+    playerStyle.background = "#e91e63";
     // playerStyle.bottom = "48px";
     // calculate the top height and we are subtracting 148px becz
     // 48 is the value of menu bar and 100px is minimized height
@@ -304,7 +305,6 @@ const MainPlayer = ({ location, history }) => {
   if (playerState === "maximized") {
     // make body overflow hidden 🙈
     body.style.overflow = "hidden";
-    playerStyle.background = "#fff";
   }
 
   if (playerState === "playlist") {
