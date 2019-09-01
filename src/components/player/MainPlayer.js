@@ -283,7 +283,7 @@ const MainPlayer = ({ location, history }) => {
     position: "fixed",
     right: 0,
     bottom: 0,
-    background: "#fff",
+    
     width: "100%",
     height: "100%",
     zIndex: 1400,
@@ -293,7 +293,6 @@ const MainPlayer = ({ location, history }) => {
 
   if (playerState === "minimized") {
     playerStyle.transform = "translateY(calc(100% - 106px))";
-    playerStyle.background = "#e91e63";
     playerStyle.zIndex = 0;
     // playerStyle.bottom = "48px";
     // calculate the top height and we are subtracting 148px becz
@@ -305,6 +304,7 @@ const MainPlayer = ({ location, history }) => {
   if (playerState === "maximized") {
     // make body overflow hidden 🙈
     body.style.overflow = "hidden";
+    playerStyle.background = "#fff";
   }
 
   if (playerState === "playlist") {
@@ -434,6 +434,7 @@ const MainPlayer = ({ location, history }) => {
           <Grid
             container
             direction="column"
+            className="main-player-inner"
             style={{
               height: " calc(100vh - 46px)",
               justifyContent: "space-evenly"
@@ -552,6 +553,7 @@ const MainPlayer = ({ location, history }) => {
         ref={containerRef}
         style={playerStyle}
         onClick={expandPlayer}
+        className="wholePlayer"
       >
         {returnMaximizedPlayer()}
         {returnMinimizedPlayer()}

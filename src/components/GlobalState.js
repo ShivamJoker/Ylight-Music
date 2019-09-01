@@ -11,6 +11,8 @@ export const GlobalState = props => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState(false); //this will contain the message for actions
   const [currentVideoSnippet, setCurrentVideoSnippet] = useState({});
+  //this is for changing the theme
+  const [themeSelectValue, setThemeSelectValue] = useState("Default");
 
   return (
     <GlobalContext.Provider
@@ -26,7 +28,9 @@ export const GlobalState = props => {
         relatedVideos,
         setRelatedVideos,
         snackbarMsg,
-        setSnackbarMsg
+        setSnackbarMsg,
+        themeSelectValue,
+        setThemeSelectValue
       }}
     >
       {props.children}

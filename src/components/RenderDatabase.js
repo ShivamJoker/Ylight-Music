@@ -226,7 +226,7 @@ const RenderDatabase = props => {
   console.log(renderResult);
 
   const renderItem = React.forwardRef((row, ref) => (
-    <div ref={ref} style={row.style}>
+    <div ref={ref} style={{ ...row.style,  maxWidth: "1000px", left: "50%", transform: "translateX(-50%)"}}>
       {renderResult[row.index]}
       <Divider />
     </div>

@@ -1,0 +1,46 @@
+.dark {
+  background: #212121;
+  color: #fff;
+}
+
+.dark #navbar {
+  background: #333;
+}
+
+.dark div.MuiTabs-root {
+  background: #333;
+}
+
+.dark .main-player-inner {
+  background: #212121;
+}
+.dark .main-player-inner * {
+  /* color: #eceff1; */
+}
+
+.dark .RelatedVideoContainer {
+  background: #333;
+}
+
+.dark .playlistHeader,
+.dark .mainContainer {
+  background: #333;
+}
+
+.dark .MuiTab-textColorPrimary {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dark .pinkLists > a, .dark .pinkLists svg{
+    color: #fff;
+    fill: #fff;
+
+}
+
+.dark .pinkLists > a {
+    background: #dedede12;
+}
+
+.wholePlayer {
+    background: #e91e63;
+}

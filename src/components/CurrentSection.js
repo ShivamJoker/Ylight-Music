@@ -39,6 +39,7 @@ import {
 } from "../external/saveSong";
 
 import { db } from "../external/saveSong";
+import SettingsPage from "./sections/SettingsPage";
 // import the db from save song
 
 // pages
@@ -236,7 +237,8 @@ const CurrentSection = ({ history, location }) => {
             return <div>Redirecting you to play store</div>;
           }}
         />
-
+       
+        <Route path="/settings" component={SettingsPage} />
         <Route path="/privacy" component={PrivacyPage} />
 
         <Route path="/feedback" component={FeedbackForm} />
