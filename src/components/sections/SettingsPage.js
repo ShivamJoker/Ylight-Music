@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Container,
   FormControl,
@@ -12,14 +12,49 @@ import {
 
 import { GlobalContext } from "../GlobalState";
 
+export const useCheckDarkmode = () => {
+  const { setThemeSelectValue } = useContext(GlobalContext);
+  const checkDarkMode = () => {
+    const selectedTheme = localStorage.getItem("selectedTheme");
+
+    if (selectedTheme) {
+      console.log(selectedTheme);
+      setThemeSelectValue(selectedTheme);
+
+      const date = new Date();
+      const hrs = date.getHours();
+
+      // if the theme is auto then only do it
+      if (selectedTheme === "Auto") {
+        if (hrs >= 18 || hrs <= 6) {
+          setThemeSelectValue("Dark");
+        } else {
+          setThemeSelectValue("Auto");
+        }
+      }
+    }
+  };
+
+  return { checkDarkMode };
+};
+
 const SettingsPage = () => {
   const { themeSelectValue, setThemeSelectValue } = useContext(GlobalContext);
+
+  const handleThemeChange = e => {
+    setThemeSelectValue(e.target.value);
+    localStorage.setItem("selectedTheme", e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(themeSelectValue);
+  }, [themeSelectValue]);
 
   const selectComp = (
     <Box m={1}>
       <Select
         value={themeSelectValue}
-        onChange={e => setThemeSelectValue(e.target.value)}
+        onChange={handleThemeChange}
         displayEmpty
         name="age"
       >

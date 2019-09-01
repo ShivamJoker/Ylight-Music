@@ -11,6 +11,7 @@ import { pink } from "@material-ui/core/colors";
 import "typeface-roboto";
 
 import { GlobalContext } from "./GlobalState";
+import { useCheckDarkmode } from "./sections/SettingsPage";
 
 const body = document.querySelector("body");
 
@@ -29,6 +30,11 @@ function App() {
     }
   };
 
+  const { checkDarkMode } = useCheckDarkmode();
+
+  useEffect(() => {
+    checkDarkMode();
+  }, []);
 
   const [theme, setTheme] = useState(defaultTheme);
   const muiTheme = createMuiTheme(theme);

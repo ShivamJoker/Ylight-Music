@@ -29,3 +29,14 @@
 a {
     text-decoration: none;
 }
+
+.paytmQR{
+    margin: 0 auto;
+    display: block;
+    width: 200px;
+    transition: all .2s ease-out;
+}
+
+.paytmQR:hover{
+    transform: scale(1.3);
+}
