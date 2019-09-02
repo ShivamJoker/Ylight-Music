@@ -1,3 +1,7 @@
+body {
+  overscroll-behavior: none;
+}
+
 .render-list-container {
   position: relative;
 }
@@ -121,13 +125,13 @@ div.RelatedVideoContainer * {
 }
 
 /* hide recaptcha badge */
-div.grecaptcha-badge  {
+div.grecaptcha-badge {
   display: none;
 }
 
 /* fix on small screen */
-@media (max-height: 570px){
-  .musicArtContainer{
+@media (max-height: 570px) {
+  .musicArtContainer {
     height: 70%;
   }
 }
