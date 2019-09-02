@@ -116,6 +116,12 @@ div.RelatedVideoContainer * {
   box-shadow: #06060640 0px 2px 3px;
 }
 
+.searchPopper {
+  width: 100%;
+  height: 93%;
+  background: #fff;
+}
+
 .playlistHeader h6 {
   margin-right: 50px;
 }

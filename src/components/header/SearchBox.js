@@ -174,7 +174,7 @@ const SearchBox = ({ history, location }) => {
       </form>
 
       <Popper
-        style={{ width: "100%", height: "92%", background: "#fff" }}
+        className="searchPopper"
         open={isPopperOpen}
         anchorEl={document.getElementById("navbar")}
         popperOptions={{
