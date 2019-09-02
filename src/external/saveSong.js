@@ -1,5 +1,7 @@
 import Dexie from "dexie";
-import 'dexie-observable';
+import "dexie-observable";
+import { promised } from "q";
+import { promises } from "fs";
 
 // Define your database
 export const db = new Dexie("Song_Database");
@@ -81,10 +83,15 @@ export const downloadSong = async (id, url) => {
     db.songs.update(id, {
       downloadState: "downloading"
     });
-    const song = await getSongBlob(url);
+    const thumbURL = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    const [thumbnailBlob, songBlob] = await Promise.all([
+      fetchProxiedBlob(thumbURL),
+      fetchProxiedBlob(url)
+    ]);
     db.songs.update(id, {
       downloadState: "downloaded",
-      audio: song
+      thumbnail: thumbnailBlob,
+      audio: songBlob
     });
     return "downloaded";
   } catch (error) {
@@ -100,7 +107,7 @@ export const deleteSongAudio = async id => {
   return "song deleted";
 };
 
-function getSongBlob(url) {
+function fetchProxiedBlob(url) {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "https://server.ylight.xyz/proxy/" + url);

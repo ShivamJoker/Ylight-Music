@@ -54,7 +54,7 @@ export const useSongMethods = songId => {
   }, []);
 
   const handleDownload = async songId => {
-    console.log("here is the id", songId);
+    // console.log("here is the id", songId);
     const res = await getAudioLink.get("/song", {
       params: { id: songId }
     });
@@ -72,9 +72,7 @@ export const useSongMethods = songId => {
     setDontAskPopup(true);
   };
 
-  useEffect(() => {
-    console.log("dont ask state", dontAskPopup);
-  }, [dontAskPopup]);
+
 
   const deleteTheSong = async checkBox => {
     const deleted = await deleteSongAudio(currentId);
@@ -126,6 +124,7 @@ const RenderDatabase = props => {
     setCurrentVideoSnippet({
       id: song.videoId,
       audio: song.audio,
+      thumbnail: song.thumbnail,
       title: song.title,
       channelTitle: song.channelTitle,
       maxThumbnail: `https://img.youtube.com/vi/${
@@ -223,7 +222,6 @@ const RenderDatabase = props => {
       </>
     );
   });
-  console.log(renderResult);
 
   const renderItem = React.forwardRef((row, ref) => (
     <div ref={ref} style={{ ...row.style,  maxWidth: "1000px", left: "50%", transform: "translateX(-50%)"}}>

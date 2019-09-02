@@ -38,9 +38,11 @@ let relatedVideosVar;
 const MainPlayer = ({ location, history }) => {
   let params = new URLSearchParams(location.search);
 
-  const { currentVideoSnippet, setCurrentVideoSnippet } = useContext(
-    GlobalContext
-  );
+  const {
+    currentVideoSnippet,
+    setCurrentVideoSnippet,
+    themeSelectValue
+  } = useContext(GlobalContext);
 
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
@@ -294,7 +296,12 @@ const MainPlayer = ({ location, history }) => {
   if (playerState === "minimized") {
     playerStyle.transform = "translateY(calc(100% - 106px))";
     playerStyle.zIndex = 0;
-    playerStyle.background = "#e91e63";
+    // if theme is not dark then only apply the pink style
+    if (themeSelectValue === "Dark") {
+      playerStyle.background = "#333";
+    } else {
+      playerStyle.background = "#e91e63";
+    }
     // playerStyle.bottom = "48px";
     // calculate the top height and we are subtracting 148px becz
     // 48 is the value of menu bar and 100px is minimized height
@@ -305,6 +312,9 @@ const MainPlayer = ({ location, history }) => {
   if (playerState === "maximized") {
     // make body overflow hidden 🙈
     body.style.overflow = "hidden";
+    if (themeSelectValue === "Dark") {
+      playerStyle.background = "#333";
+    }
   }
 
   if (playerState === "playlist") {

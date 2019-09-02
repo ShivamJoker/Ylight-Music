@@ -57,7 +57,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
       e.target.src = data.sdThumbnail;
     }
   };
-
+  
   // double tap to like the song
   const likeSong = useCallback(() => {
     // run the like function to like provided with song id and rating
@@ -91,6 +91,15 @@ const MusicArt = ({ data, rating, audioEl }) => {
     const re = new RegExp(data.channelTitle + " - | : ", "g");
 
     return data.title.replace(re, "").slice(0, 25) + "...";
+  };
+
+  const getThumbnail = () => {
+    // if the thumbnail is downloaded then get it from database or else use the url to fetch
+    if (data.thumbnail) {
+      return window.URL.createObjectURL(data.thumbnail);
+    } else {
+      return data.maxThumbnail;
+    }
   };
 
   return (
@@ -127,7 +136,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
             boxShadow: "#0000008c 1px 3px 8px"
           }}
           alt="video thumbnail"
-          src={data.maxThumbnail}
+          src={getThumbnail()}
           imgProps={{ onLoad: e => checkImg(e) }}
         />
       </motion.div>
