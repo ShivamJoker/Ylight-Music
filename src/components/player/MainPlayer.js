@@ -136,10 +136,12 @@ const MainPlayer = ({ location, history }) => {
       });
 
       // set the audio data
-      audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
+      const proxyURL = "https://server.ylight.xyz/proxy/"
+      audioPlayer.current.src = res.data;
       playAudio();
 
       // var audioContext = new AudioContext();
+      
       // var track = audioContext.createMediaElementSource(audioPlayer.current);
       // track.connect(audioContext.destination);
     };
@@ -220,7 +222,7 @@ const MainPlayer = ({ location, history }) => {
     });
 
     // set the audio data
-    audioPlayer.current.src = "https://server.ylight.xyz/proxy/" + res.data;
+    audioPlayer.current.src = res.data;
     playAudio();
   };
 
@@ -229,12 +231,8 @@ const MainPlayer = ({ location, history }) => {
       id: video.id.videoId,
       title: video.snippet.title,
       channelTitle: video.snippet.channelTitle,
-      maxThumbnail: `https://img.youtube.com/vi/${
-        video.id.videoId
-      }/hqdefault.jpg`,
-      sdThumbnail: `https://img.youtube.com/vi/${
-        video.id.videoId
-      }/sddefault.jpg`
+      maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/hqdefault.jpg`,
+      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
 
@@ -540,9 +538,7 @@ const MainPlayer = ({ location, history }) => {
           id: item.id,
           title: item.snippet.title,
           channelTitle: item.snippet.channelTitle,
-          maxThumbnail: `https://img.youtube.com/vi/${
-            item.id
-          }/maxresdefault.jpg`,
+          maxThumbnail: `https://img.youtube.com/vi/${item.id}/maxresdefault.jpg`,
           sdThumbnail: `https://img.youtube.com/vi/${item.id}/sddefault.jpg`
           // this is the url of the max resolution of thumbnail
         });
@@ -577,6 +573,7 @@ const MainPlayer = ({ location, history }) => {
           onCanPlay={() => {
             setAudioState("loaded");
           }}
+          // crossOrigin="anonymous"
           onPlay={() => setAudioState("playing")}
           onPlaying={() => setAudioState("playing")}
           onPause={() => setAudioState("paused")}
