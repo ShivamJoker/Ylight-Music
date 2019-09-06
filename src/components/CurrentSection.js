@@ -35,10 +35,11 @@ import { GlobalContext } from "./GlobalState";
 import {
   getHistory,
   getLikedSongs,
-  getDownloadedSongs
+  getDownloadedSongs,
+  removeDownloadingState,
+  db
 } from "../external/saveSong";
 
-import { db } from "../external/saveSong";
 import SettingsPage from "./sections/SettingsPage";
 // import the db from save song
 
@@ -150,6 +151,8 @@ const CurrentSection = ({ history, location }) => {
     db.on("changes", () => {
       setUpdateCount(c => c + 1);
     });
+    // will remove all the songs which are downloading in the first place
+    removeDownloadingState();
 
     const isThisNewUser = localStorage.getItem("isThisNew");
     if (isThisNewUser === "no") {
@@ -237,7 +240,7 @@ const CurrentSection = ({ history, location }) => {
             return <div>Redirecting you to play store</div>;
           }}
         />
-       
+
         <Route path="/settings" component={SettingsPage} />
         <Route path="/privacy" component={PrivacyPage} />
 

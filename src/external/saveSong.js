@@ -71,11 +71,22 @@ export const getLikedSongs = async () => {
 
 export const getDownloadedSongs = async () => {
   const downloadedSongs = await db.songs
-    .where("[downloadState+timestamp]") //this will filter song based on time and liked
+    .where("[downloadState+timestamp]") //this will filter song based on time and downloaded
     .between(["downloaded", Dexie.minKey], ["downloaded", Dexie.maxKey])
     .reverse()
     .toArray();
   return downloadedSongs;
+};
+
+export const removeDownloadingState = async () => {
+  // find all the downloadState which is downloading and remove that
+  const songs = await db.songs
+    .where("[downloadState+timestamp]")
+    .between(["downloading", Dexie.minKey], ["downloading", Dexie.maxKey])
+    .modify(x => {
+      delete x.downloadState;
+    });
+  console.log(songs);
 };
 
 export const downloadSong = async (id, url) => {
@@ -108,9 +119,10 @@ export const deleteSongAudio = async id => {
 };
 
 function fetchProxiedBlob(url) {
+  const URL = url;
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://server.ylight.xyz/proxy/" + url);
+    xhr.open("GET", "https://server.ylight.xyz/proxy/" + URL);
     xhr.responseType = "blob";
     xhr.onload = function() {
       var status = xhr.status;
@@ -124,5 +136,11 @@ function fetchProxiedBlob(url) {
       }
     };
     xhr.send();
+    setTimeout(() => {
+      xhr.abort();
+      xhr.open("GET", "https://server.ylight.xyz/proxy/" + URL);
+
+      xhr.send();
+    }, 1000);
   });
 }
