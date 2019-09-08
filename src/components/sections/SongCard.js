@@ -25,7 +25,10 @@ const useStyles = makeStyles({
   }
 });
 const MediaCard = ({ songs, categotyTitle }) => {
-  const { setCurrentVideoSnippet } = useContext(GlobalContext);
+  const [{}, dispatch] = useContext(GlobalContext);
+  const setCurrentVideoSnippet = data => {
+    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+  };
 
   const handleClick = video => {
     // set all the info of current clicked video in this object
@@ -35,9 +38,7 @@ const MediaCard = ({ songs, categotyTitle }) => {
         id: video.id,
         title: video.snippet.title,
         channelTitle: video.snippet.channelTitle,
-        maxThumbnail: `https://img.youtube.com/vi/${
-          video.id
-        }/maxresdefault.jpg`,
+        maxThumbnail: `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`,
         sdThumbnail: `https://img.youtube.com/vi/${video.id}/sddefault.jpg`
         // this is the url of the max resolution of thumbnail
       });
@@ -46,12 +47,8 @@ const MediaCard = ({ songs, categotyTitle }) => {
         id: video.snippet.resourceId.videoId,
         title: video.snippet.title,
         channelTitle: video.snippet.channelTitle,
-        maxThumbnail: `https://img.youtube.com/vi/${
-          video.snippet.resourceId.videoId
-        }/maxresdefault.jpg`,
-        sdThumbnail: `https://img.youtube.com/vi/${
-          video.snippet.resourceId.videoId
-        }/sddefault.jpg`
+        maxThumbnail: `https://img.youtube.com/vi/${video.snippet.resourceId.videoId}/maxresdefault.jpg`,
+        sdThumbnail: `https://img.youtube.com/vi/${video.snippet.resourceId.videoId}/sddefault.jpg`
         // this is the url of the max resolution of thumbnail
       });
     }

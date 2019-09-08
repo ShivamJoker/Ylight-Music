@@ -23,11 +23,8 @@ import {
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
-
-
 import { GlobalContext } from "./GlobalState";
 import "./darkMode.css";
-
 
 const SwipeMenu = () => {
   const largeAvator = {
@@ -37,9 +34,11 @@ const SwipeMenu = () => {
     background: "#e91e63"
   };
 
-  const { menuOpen, setMenuOpen } = useContext(GlobalContext);
+  const [{ menuOpen }, dispatch] = useContext(GlobalContext);
 
-
+  const setMenuOpen = data => {
+    dispatch({ type: "setMenuOpen", snippet: data });
+  };
 
   return (
     <SwipeableDrawer
@@ -83,7 +82,7 @@ const SwipeMenu = () => {
         >
           <ListItem button component={Link} to="/settings">
             <ListItemIcon>
-              <Settings/>
+              <Settings />
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItem>

@@ -93,6 +93,29 @@ svg.songHeart.left {
   left: -8px;
 }
 
+/* main media player container style */
+.mediaPlayerContainer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  z-index: 1400;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.playerMinimized {
+  transform: translateY(calc(100% - 106px));
+  z-index: 0;
+  background: #e91e63;
+}
+
+.playerPlaylist{
+  transform : translateY(-418px);
+}
+
 /* style for the playlist of related videos */
 
 .RelatedVideoContainer {
@@ -133,6 +156,14 @@ div.RelatedVideoContainer * {
 /* hide recaptcha badge */
 div.grecaptcha-badge {
   display: none;
+}
+
+/* short the title based on space */
+.musicArtTitle {
+  width: 88vw;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 /* fix on small screen */

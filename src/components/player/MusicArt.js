@@ -57,7 +57,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
       e.target.src = data.sdThumbnail;
     }
   };
-  
+
   // double tap to like the song
   const likeSong = useCallback(() => {
     // run the like function to like provided with song id and rating
@@ -88,9 +88,10 @@ const MusicArt = ({ data, rating, audioEl }) => {
   // if we find the channel name is before the song title we will remove it
   //using the regex
   const shortTitle = data => {
+    // this regex is to remove channel name from song title
     const re = new RegExp(data.channelTitle + " - | : ", "g");
 
-    return data.title.replace(re, "").slice(0, 25) + "...";
+    return data.title.replace(re, "");
   };
 
   const getThumbnail = () => {
@@ -141,7 +142,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
         />
       </motion.div>
       <br />
-      <Typography color="primary" variant="h5">
+      <Typography color="primary" variant="h5" className="musicArtTitle">
         {shortTitle(data)}
       </Typography>
       <Typography color="primary" variant="subtitle1">

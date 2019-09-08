@@ -1,38 +1,70 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 
 export const GlobalContext = React.createContext();
 
-export const GlobalState = props => {
-  const [searchState, setSearchState] = useState("home");
-  // there will be three types of state
-  // home,clicked, searching, completed
-  const [searchResult, setSearchResult] = useState([]);
-  const [relatedVideos, setRelatedVideos] = useState([]);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [snackbarMsg, setSnackbarMsg] = useState(false); //this will contain the message for actions
-  const [currentVideoSnippet, setCurrentVideoSnippet] = useState({});
-  //this is for changing the theme
-  const [themeSelectValue, setThemeSelectValue] = useState("Default");
+const initialState = {
+  searchState: "home",
+  searchResult: [],
+  relatedVideos: [],
+  menuOpen: false,
+  snackbarMsg: false,
+  currentVideoSnippet: {},
+  themeSelectValue: "Default"
+};
 
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "setCurrentVideoSnippet":
+      return {
+        ...state,
+        currentVideoSnippet: action.snippet
+      };
+
+    case "setRelatedVideos": {
+      return {
+        ...state,
+        relatedVideos: action.snippet
+      };
+    }
+    case "setSnackbarMsg": {
+      return {
+        ...state,
+        snackbarMsg: action.snippet
+      };
+    }
+    case "setThemeSelectValue": {
+      return {
+        ...state,
+        themeSelectValue: action.snippet
+      };
+    }
+    case "setSearchState": {
+      return {
+        ...state,
+        searchState: action.snippet
+      };
+    }
+    case "setSearchResult": {
+      return {
+        ...state,
+        searchResult: action.snippet
+      };
+    }
+    case "setMenuOpen": {
+      return {
+        ...state,
+        menuOpen: action.snippet
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+export const GlobalState = props => {
+  const globalState = useReducer(reducer, initialState);
   return (
-    <GlobalContext.Provider
-      value={{
-        searchState,
-        setSearchState,
-        searchResult,
-        setSearchResult,
-        currentVideoSnippet,
-        setCurrentVideoSnippet,
-        menuOpen,
-        setMenuOpen,
-        relatedVideos,
-        setRelatedVideos,
-        snackbarMsg,
-        setSnackbarMsg,
-        themeSelectValue,
-        setThemeSelectValue
-      }}
-    >
+    <GlobalContext.Provider value={globalState}>
       {props.children}
     </GlobalContext.Provider>
   );

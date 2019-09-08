@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 import {
   Container,
   FormControl,
@@ -13,7 +13,13 @@ import {
 import { GlobalContext } from "../GlobalState";
 
 export const useCheckDarkmode = () => {
-  const { setThemeSelectValue } = useContext(GlobalContext);
+  const [{}, dispatch] = useContext(GlobalContext);
+  const setThemeSelectValue = useCallback(
+    data => {
+      dispatch({ type: "setThemeSelectValue", snippet: data });
+    },
+    [dispatch]
+  );
   const checkDarkMode = () => {
     const selectedTheme = localStorage.getItem("selectedTheme");
 
@@ -39,8 +45,13 @@ export const useCheckDarkmode = () => {
 };
 
 const SettingsPage = () => {
-  const { themeSelectValue, setThemeSelectValue } = useContext(GlobalContext);
-
+  const [{ themeSelectValue }, dispatch] = useContext(GlobalContext);
+  const setThemeSelectValue = useCallback(
+    data => {
+      dispatch({ type: "setThemeSelectValue", snippet: data });
+    },
+    [dispatch]
+  );
   const handleThemeChange = e => {
     setThemeSelectValue(e.target.value);
     localStorage.setItem("selectedTheme", e.target.value);

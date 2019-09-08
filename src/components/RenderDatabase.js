@@ -41,7 +41,15 @@ import { downloadSong, deleteSongAudio } from "../external/saveSong";
 let currentId;
 
 export const useSongMethods = songId => {
-  const { setSnackbarMsg } = useContext(GlobalContext);
+  const [{}, dispatch] = useContext(GlobalContext);
+
+  const setSnackbarMsg = React.useCallback(
+    data => {
+
+      dispatch({ type: "setSnackbarMsg", snippet: data });
+    },
+    [dispatch]
+  );
 
   const [deleteDialogState, setDeleteDialogState] = useState(false);
   const [dontAskPopup, setDontAskPopup] = useState(null);
@@ -117,7 +125,13 @@ export const useSongMethods = songId => {
 
 const RenderDatabase = props => {
   const songs = props.songs;
-  const { setCurrentVideoSnippet, setSnackbarMsg } = useContext(GlobalContext);
+  const [{}, dispatch] = useContext(GlobalContext);
+  const setCurrentVideoSnippet = data => {
+    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+  };
+  const setSnackbarMsg = data => {
+    dispatch({ type: "setSnakbarMsg", snippet: data });
+  };
 
   const handleClick = song => {
     // set all the info of current clicked video in this object

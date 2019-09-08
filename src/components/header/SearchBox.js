@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 
 import {
@@ -18,8 +18,22 @@ import youtubeSearch from "../../apis/youtubeSearch";
 const SearchBox = ({ history, location }) => {
   let params = new URLSearchParams(location.search);
 
-  const { setSearchResult } = useContext(GlobalContext);
-  const { searchState, setSearchState } = useContext(GlobalContext);
+  const [{ searchState }, dispatch] = useContext(GlobalContext);
+
+  const setSearchState = useCallback(
+    data => {
+      dispatch({ type: "setSearchState", snippet: data });
+    },
+    [dispatch]
+  );
+
+  const setSearchResult = useCallback(
+    data => {
+      console.log(data);
+      dispatch({ type: "setSearchResult", snippet: data });
+    },
+    [dispatch]
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [autoSearchData, setAutoSearch] = useState("");
@@ -36,7 +50,7 @@ const SearchBox = ({ history, location }) => {
     setSearchQuery(result);
     setYtSearchQuery(result);
     setSearchState("searching");
-    history.push({ pathname: "/search", search: `?q=${searchQuery}` });
+    history.push({ pathname: "/search", search: `?q=${result}` });
   };
 
   // when user hits enter then also fetch the data from yt api

@@ -6,21 +6,25 @@ import { GlobalContext } from "./GlobalState";
 
 const SnackbarMessage = () => {
   const [isOpen, setOpen] = useState(false);
-  const { snackbarMsg, setSnackbarMsg } = useContext(GlobalContext);
+  const [{ snackbarMsg }, dispatch] = useContext(GlobalContext);
 
+  const setSnackbarMsg = React.useCallback(
+    data => {
+      dispatch({ type: "setSnackbarMsg", snippet: data });
+    },
+    [dispatch]
+  );
   useEffect(() => {
     if (snackbarMsg) {
-      setOpen(true)
+      setOpen(true);
     }
-
   }, [snackbarMsg, setSnackbarMsg]);
 
   function handleClose() {
     console.log("closed");
     setOpen(false);
-    setSnackbarMsg(null)
+    setSnackbarMsg(null);
     // we will set back it to null otherwise it wont fire for the same
-
   }
   return (
     <Snackbar

@@ -1,16 +1,6 @@
 import React, { useEffect, useContext, useState, useRef } from "react";
 import { Grid } from "@material-ui/core";
 import { useSwipeable } from "react-swipeable";
-import AudioSpectrum from "react-audio-spectrum";
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  withRouter
-} from "react-router-dom";
-import { motion } from "framer-motion";
-
 import PlayPauseButton from "./PlayPauseButton";
 import NextButton from "./NextButton";
 import PreviousButton from "./PreviousButton";
@@ -28,7 +18,6 @@ import "../../external/saveCountry";
 import "../../style.css";
 
 import { GlobalContext } from "../GlobalState";
-let songIndex = 0;
 
 // window.onbeforeunload = function() {
 //   return 'You have unsaved changes!';
@@ -38,11 +27,13 @@ let relatedVideosVar;
 const MainPlayer = ({ location, history }) => {
   let params = new URLSearchParams(location.search);
 
-  const {
-    currentVideoSnippet,
-    setCurrentVideoSnippet,
-    themeSelectValue
-  } = useContext(GlobalContext);
+  const [{ currentVideoSnippet, themeSelectValue }, dispatch] = useContext(
+    GlobalContext
+  );
+
+  const setCurrentVideoSnippet = data => {
+    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+  };
 
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [isItFromPlaylist, setIsItFromPlaylist] = useState(false);
@@ -136,12 +127,12 @@ const MainPlayer = ({ location, history }) => {
       });
 
       // set the audio data
-      const proxyURL = "https://server.ylight.xyz/proxy/"
+      const proxyURL = "https://server.ylight.xyz/proxy/";
       audioPlayer.current.src = res.data;
       playAudio();
 
       // var audioContext = new AudioContext();
-      
+
       // var track = audioContext.createMediaElementSource(audioPlayer.current);
       // track.connect(audioContext.destination);
     };
@@ -173,10 +164,9 @@ const MainPlayer = ({ location, history }) => {
 
       // if its not from the mini next button then only change history
       if (!isNextFromMini) {
-        console.log("history changed triggered", isNextFromMini);
         // if the click is not from playlist then only we will search for realated video
         if (!isItFromPlaylist) {
-          console.log("searching for related vids", relatedVideos);
+          // console.log("searching for related vids", relatedVideos);
           // if player is in playlist mode we will just replace history else push it
           if (location.pathname !== "/play") {
             // prevent duplicating history
@@ -196,12 +186,6 @@ const MainPlayer = ({ location, history }) => {
     // set rating to none when we load new song
     setRating("none");
   }, [currentVideoSnippet, setIsItFromPlaylist]);
-
-  const [justState, setJustState] = useState(1);
-
-  useEffect(() => {
-    console.log(justState);
-  }, [justState]);
 
   useEffect(() => {
     console.log("from playlist", isItFromPlaylist);
@@ -377,15 +361,14 @@ const MainPlayer = ({ location, history }) => {
       if (positionDifference < 1) {
         positionDifference = 0;
       }
-      console.log(positionDifference);
+
       const containerRefStyle = containerRef.current.style;
       containerRefStyle.transform = `translateY(${positionDifference}px)`;
       containerRefStyle.transition = "none";
-      console.log(containerRef);
     },
     onSwiped: e => {
       initPosition = 0;
-      containerRef.current.style.transition = "all .3s ease";
+      containerRef.current.style = "";
       // we will make the initial position 0 again after user leaves the screen
     },
     onSwipedUp: e => {
@@ -414,6 +397,13 @@ const MainPlayer = ({ location, history }) => {
   });
 
   useEffect(() => {
+    if (location.pathname === "/play" && !currentVideoSnippet.id) {
+      console.log("history is in play fetching song");
+
+      fetchAndSetCurrentVideoSnippet(params.get("id")); // math will give the song id from
+    }
+    // we will only change if its push  otherwise while changing song from playlist changes the state
+
     // Listen for changes to the current location.
     const unlisten = history.listen(location => {
       // location is an object like window.location
@@ -434,6 +424,14 @@ const MainPlayer = ({ location, history }) => {
   useEffect(() => {
     console.log(playerState);
   }, [playerState]);
+
+  const returnMinMaxClass = () => {
+    if (playerState === "minimized") {
+      return "playerMinimized";
+    } else if (playerState === "playlist") {
+      return "playerPlaylist";
+    }
+  };
 
   const returnMaximizedPlayer = () => {
     if (playerState === "maximized" || playerState === "playlist") {
@@ -545,52 +543,41 @@ const MainPlayer = ({ location, history }) => {
       });
   };
 
-  const renderWholePlayer = props => {
-    // console.log(match.params.songId);
-
-    // if there is no current sinppet we will make it
-    if (!currentVideoSnippet.id) {
-      fetchAndSetCurrentVideoSnippet(params.get("id")); // math will give the song id from
-    }
-    return (
-      <div
-        // drag="y"
-        // dragConstraints={{ top: 0, bottom: 600 }}
-        ref={containerRef}
-        style={playerStyle}
-        onClick={expandPlayer}
-        className="wholePlayer"
-      >
-        {returnMaximizedPlayer()}
-        {returnMinimizedPlayer()}
-        <audio
-          // onTimeUpdate={timeUpdate}
-          onLoadStart={() => {
-            setAudioState("loading");
-          }}
-          id="audio-element"
-          onLoadedData={updateSongDB}
-          onCanPlay={() => {
-            setAudioState("loaded");
-          }}
-          // crossOrigin="anonymous"
-          onPlay={() => setAudioState("playing")}
-          onPlaying={() => setAudioState("playing")}
-          onPause={() => setAudioState("paused")}
-          onEnded={songEnded}
-          autoPlay
-          ref={audioPlayer}
-        />
-      </div>
-    );
-  };
-
-  if (currentVideoSnippet.id) {
-    return renderWholePlayer();
-  } else {
-    console.log("nothing found");
-    return <Route path="/play" component={renderWholePlayer} />;
+  if (!currentVideoSnippet.id) {
+    return null;
   }
+
+  return (
+    <div
+      // drag="y"
+      // dragConstraints={{ top: 0, bottom: 600 }}
+      ref={containerRef}
+      // style={playerStyle}
+      onClick={expandPlayer}
+      className={"mediaPlayerContainer " + returnMinMaxClass()}
+    >
+      {returnMaximizedPlayer()}
+      {returnMinimizedPlayer()}
+      <audio
+        // onTimeUpdate={timeUpdate}
+        onLoadStart={() => {
+          setAudioState("loading");
+        }}
+        id="audio-element"
+        onLoadedData={updateSongDB}
+        onCanPlay={() => {
+          setAudioState("loaded");
+        }}
+        // crossOrigin="anonymous"
+        onPlay={() => setAudioState("playing")}
+        onPlaying={() => setAudioState("playing")}
+        onPause={() => setAudioState("paused")}
+        onEnded={songEnded}
+        autoPlay
+        ref={audioPlayer}
+      />
+    </div>
+  );
 };
 
-export default withRouter(MainPlayer);
+export default MainPlayer;

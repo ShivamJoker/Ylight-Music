@@ -14,9 +14,7 @@
 .dark .main-player-inner {
   background: #212121;
 }
-.dark .main-player-inner * {
-  /* color: #eceff1; */
-}
+
 
 .dark .RelatedVideoContainer {
   background: #333;

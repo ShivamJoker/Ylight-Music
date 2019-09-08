@@ -92,9 +92,10 @@ window.addEventListener("beforeinstallprompt", e => {
 });
 
 const CurrentSection = ({ history, location }) => {
-  const { searchState } = useContext(GlobalContext);
-  const { searchResult } = useContext(GlobalContext);
-  const { currentVideoSnippet } = useContext(GlobalContext);
+  const [{ currentVideoSnippet, searchResult }] = useContext(
+    GlobalContext
+  );
+  console.log(currentVideoSnippet);
 
   const [songsHistoryState, setSongsHistory] = useState([]);
   const [songsLikedState, setSongsLiked] = useState([]);

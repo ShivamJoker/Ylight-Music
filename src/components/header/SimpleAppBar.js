@@ -42,12 +42,19 @@ function HideOnScroll(props) {
 }
 
 function SimpleAppBar(props) {
-  const { searchState, setSearchState } = useContext(GlobalContext);
-  const { setMenuOpen } = useContext(GlobalContext);
+  const [{ searchState }, dispatch] = useContext(GlobalContext);
 
-  const setOpenMenu = () => {
-    setMenuOpen(true);
+  const setMenuOpen = data => {
+    console.log(data);
+    dispatch({ type: "setMenuOpen", snippet: data });
   };
+  const setSearchState = React.useCallback(
+    data => {
+      console.log(data);
+      dispatch({ type: "setSearchState", snippet: data });
+    },
+    [dispatch]
+  );
 
   React.useEffect(() => {
     // if the page is on search we will change the search state
@@ -71,7 +78,11 @@ function SimpleAppBar(props) {
     if (searchState === "home") {
       return (
         <>
-          <IconButton color="inherit" aria-label="Menu" onClick={setOpenMenu}>
+          <IconButton
+            color="inherit"
+            aria-label="Menu"
+            onClick={() => setMenuOpen(true)}
+          >
             <Menu />
           </IconButton>
           <Typography variant="h6" color="inherit" style={styles.title}>

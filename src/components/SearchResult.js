@@ -48,9 +48,10 @@ const ulVariants = {
 const SearchResult = ({ videos }) => {
   const [isOpen, setisOpen] = useCycle(false, true);
 
-  const { setCurrentVideoSnippet } = useContext(
-    GlobalContext
-  );
+  const [{}, dispatch] = useContext(GlobalContext);
+  const setCurrentVideoSnippet = data => {
+    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+  };
 
   const handleClick = video => {
     // set all the info of current clicked video in this object
@@ -58,12 +59,8 @@ const SearchResult = ({ videos }) => {
       id: video.id.videoId,
       title: entities.decode(video.snippet.title),
       channelTitle: entities.decode(video.snippet.channelTitle),
-      maxThumbnail: `https://img.youtube.com/vi/${
-        video.id.videoId
-      }/maxresdefault.jpg`,
-      sdThumbnail: `https://img.youtube.com/vi/${
-        video.id.videoId
-      }/sddefault.jpg`
+      maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
+      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
   };
@@ -76,7 +73,7 @@ const SearchResult = ({ videos }) => {
 
   const renderResult = videos.map(video => {
     const { snippet } = video;
-    console.log("render result times")
+    console.log("render result times");
     return (
       <motion.div variants={liVariants} key={video.id.videoId}>
         <ListItem

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext, useCallback} from "react";
 import {
   FormControl,
   TextField,
@@ -13,7 +13,14 @@ import { GlobalContext } from "../GlobalState";
 
 let captchaToken;
 const FeedbackForm = () => {
-  const { setSnackbarMsg } = React.useContext(GlobalContext);
+  const [{}, dispatch] = useContext(GlobalContext);
+
+  const setSnackbarMsg = React.useCallback(
+    data => {
+      dispatch({ type: "setSnackbarMsg", snippet: data });
+    },
+    [dispatch]
+  );
   const [isSending, setIsSending] = React.useState(false);
   const formEl = React.useRef(null);
 
