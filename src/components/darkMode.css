@@ -15,7 +15,6 @@
   background: #212121;
 }
 
-
 .dark .RelatedVideoContainer {
   background: #333;
 }
@@ -39,6 +38,9 @@
   background: #dedede12;
 }
 
+.dark .mediaPlayerContainer {
+  background: #2f2f2f;
+}
 .wholePlayer {
   background: #e91e63;
 }

@@ -42,13 +42,13 @@ const darkTheme = {
 const muiDarkTheme = createMuiTheme(darkTheme);
 const muiDefaultTheme = createMuiTheme(defaultTheme);
 
-const ThemeProvider = () => {
+const AppContainer = () => {
   const [{ themeSelectValue }, dispatch] = useContext(GlobalContext);
 
   const { checkDarkMode } = useCheckDarkmode();
 
   useEffect(() => {
-    // checkDarkMode();
+    checkDarkMode();
   }, []);
 
   useEffect(() => {
@@ -73,4 +73,4 @@ const ThemeProvider = () => {
     </MuiThemeProvider>
   );
 };
-export default ThemeProvider;
+export default AppContainer;

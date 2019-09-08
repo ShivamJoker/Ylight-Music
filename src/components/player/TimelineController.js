@@ -106,7 +106,7 @@ const TimelineController = ({ audioState, player, minimized }) => {
     );
   } else {
     return (
-      <div style={{ margin: "0 20px" }}>
+      <div style={{ margin: "0 auto", width: "90%" }}>
         <Grid container direction="row" justify="space-between">
           <Typography variant="body1" color="primary">
             {formatTime(currentTime)}

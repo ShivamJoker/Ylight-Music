@@ -2,14 +2,16 @@ import React from "react";
 
 import "typeface-roboto";
 import { GlobalState } from "./GlobalState";
-import ThemeProvider from "./ThemeProvider";
+import AppContainer from "./AppContainer";
 
 function App() {
   return (
     <GlobalState>
-      <ThemeProvider />
+      <AppContainer />
     </GlobalState>
   );
 }
 
 export default App;
+
+// this do not works 
