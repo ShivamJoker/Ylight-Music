@@ -122,8 +122,13 @@ svg.songHeart.left {
   background: #e91d63;
   overflow: auto;
   height: calc(100% - 200px);
+  height: 100%;
   min-height: 470px;
   /* half of the portion will be taken by player */
+}
+
+.RelatedVideoContainer ul{
+  height: 100%;
 }
 
 div.RelatedVideoContainer * {
