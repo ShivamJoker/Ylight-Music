@@ -49,9 +49,10 @@ const RelatedVideos = ({
   setIsRepeatOn,
   isRepeatOn
 }) => {
-  
-  const { setCurrentVideoSnippet } = useContext(GlobalContext);
-
+  const [{}, dispatch] = useContext(GlobalContext);
+  const setCurrentVideoSnippet = data => {
+    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+  };
   const handleShuffleClick = () => {
     setRelatedVideos(shuffle(relatedVideos));
   };
@@ -67,12 +68,8 @@ const RelatedVideos = ({
       id: video.id.videoId,
       title: video.snippet.title,
       channelTitle: video.snippet.channelTitle,
-      maxThumbnail: `https://img.youtube.com/vi/${
-        video.id.videoId
-      }/maxresdefault.jpg`,
-      sdThumbnail: `https://img.youtube.com/vi/${
-        video.id.videoId
-      }/sddefault.jpg`
+      maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
+      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
     setPlaylist();
@@ -102,7 +99,7 @@ const RelatedVideos = ({
       );
     });
   } else {
-    return <LinearProgress/>;
+    return <LinearProgress />;
   }
 
   const returnPlaylistExpandBtn = () => {
@@ -126,7 +123,11 @@ const RelatedVideos = ({
         <Typography variant="h6">Coming Next</Typography>
         <Shuffle onClick={handleShuffleClick} />
         {/* this will show the repeat button and repeat the song */}
-        {isRepeatOn ? <RepeatOne onClick={setIsRepeatOn}/> : <Repeat onClick={setIsRepeatOn}/>}
+        {isRepeatOn ? (
+          <RepeatOne onClick={setIsRepeatOn} />
+        ) : (
+          <Repeat onClick={setIsRepeatOn} />
+        )}
         {returnPlaylistExpandBtn()}
       </Grid>
       <List dense={true}>{renderResult}</List>
