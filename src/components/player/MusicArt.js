@@ -142,7 +142,7 @@ const MusicArt = ({ data, rating, audioEl }) => {
         />
       </motion.div>
       <br />
-      <Typography color="primary" variant="h5" className="musicArtTitle">
+      <Typography color="primary" variant="h5" className="musicArtTitle" align="center">
         {shortTitle(data)}
       </Typography>
       <Typography color="primary" variant="subtitle1">

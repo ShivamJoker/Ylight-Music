@@ -309,7 +309,8 @@ const MainPlayer = ({ location, history }) => {
       setMinimized(true);
       history.push({
         pathname: "/play",
-        search: `?id=${currentVideoSnippet.id}`
+        search: `?id=${currentVideoSnippet.id}`,
+        state: { modal: true }
       });
     }
   };
@@ -565,9 +566,6 @@ const MainPlayer = ({ location, history }) => {
         }}
         id="audio-element"
         onLoadedData={updateSongDB}
-        onCanPlay={() => {
-          setAudioState("loaded");
-        }}
         // crossOrigin="anonymous"
         onPlay={() => setAudioState("playing")}
         onPlaying={() => setAudioState("playing")}

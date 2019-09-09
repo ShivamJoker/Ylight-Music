@@ -42,7 +42,7 @@ import {
 
 import SettingsPage from "./sections/SettingsPage";
 // import the db from save song
-
+import MainPlayer from "../components/player/MainPlayer";
 // pages
 const LoginPage = lazy(() => import("./LoginPage"));
 const RenderDatabase = lazy(() => import("./RenderDatabase"));
@@ -85,6 +85,7 @@ const CustomTabs = withStyles({
 })(Tab);
 
 let deferredPrompt = undefined;
+let previousLocation, modifiedLocation;
 
 window.addEventListener("beforeinstallprompt", e => {
   // Stash the event so it can be triggered later.
@@ -92,9 +93,7 @@ window.addEventListener("beforeinstallprompt", e => {
 });
 
 const CurrentSection = ({ history, location }) => {
-  const [{ currentVideoSnippet, searchResult }] = useContext(
-    GlobalContext
-  );
+  const [{ currentVideoSnippet, searchResult }] = useContext(GlobalContext);
   console.log(currentVideoSnippet);
 
   const [songsHistoryState, setSongsHistory] = useState([]);
@@ -159,6 +158,14 @@ const CurrentSection = ({ history, location }) => {
     if (isThisNewUser === "no") {
       setRedirectState(true);
     }
+    // if this is not a new user redirect it to home
+    previousLocation = location;
+    const unlisten = history.listen(location => {
+      if (location.pathname !== "/play") {
+        previousLocation = location;
+        console.log(previousLocation);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -166,7 +173,19 @@ const CurrentSection = ({ history, location }) => {
     if (redirectState && history.location.pathname === "/") {
       history.replace("/home");
     }
+
+    // if the location is not play then we will push new location
   }, [setRedirectState, history, redirectState]);
+
+
+
+  const checkPrevLocation = () => {
+    if (location.pathname === "/play") {
+      return previousLocation;
+    } else {
+      return location;
+    }
+  };
 
   // we will load the homepage with all the playlists
   const continueToHome = () => {
@@ -187,67 +206,82 @@ const CurrentSection = ({ history, location }) => {
       });
     }
   };
+
+  const returnMainPlayer = props => {
+    // we will return the main player if the path is not the "/"
+
+    if (window.location.pathname !== "/") {
+      return <MainPlayer {...props} />;
+    } else {
+      return null;
+    }
+  };
+
   // the set tab value will keep the tab active on their route
   // there are 4 tabs so there will be 3 indexes
   return (
     <div>
       <Suspense fallback={circularLoader}>
-        <Route
-          exact
-          path="/"
-          render={props => {
-            return <LoginPage continueToHome={continueToHome} />;
-          }}
-        />
-        <Route
-          path="/search"
-          render={props => <SearchResult videos={searchResult} />}
-        />
-        <Route
-          path="/home"
-          render={props => {
-            setTabValue(0);
-            return <HomePage />;
-          }}
-        />
-        <Route
-          path="/liked"
-          render={props => {
-            setTabValue(1);
-            return <RenderDatabase songs={songsLikedState} {...props} />;
-          }}
-        />
-        <Route
-          path="/downloads"
-          render={props => {
-            setTabValue(2);
-            return <RenderDatabase songs={songsDownloadedState} />;
-          }}
-        />
-        <Route
-          path="/history"
-          render={props => {
-            setTabValue(3);
+        <Switch location={checkPrevLocation()}>
+          <Route
+            exact
+            path="/"
+            render={props => {
+              return <LoginPage continueToHome={continueToHome} />;
+            }}
+          />
+          <Route
+            path="/search"
+            render={props => <SearchResult videos={searchResult} />}
+          />
+          <Route
+            path="/home"
+            render={props => {
+              setTabValue(0);
+              return <HomePage />;
+            }}
+          />
+          <Route
+            path="/liked"
+            render={props => {
+              setTabValue(1);
+              return <RenderDatabase songs={songsLikedState} {...props} />;
+            }}
+          />
+          <Route
+            path="/downloads"
+            render={props => {
+              setTabValue(2);
+              return <RenderDatabase songs={songsDownloadedState} />;
+            }}
+          />
+          <Route
+            path="/history"
+            render={props => {
+              setTabValue(3);
 
-            return <RenderDatabase songs={songsHistoryState} />;
-          }}
-        />
-        <Route
-          path="/app"
-          render={props => {
-            window.location.replace(
-              "https://play.google.com/store/apps/details?id=com.ylightmusic.app"
-            );
-            return <div>Redirecting you to play store</div>;
-          }}
-        />
+              return <RenderDatabase songs={songsHistoryState} />;
+            }}
+          />
+          <Route
+            path="/app"
+            render={props => {
+              window.location.replace(
+                "https://play.google.com/store/apps/details?id=com.ylightmusic.app"
+              );
+              return <div>Redirecting you to play store</div>;
+            }}
+          />
 
-        <Route path="/settings" component={SettingsPage} />
-        <Route path="/privacy" component={PrivacyPage} />
+          <Route path="/settings" component={SettingsPage} />
+          <Route path="/privacy" component={PrivacyPage} />
 
-        <Route path="/feedback" component={FeedbackForm} />
-        <Route path="/donate" component={DonatePage} />
-        <Route path="/contributors" component={ContributorsPage} />
+          <Route path="/feedback" component={FeedbackForm} />
+          <Route path="/donate" component={DonatePage} />
+          <Route path="/contributors" component={ContributorsPage} />
+        </Switch>
+        <Route path="/" render={props => returnMainPlayer(props)} />
+
         <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
       </Suspense>
       {/* if the player is on then return 100px else 50px*/}

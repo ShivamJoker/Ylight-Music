@@ -65,8 +65,8 @@ const AppContainer = () => {
     >
       <Router>
         <SimpleAppBar />
-        <CurrentSection />
-        <Route path={"/"} component={MainPlayer} />
+        <Route component={CurrentSection} />
+
         <SwipeMenu />
       </Router>
       <SnackbarMessage />
