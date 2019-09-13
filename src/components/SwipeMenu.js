@@ -49,22 +49,25 @@ const SwipeMenu = () => {
   useEffect(() => {
     if (themeSelectValue === "Dark") {
       setIsNight(true);
-      localStorage.setItem("selectedTheme", "Dark");
-      // also set in local
     } else {
       setIsNight(false);
-      localStorage.setItem("selectedTheme", "Default");
     }
   }, [themeSelectValue]);
 
-  useEffect(() => {
-    if (isNight) {
-      //if the is night is true we will make the theme night else default
-      setThemeSelectValue("Dark");
+  const changeTheme = theme => {
+    setThemeSelectValue(theme);
+    localStorage.setItem("selectedTheme", theme);
+  };
+
+  const handleThemeToggle = () => {
+    if (!isNight) {
+      changeTheme("Dark");
+      setIsNight(false);
     } else {
-      setThemeSelectValue("Default");
+      changeTheme("Default");
+      setIsNight(true);
     }
-  }, [isNight, setThemeSelectValue]);
+  };
 
   return (
     <SwipeableDrawer
@@ -89,7 +92,7 @@ const SwipeMenu = () => {
               exit={{ scale: 0 }}
               // transition={{ duration: 0.5 }}
               src={isNight ? sun : moon}
-              onClick={() => setIsNight(!isNight)}
+              onClick={() => handleThemeToggle()}
               className="dayNightToggleBtn"
               alt="sun moon icon"
             />
