@@ -13,7 +13,7 @@ import {
 import { GlobalContext } from "../GlobalState";
 
 export const useCheckDarkmode = () => {
-  const [{}, dispatch] = useContext(GlobalContext);
+  const [, dispatch] = useContext(GlobalContext);
   const setThemeSelectValue = useCallback(
     data => {
       dispatch({ type: "setThemeSelectValue", snippet: data });

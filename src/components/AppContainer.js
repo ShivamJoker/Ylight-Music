@@ -49,6 +49,11 @@ const AppContainer = () => {
 
   useEffect(() => {
     checkDarkMode();
+
+    if (navigator.userAgent.match(/Android/i)) {
+      body.style.overscrollBehavior = "none";
+      // this is to disable pull refresh on android
+    }
   }, []);
 
   useEffect(() => {
