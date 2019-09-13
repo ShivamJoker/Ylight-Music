@@ -9,7 +9,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-
   Link as MaterialLink
 } from "@material-ui/core";
 
@@ -50,20 +49,22 @@ const SwipeMenu = () => {
   useEffect(() => {
     if (themeSelectValue === "Dark") {
       setIsNight(true);
+      localStorage.setItem("selectedTheme", "Dark");
+      // also set in local
     } else {
       setIsNight(false);
+      localStorage.setItem("selectedTheme", "Default");
     }
   }, [themeSelectValue]);
 
   useEffect(() => {
-   if (isNight) {
-     //if the is night is true we will make the theme night else default
-     setThemeSelectValue("Dark")
-   } else {
-    setThemeSelectValue("Default")
-     
-   }
-  }, [isNight, setThemeSelectValue])
+    if (isNight) {
+      //if the is night is true we will make the theme night else default
+      setThemeSelectValue("Dark");
+    } else {
+      setThemeSelectValue("Default");
+    }
+  }, [isNight, setThemeSelectValue]);
 
   return (
     <SwipeableDrawer
