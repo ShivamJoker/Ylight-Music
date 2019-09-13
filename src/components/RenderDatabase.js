@@ -8,8 +8,6 @@ import React, { useContext, useState, useEffect } from "react";
 
 import { DynamicSizeList as List } from "react-window";
 
-import AutoSizer from "react-virtualized-auto-sizer";
-import { motion } from "framer-motion";
 
 import CompletedTick from "../images/CompletedTick.svg";
 import DownloadIcon from "../images/DownloadIcon.svg";
@@ -23,7 +21,6 @@ import {
   ListItemText
 } from "@material-ui/core";
 
-import { PlayForWork } from "@material-ui/icons";
 import DownloadDeleteDialog from "./DownloadDeleteDialog";
 
 import { GlobalContext } from "./GlobalState";
@@ -149,10 +146,6 @@ const RenderDatabase = props => {
   const {
     handleDownload,
     handleRemoveSong,
-    deleteTheSong,
-    dontAskPopup,
-    setDeleteDialogState,
-    deleteDialogState,
     deleteDialogComponent
   } = useSongMethods();
 
@@ -165,19 +158,8 @@ const RenderDatabase = props => {
     }
   };
 
-  const transition = {
-    duration: 1,
-    ease: [0.43, 0.13, 0.23, 0.96]
-  };
 
-  const imageVariants = {
-    exit: { y: "50%", opacity: 0, transition },
-    enter: {
-      y: "0%",
-      opacity: 1,
-      transition
-    }
-  };
+
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);

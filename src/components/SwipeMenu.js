@@ -9,7 +9,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  withStyles,
+
   Link as MaterialLink
 } from "@material-ui/core";
 

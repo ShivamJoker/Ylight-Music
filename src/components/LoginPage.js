@@ -7,7 +7,7 @@ import bgImg from "../images/music-bg.svg";
 import gIcon from "../images/google.svg";
 import handcraftedText from "../images/craftedImg.png";
 
-import GoogleSignIn from "./GoogleSignIn";
+// import GoogleSignIn from "./GoogleSignIn";
 
 const bgStyle = {
   background: `url(${bgImg}) no-repeat`,
@@ -19,12 +19,12 @@ const bgStyle = {
 
 
 const LoginPage = ({ continueToHome }) => {
-  const showSignIn = () => {
-    // if user has already closed the popup dont show it
-    if (localStorage.getItem("signInClosed") !== "true") {
-      return <GoogleSignIn />;
-    }
-  };
+  // const showSignIn = () => {
+  //   // if user has already closed the popup dont show it
+  //   if (localStorage.getItem("signInClosed") !== "true") {
+  //     return <GoogleSignIn />;
+  //   }
+  // };
 
   return (
     <Grid

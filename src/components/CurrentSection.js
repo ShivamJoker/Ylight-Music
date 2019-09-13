@@ -85,7 +85,7 @@ const CustomTabs = withStyles({
 })(Tab);
 
 let deferredPrompt = undefined;
-let previousLocation, modifiedLocation;
+let previousLocation;
 
 window.addEventListener("beforeinstallprompt", e => {
   // Stash the event so it can be triggered later.
@@ -160,7 +160,7 @@ const CurrentSection = ({ history, location }) => {
     }
     // if this is not a new user redirect it to home
     previousLocation = location;
-    const unlisten = history.listen(location => {
+     history.listen(location => {
       if (location.pathname !== "/play") {
         previousLocation = location;
         console.log(previousLocation);
