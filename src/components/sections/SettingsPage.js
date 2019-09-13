@@ -35,7 +35,7 @@ export const useCheckDarkmode = () => {
         if (hrs >= 18 || hrs <= 6) {
           setThemeSelectValue("Dark");
         } else {
-          setThemeSelectValue("Auto");
+          setThemeSelectValue("Default");
         }
       }
     }

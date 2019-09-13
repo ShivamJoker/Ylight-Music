@@ -116,6 +116,15 @@ svg.songHeart.left {
   transform : translateY(-418px);
 }
 
+/* short the title based on space */
+.musicArtTitle {
+  width: 88vw;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
 /* style for the playlist of related videos */
 
 .RelatedVideoContainer {
@@ -163,13 +172,13 @@ div.grecaptcha-badge {
   display: none;
 }
 
-/* short the title based on space */
-.musicArtTitle {
-  width: 88vw;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+.dayNightToggleBtn{
+  height: 25px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
+
 
 /* fix on small screen */
 @media (max-height: 570px) {

@@ -45,7 +45,6 @@ export const useSongMethods = songId => {
 
   const setSnackbarMsg = React.useCallback(
     data => {
-
       dispatch({ type: "setSnackbarMsg", snippet: data });
     },
     [dispatch]
@@ -79,8 +78,6 @@ export const useSongMethods = songId => {
     localStorage.setItem("dontAskPopup", true);
     setDontAskPopup(true);
   };
-
-
 
   const deleteTheSong = async checkBox => {
     const deleted = await deleteSongAudio(currentId);
@@ -133,6 +130,8 @@ const RenderDatabase = props => {
     dispatch({ type: "setSnakbarMsg", snippet: data });
   };
 
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
   const handleClick = song => {
     // set all the info of current clicked video in this object
     setCurrentVideoSnippet({
@@ -141,9 +140,7 @@ const RenderDatabase = props => {
       thumbnail: song.thumbnail,
       title: song.title,
       channelTitle: song.channelTitle,
-      maxThumbnail: `https://img.youtube.com/vi/${
-        song.videoId
-      }/maxresdefault.jpg`,
+      maxThumbnail: `https://img.youtube.com/vi/${song.videoId}/maxresdefault.jpg`,
       sdThumbnail: `https://img.youtube.com/vi/${song.videoId}/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
     });
@@ -181,6 +178,10 @@ const RenderDatabase = props => {
       transition
     }
   };
+
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+  });
 
   const renderResult = songs.map((song, index) => {
     return (
@@ -238,7 +239,15 @@ const RenderDatabase = props => {
   });
 
   const renderItem = React.forwardRef((row, ref) => (
-    <div ref={ref} style={{ ...row.style,  maxWidth: "1000px", left: "50%", transform: "translateX(-50%)"}}>
+    <div
+      ref={ref}
+      style={{
+        ...row.style,
+        maxWidth: "1000px",
+        left: "50%",
+        transform: "translateX(-50%)"
+      }}
+    >
       {renderResult[row.index]}
       <Divider />
     </div>
@@ -248,7 +257,7 @@ const RenderDatabase = props => {
       {deleteDialogComponent}
 
       <List
-        height={window.innerHeight - 100}
+        height={windowHeight}
         itemCount={songs.length}
         width={window.innerWidth}
       >

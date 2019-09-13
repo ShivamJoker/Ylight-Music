@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 
 import {
   SwipeableDrawer,
@@ -21,24 +21,49 @@ import {
   People,
   Settings
 } from "@material-ui/icons";
+
+import { motion, AnimatePresence } from "framer-motion";
+
 import { Link } from "react-router-dom";
 
 import { GlobalContext } from "./GlobalState";
 import "./darkMode.css";
+import moon from "../images/moon-solid.svg";
+import sun from "../images/sun-solid.svg";
 
 const SwipeMenu = () => {
-  const largeAvator = {
-    width: "50px",
-    height: "50px",
-    margin: "25px 0",
-    background: "#e91e63"
-  };
-
-  const [{ menuOpen }, dispatch] = useContext(GlobalContext);
+  const [{ menuOpen, themeSelectValue }, dispatch] = useContext(GlobalContext);
 
   const setMenuOpen = data => {
     dispatch({ type: "setMenuOpen", snippet: data });
   };
+
+  const setThemeSelectValue = useCallback(
+    data => {
+      dispatch({ type: "setThemeSelectValue", snippet: data });
+    },
+    [dispatch]
+  );
+
+  const [isNight, setIsNight] = useState(false);
+
+  useEffect(() => {
+    if (themeSelectValue === "Dark") {
+      setIsNight(true);
+    } else {
+      setIsNight(false);
+    }
+  }, [themeSelectValue]);
+
+  useEffect(() => {
+   if (isNight) {
+     //if the is night is true we will make the theme night else default
+     setThemeSelectValue("Dark")
+   } else {
+    setThemeSelectValue("Default")
+     
+   }
+  }, [isNight, setThemeSelectValue])
 
   return (
     <SwipeableDrawer
@@ -49,30 +74,27 @@ const SwipeMenu = () => {
       <div style={{ width: "300px" }}>
         <div
           style={{
-            padding: "15px"
+            margin: "35px",
+            position: "relative",
+            width: "30px",
+            height: "30px"
           }}
         >
-          <Avatar
-            style={largeAvator}
-            alt="Remy Sharp"
-            // src="/static/images/avatar/1.jpg"
-          >
-            <AccountCircle fontSize="large" />
-          </Avatar>
-          {/* <Button
-            variant="outlined"
-            color="primary"
-            //  onClick={handleAuthClick}
-          >
-            <img
-              src={gIcon}
-              height="25px"
-              alt=""
-              style={{ marginRight: "8px" }}
+          <AnimatePresence>
+            <motion.img
+              key={isNight ? sun : moon}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1.5, rotate: "360deg" }}
+              exit={{ scale: 0 }}
+              // transition={{ duration: 0.5 }}
+              src={isNight ? sun : moon}
+              onClick={() => setIsNight(!isNight)}
+              className="dayNightToggleBtn"
+              alt="sun moon icon"
             />
-            Sign In
-          </Button> */}
+          </AnimatePresence>
         </div>
+
         <Divider />
 
         <List

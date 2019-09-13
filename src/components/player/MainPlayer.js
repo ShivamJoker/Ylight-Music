@@ -573,6 +573,7 @@ const MainPlayer = ({ location, history }) => {
         onEnded={songEnded}
         autoPlay
         ref={audioPlayer}
+        // type="audio/mp4"
       />
     </div>
   );
