@@ -178,8 +178,9 @@ div.grecaptcha-badge {
 div a.MuiTab-root{
   padding: 0;
   line-height: .8;
-  min-height: 50px;
+  min-height: 48px;
   font-weight: normal;
+  text-transform: capitalize;
 }
 
 /* fix on small screen */
