@@ -239,7 +239,7 @@ const RenderDatabase = props => {
       {deleteDialogComponent}
 
       <List
-        height={windowHeight}
+        height={window.innerHeight - 100}
         itemCount={songs.length}
         width={window.innerWidth}
       >

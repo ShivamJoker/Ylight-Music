@@ -59,17 +59,25 @@ const CustomTab = withStyles({
     background: "#e91e63",
     position: "fixed",
     bottom: "0",
+    padding: 0,
     width: "100%",
-    zIndex: 1300
+    zIndex: 1300,
   },
   indicator: {
     display: "none"
-  }
+  },
+  labelIcon: {
+    margin: 0,
+  },
 })(Tabs);
 
 const CustomTabs = withStyles({
+
   root: {
     color: "#FFB2C1",
+    fontSize: ".75rem",
+    margin: 0,
+
     "&:hover": {
       color: "#ffffffed",
       opacity: 1
@@ -81,6 +89,7 @@ const CustomTabs = withStyles({
       color: "#FFFFFF"
     }
   },
+
   selected: {}
 })(Tab);
 
@@ -245,14 +254,14 @@ const CurrentSection = ({ history, location }) => {
             path="/liked"
             render={props => {
               setTabValue(1);
-              return <RenderDatabase songs={songsLikedState} {...props} />;
+              return <RenderDatabase songs={songsLikedState} {...props} key={location.pathname}/>;
             }}
           />
           <Route
             path="/downloads"
             render={props => {
               setTabValue(2);
-              return <RenderDatabase songs={songsDownloadedState} />;
+              return <RenderDatabase songs={songsDownloadedState} key={location.pathname}/>;
             }}
           />
           <Route
@@ -260,7 +269,7 @@ const CurrentSection = ({ history, location }) => {
             render={props => {
               setTabValue(3);
 
-              return <RenderDatabase songs={songsHistoryState} />;
+              return <RenderDatabase songs={songsHistoryState} key={location.pathname}/>;
             }}
           />
           <Route
@@ -297,6 +306,7 @@ const CurrentSection = ({ history, location }) => {
           aria-label="Home"
           component={Link}
           to="/home"
+          label="Home"
         />
 
         <CustomTabs
@@ -304,6 +314,7 @@ const CurrentSection = ({ history, location }) => {
           aria-label="Liked"
           component={Link}
           to="/liked"
+          label="Liked"
         />
 
         <CustomTabs
@@ -311,12 +322,14 @@ const CurrentSection = ({ history, location }) => {
           aria-label="Downloads"
           component={Link}
           to="/downloads"
+          label="Downloads"
         />
         <CustomTabs
           icon={<History />}
           aria-label="History"
           component={Link}
           to="/history"
+          label="History"
         />
       </CustomTab>
     </div>

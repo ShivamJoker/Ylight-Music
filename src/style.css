@@ -1,4 +1,3 @@
-
 .render-list-container {
   position: relative;
 }
@@ -109,8 +108,8 @@ svg.songHeart.left {
   background: #e91e63;
 }
 
-.playerPlaylist{
-  transform : translateY(-418px);
+.playerPlaylist {
+  transform: translateY(-418px);
 }
 
 /* short the title based on space */
@@ -120,7 +119,6 @@ svg.songHeart.left {
   overflow: hidden;
   white-space: nowrap;
 }
-
 
 /* style for the playlist of related videos */
 
@@ -133,7 +131,7 @@ svg.songHeart.left {
   /* half of the portion will be taken by player */
 }
 
-.RelatedVideoContainer ul{
+.RelatedVideoContainer ul {
   height: 100%;
 }
 
@@ -169,13 +167,20 @@ div.grecaptcha-badge {
   display: none;
 }
 
-.dayNightToggleBtn{
+.dayNightToggleBtn {
   height: 25px;
   position: absolute;
   top: 0;
   left: 0;
 }
 
+/* forcing style for bottom tab menu */
+div a.MuiTab-root{
+  padding: 0;
+  line-height: .8;
+  min-height: 50px;
+  font-weight: normal;
+}
 
 /* fix on small screen */
 @media (max-height: 570px) {
