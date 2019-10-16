@@ -23,6 +23,17 @@ export const useCheckDarkmode = () => {
   const checkDarkMode = () => {
     const selectedTheme = localStorage.getItem("selectedTheme");
 
+    // we will check if system dark mode is enabled or not
+
+    const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    colorScheme.addEventListener("change", e => {
+      if (e.matches) {
+        // if it matches we will set it to dark else default
+        setThemeSelectValue("Dark");
+      } else {
+        setThemeSelectValue("Default");
+      }
+    });
     if (selectedTheme) {
       console.log(selectedTheme);
       setThemeSelectValue(selectedTheme);
