@@ -53,7 +53,7 @@ const DonatePage = () => {
           />
         </div>
       </a>
-      <a target="self" href="https://p-y.tm/rZ-kJ9T">
+      <a target="self" href="https://p-y.tm/5Og-kb3">
         <div className="paypalBtn">
           <img src={paytmLogo} alt="paytm logo" />
         </div>
