@@ -6,7 +6,7 @@ import React, { useContext, useState, useEffect } from "react";
 //   CellMeasurerCache
 // } from "react-virtualized";
 
-import { DynamicSizeList as List } from "react-window";
+import { DynamicSizeList as List } from "react-window-dynamic";
 
 
 import CompletedTick from "../images/CompletedTick.svg";
