@@ -24,7 +24,7 @@
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window-dynamic": "^1.8.0-alpha.1",
     "typeface-roboto": "0.0.75",
-    "wonky-scripts": "0.0.5"
+    "react-scripts": "3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
