@@ -74,6 +74,7 @@ const SettingsPage = () => {
 
   const selectComp = (
     <Box m={1}>
+      
       <Select
         value={themeSelectValue}
         onChange={handleThemeChange}

@@ -13,17 +13,18 @@
     "html-entities": "^1.2.1",
     "material-ui": "^0.20.2",
     "react": "^16.9.0",
+    "react-app-location": "^1.2.0",
     "react-circle-slider": "^1.6.2",
     "react-dom": "^16.9.0",
     "react-ga": "^2.6.0",
     "react-recaptcha-v3": "^1.1.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
     "react-swipeable": "^5.4.0",
     "react-virtualized": "^9.21.1",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.6.0-alpha.1",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "wonky-scripts": "0.0.5"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const country_code = localStorage.getItem("country_code");
 
-const key = "02924c9a5a777f4d4854a45a326432c6";
+// const key = "02924c9a5a777f4d4854a45a326432c6";
 
 const GeoAPI = "https://ipapi.co/json/";
 

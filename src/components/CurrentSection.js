@@ -23,6 +23,8 @@ import {
   Grid,
   CircularProgress
 } from "@material-ui/core";
+
+
 import {
   Home,
   Favorite,
@@ -61,18 +63,17 @@ const CustomTab = withStyles({
     bottom: "0",
     padding: 0,
     width: "100%",
-    zIndex: 1300,
+    zIndex: 1300
   },
   indicator: {
     display: "none"
   },
   labelIcon: {
-    margin: 0,
-  },
+    margin: 0
+  }
 })(Tabs);
 
 const CustomTabs = withStyles({
-
   root: {
     color: "#FFB2C1",
     fontSize: ".75rem",
@@ -169,7 +170,7 @@ const CurrentSection = ({ history, location }) => {
     }
     // if this is not a new user redirect it to home
     previousLocation = location;
-     history.listen(location => {
+    history.listen(location => {
       if (location.pathname !== "/play") {
         previousLocation = location;
         console.log(previousLocation);
@@ -185,8 +186,6 @@ const CurrentSection = ({ history, location }) => {
 
     // if the location is not play then we will push new location
   }, [setRedirectState, history, redirectState]);
-
-
 
   const checkPrevLocation = () => {
     if (location.pathname === "/play") {
@@ -254,22 +253,37 @@ const CurrentSection = ({ history, location }) => {
             path="/liked"
             render={props => {
               setTabValue(1);
-              return <RenderDatabase songs={songsLikedState} {...props} key={location.pathname}/>;
+              return (
+                <RenderDatabase
+                  songs={songsLikedState}
+                  {...props}
+                  key={location.pathname}
+                />
+              );
             }}
           />
           <Route
             path="/downloads"
             render={props => {
               setTabValue(2);
-              return <RenderDatabase songs={songsDownloadedState} key={location.pathname}/>;
+              return (
+                <RenderDatabase
+                  songs={songsDownloadedState}
+                  key={location.pathname}
+                />
+              );
             }}
           />
           <Route
             path="/history"
             render={props => {
               setTabValue(3);
-
-              return <RenderDatabase songs={songsHistoryState} key={location.pathname}/>;
+              return (
+                <RenderDatabase
+                  songs={songsHistoryState}
+                  key={location.pathname}
+                />
+              );
             }}
           />
           <Route

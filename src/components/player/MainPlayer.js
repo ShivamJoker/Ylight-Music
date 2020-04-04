@@ -187,9 +187,9 @@ const MainPlayer = ({ location, history }) => {
     setRating("none");
   }, [currentVideoSnippet, setIsItFromPlaylist]);
 
-  useEffect(() => {
-    console.log("from playlist", isItFromPlaylist);
-  }, [isItFromPlaylist]);
+  // useEffect(() => {
+  //   console.log("from playlist", isItFromPlaylist);
+  // }, [isItFromPlaylist]);
 
   useEffect(() => {
     relatedVideosVar = relatedVideos;

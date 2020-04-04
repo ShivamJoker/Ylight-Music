@@ -94,7 +94,7 @@ const SearchResult = ({ videos }) => {
           <ListItemText
             primary={entities.decode(snippet.title)}
             secondary={
-              <React.Fragment>
+              <>
                 <Typography
                   component="span"
                   variant="body2"
@@ -102,7 +102,7 @@ const SearchResult = ({ videos }) => {
                 >
                   {snippet.channelTitle}
                 </Typography>
-              </React.Fragment>
+              </>
             }
           />
         </ListItem>

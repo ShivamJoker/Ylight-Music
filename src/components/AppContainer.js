@@ -74,7 +74,7 @@ const AppContainer = () => {
 
         <SwipeMenu />
       </Router>
-      <SnackbarMessage />
+       
     </MuiThemeProvider>
   );
 };
