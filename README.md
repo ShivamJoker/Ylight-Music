@@ -25,4 +25,3 @@
 
 ## Patrons
 + Kate
-+ Razvan
