@@ -10,7 +10,7 @@ import {
   ListItemText,
   Grid,
   Divider,
-  LinearProgress
+  LinearProgress,
 } from "@material-ui/core";
 
 import {
@@ -20,7 +20,7 @@ import {
   Repeat,
   KeyboardArrowUp,
   KeyboardArrowDown,
-  RepeatOne
+  RepeatOne,
 } from "@material-ui/icons";
 
 import { GlobalContext } from "./GlobalState";
@@ -28,7 +28,7 @@ import { GlobalContext } from "./GlobalState";
 let renderResult;
 
 // written by @bushblade
-const shuffle = arry =>
+const shuffle = (arry) =>
   arry.reduce(
     (acc, _, i) => {
       const rnd = Math.floor(Math.random() * acc.length),
@@ -47,10 +47,10 @@ const RelatedVideos = ({
   relatedVideos,
   setRelatedVideos,
   setIsRepeatOn,
-  isRepeatOn
+  isRepeatOn,
 }) => {
   const [{}, dispatch] = useContext(GlobalContext);
-  const setCurrentVideoSnippet = data => {
+  const setCurrentVideoSnippet = (data) => {
     dispatch({ type: "setCurrentVideoSnippet", snippet: data });
   };
   const handleShuffleClick = () => {
@@ -60,42 +60,44 @@ const RelatedVideos = ({
   const spring = {
     type: "spring",
     damping: 20,
-    stiffness: 300
+    stiffness: 300,
   };
-  const handleClick = video => {
+  const handleClick = (video) => {
     // set all the info of current clicked video in this object
     setCurrentVideoSnippet({
       id: video.id.videoId,
       title: video.snippet.title,
       channelTitle: video.snippet.channelTitle,
       maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
-      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
+      sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`,
       // this is the url of the max resolution of thumbnail
     });
     setPlaylist();
   };
 
   if (relatedVideos.length > 1) {
-    renderResult = relatedVideos.map(song => {
+    renderResult = relatedVideos.map((song) => {
       return (
-        <motion.li key={song.id.videoId} positionTransition={spring}>
-          <ListItem
-            // key={song.id.videoId}
-            button
-            onClick={() => handleClick(song)}
-            // component={Link}
-            // replace
-            // to={{ pathname: "/play", search: `?id=${song.id.videoId}` }}
-          >
-            <ListItemIcon>
-              <MusicVideo style={{ color: "#fff" }} />
-            </ListItemIcon>
-            <ListItemText
-              primary={song.snippet.title.slice(0, 40)}
-              secondary={song.snippet.channelTitle.slice(0, 40)}
-            />
-          </ListItem>
-        </motion.li>
+        song.snippet && (
+          <motion.li key={song.id.videoId} positionTransition={spring}>
+            <ListItem
+              // key={song.id.videoId}
+              button
+              onClick={() => handleClick(song)}
+              // component={Link}
+              // replace
+              // to={{ pathname: "/play", search: `?id=${song.id.videoId}` }}
+            >
+              <ListItemIcon>
+                <MusicVideo style={{ color: "#fff" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={song.snippet.title.slice(0, 40)}
+                secondary={song.snippet.channelTitle.slice(0, 40)}
+              />
+            </ListItem>
+          </motion.li>
+        )
       );
     });
   } else {
