@@ -15,9 +15,7 @@ import {
   ListItemText
 } from "@material-ui/core";
 
-const Entities = require("html-entities").XmlEntities;
-
-const entities = new Entities();
+const entities = require("html-entities");
 
 const liVariants = {
   open: {
@@ -57,8 +55,8 @@ const SearchResult = ({ videos }) => {
     // set all the info of current clicked video in this object
     setCurrentVideoSnippet({
       id: video.id.videoId,
-      title: entities.decode(video.snippet.title),
-      channelTitle: entities.decode(video.snippet.channelTitle),
+      title: entities.decode(video.snippet.title, {level: 'xml'}),
+      channelTitle: entities.decode(video.snippet.channelTitle, {level: 'xml'}),
       maxThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/maxresdefault.jpg`,
       sdThumbnail: `https://img.youtube.com/vi/${video.id.videoId}/sddefault.jpg`
       // this is the url of the max resolution of thumbnail
@@ -92,7 +90,7 @@ const SearchResult = ({ videos }) => {
             />
           </ListItemAvatar>
           <ListItemText
-            primary={entities.decode(snippet.title)}
+            primary={entities.decode(snippet.title, {level: 'xml'})}
             secondary={
               <>
                 <Typography
