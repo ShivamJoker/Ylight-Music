@@ -14,6 +14,7 @@ import { GlobalContext } from "../GlobalState";
 import suggestSearch from "../../apis/suggestSearch";
 import AutoSearchResult from "./AutoSearchResult";
 import youtubeSearch from "../../apis/youtubeSearch";
+const jsonp = require('jsonp')
 
 const SearchBox = ({ history, location }) => {
   let params = new URLSearchParams(location.search);
@@ -63,25 +64,41 @@ const SearchBox = ({ history, location }) => {
     history.push({ pathname: "/search", search: `?q=${searchQuery}` });
   };
 
+  const debounce = (func, delay = 150) => {
+    let timeId;
+    return function() {
+      let context = this, args = arguments;
+      clearTimeout(timeId);
+      timeId = setTimeout(() => {
+        func.apply(context, args);
+      }, delay);
+    }
+  }
+
+  const getQueryString = queryParams => {
+    let queryStr = '';
+    for(let param in queryParams)
+      queryStr += `${param}=${queryParams[param]}&`;
+    
+    // remove the last &
+    return queryStr.slice(0, -1);
+  }
+
   // for controlled input change
-  const onChange = e => {
-    setSearchQuery(e.target.value);
-    getAutocomplete();
+  const onChange = (event) => {
+    setSearchQuery(event.target.value);
+    debounce((e) => {
+      getAutocomplete();
+    })(event);
   };
 
-  const processSuggestionResponse = data => {
-    let strData = data.split("window.google.ac.h(")[1].slice(0, -1)
-    return JSON.parse(strData)[1];
-  }
-  
   // get autocomplete data form api
-  const getAutocomplete = async () => {
-    const response = await suggestSearch.get("", {
-      params: {
-        q: searchQuery
-      }
+  const getAutocomplete = () => {
+    suggestSearch.params.q = searchQuery;
+    jsonp(suggestSearch.baseURL + getQueryString(suggestSearch.params)
+    , null, (err, response) => {
+      setAutoSearch(response[1]);
     });
-    setAutoSearch(processSuggestionResponse(response.data));
   };
 
   // get youtube search result from api
