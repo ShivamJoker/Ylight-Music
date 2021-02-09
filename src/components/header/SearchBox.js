@@ -69,6 +69,11 @@ const SearchBox = ({ history, location }) => {
     getAutocomplete();
   };
 
+  const processSuggestionResponse = data => {
+    let strData = data.split("window.google.ac.h(")[1].slice(0, -1)
+    return JSON.parse(strData)[1];
+  }
+  
   // get autocomplete data form api
   const getAutocomplete = async () => {
     const response = await suggestSearch.get("", {
@@ -76,7 +81,7 @@ const SearchBox = ({ history, location }) => {
         q: searchQuery
       }
     });
-    setAutoSearch(response.data[1]);
+    setAutoSearch(processSuggestionResponse(response.data));
   };
 
   // get youtube search result from api
