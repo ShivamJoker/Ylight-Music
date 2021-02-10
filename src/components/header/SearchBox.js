@@ -31,7 +31,7 @@ const SearchBox = ({ history, location }) => {
 
   const setSearchResult = useCallback(
     (data) => {
-      console.log(data);
+      // console.log(data);
       dispatch({ type: 'setSearchResult', snippet: data });
     },
     [dispatch]
@@ -45,7 +45,7 @@ const SearchBox = ({ history, location }) => {
   // toggle popper
   const [isPopperOpen, setPopper] = useState(true);
 
-  console.log('search box re rendered');
+  // console.log('search box re rendered');
 
   // get back the selected search data
   const onSearchSelect = (result) => {
@@ -58,7 +58,7 @@ const SearchBox = ({ history, location }) => {
   // when user hits enter then also fetch the data from yt api
   const onSearchSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target.lastChild);
+    // console.log(e.target.lastChild);
     e.target.lastChild.lastChild.blur();
     setSearchState('searching');
     setYtSearchQuery(searchQuery);
@@ -122,11 +122,11 @@ const SearchBox = ({ history, location }) => {
     if (ytSearchQuery && ytSearchQuery !== '') {
       searchYt(ytSearchQuery);
     }
-    // console.log(ytSearchQuery);
+    // // console.log(ytSearchQuery);
   }, [ytSearchQuery, setSearchResult, setSearchState]);
 
   useEffect(() => {
-    console.log('search state', searchState);
+    // console.log('search state', searchState);
   }, [searchState]);
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const SearchBox = ({ history, location }) => {
       setYtSearchQuery(query);
       setSearchQuery(query);
       setSearchState('searching');
-      console.log('changing query to', query);
+      // console.log('changing query to', query);
     }
 
     // const unlisten = history.listen(location => {
@@ -180,7 +180,7 @@ const SearchBox = ({ history, location }) => {
       default:
         break;
     }
-    console.log('Function ran');
+    // console.log('Function ran');
   };
 
   return (

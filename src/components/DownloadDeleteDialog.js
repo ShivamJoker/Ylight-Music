@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { FormControlLabel, Checkbox } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import React, { useState } from 'react';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const DownloadDeleteDialog = ({ isOpen, handleCancel, handleDelete }) => {
   const [checkBox, setCheckBox] = useState(false);
 
   React.useEffect(() => {
-    console.log(checkBox);
+    // console.log(checkBox);
   }, [checkBox]);
 
   return (
@@ -24,7 +24,7 @@ const DownloadDeleteDialog = ({ isOpen, handleCancel, handleDelete }) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Delete this song from your device ?"}
+          {'Delete this song from your device ?'}
         </DialogTitle>
         <DialogContent>
           <FormControlLabel
@@ -32,7 +32,7 @@ const DownloadDeleteDialog = ({ isOpen, handleCancel, handleDelete }) => {
               <Checkbox
                 color="primary"
                 checked={checkBox}
-                onChange={e => setCheckBox(e.target.checked)}
+                onChange={(e) => setCheckBox(e.target.checked)}
                 value="checkBox"
               />
             }

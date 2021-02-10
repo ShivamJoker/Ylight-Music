@@ -1,16 +1,16 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from 'react';
 
-import { Snackbar } from "@material-ui/core";
+import { Snackbar } from '@material-ui/core';
 
-import { GlobalContext } from "./GlobalState";
+import { GlobalContext } from './GlobalState';
 
 const SnackbarMessage = () => {
   const [isOpen, setOpen] = useState(false);
   const [{ snackbarMsg }, dispatch] = useContext(GlobalContext);
 
   const setSnackbarMsg = React.useCallback(
-    data => {
-      dispatch({ type: "setSnackbarMsg", snippet: data });
+    (data) => {
+      dispatch({ type: 'setSnackbarMsg', snippet: data });
     },
     [dispatch]
   );
@@ -21,7 +21,7 @@ const SnackbarMessage = () => {
   }, [snackbarMsg, setSnackbarMsg]);
 
   function handleClose() {
-    console.log("closed");
+    // console.log("closed");
     setOpen(false);
     setSnackbarMsg(null);
     // we will set back it to null otherwise it wont fire for the same
@@ -29,13 +29,13 @@ const SnackbarMessage = () => {
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "center"
+        vertical: 'bottom',
+        horizontal: 'center',
       }}
       autoHideDuration={3000}
       open={isOpen}
       ContentProps={{
-        "aria-describedby": "message-id"
+        'aria-describedby': 'message-id',
       }}
       onClose={handleClose}
       message={<span id="message-id">{snackbarMsg}</span>}

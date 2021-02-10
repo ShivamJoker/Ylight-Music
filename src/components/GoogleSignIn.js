@@ -22,19 +22,19 @@ const GoogleSignIn = () => {
   useEffect(() => {
     function updateSigninStatus(isSignedIn) {
       if (isSignedIn) {
-        console.log("Signed in");
+        // console.log("Signed in");
         setIsSignedIn(true);
         // also close the popup
         setOpen(false);
         loadClient();
-        console.log(
+        // console.log(
           gapi.auth2
             .getAuthInstance()
             .currentUser.get()
             .getAuthResponse().id_token
         );
       } else {
-        console.log("Signed out");
+        // console.log("Signed out");
         setIsSignedIn(false);
       }
     }
@@ -65,14 +65,14 @@ const GoogleSignIn = () => {
       .load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
       .then(
         function() {
-          console.log("GAPI client loaded for API");
+          // console.log("GAPI client loaded for API");
           gapi.client.youtube.videos
             .list({
               part: "snippet",
               myRating: "like"
             })
             .then(response => {
-              console.log(response);
+              // console.log(response);
             });
         },
         function(err) {

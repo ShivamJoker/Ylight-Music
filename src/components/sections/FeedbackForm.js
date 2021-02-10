@@ -1,36 +1,36 @@
-import React, {useContext, useCallback} from "react";
+import React, { useContext, useCallback } from 'react';
 import {
   FormControl,
   TextField,
   Button,
   Grid,
   CircularProgress,
-  LinearProgress
-} from "@material-ui/core";
-import { loadReCaptcha, ReCaptcha } from "react-recaptcha-v3";
-import axios from "axios";
-import { GlobalContext } from "../GlobalState";
+  LinearProgress,
+} from '@material-ui/core';
+import { loadReCaptcha, ReCaptcha } from 'react-recaptcha-v3';
+import axios from 'axios';
+import { GlobalContext } from '../GlobalState';
 
 let captchaToken;
 const FeedbackForm = () => {
   const [{}, dispatch] = useContext(GlobalContext);
 
   const setSnackbarMsg = React.useCallback(
-    data => {
-      dispatch({ type: "setSnackbarMsg", snippet: data });
+    (data) => {
+      dispatch({ type: 'setSnackbarMsg', snippet: data });
     },
     [dispatch]
   );
   const [isSending, setIsSending] = React.useState(false);
   const formEl = React.useRef(null);
 
-  const submitForm = e => {
+  const submitForm = (e) => {
     // set state to sending
     setIsSending(true);
     const formData = new FormData(formEl.current);
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const message = formData.get("message");
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const message = formData.get('message');
 
     e.preventDefault();
 
@@ -38,25 +38,25 @@ const FeedbackForm = () => {
       name: name,
       email: email,
       message: message,
-      captcha: captchaToken
+      captcha: captchaToken,
     };
 
     axios
-      .post("https://xmailerr.glitch.me/contact", post)
-      .then(function(response) {
-        console.log(response.data.status);
+      .post('https://xmailerr.glitch.me/contact', post)
+      .then(function (response) {
+        // console.log(response.data.status);
         // also clear the form
         formEl.current.reset();
         setSnackbarMsg(response.data.status);
         setIsSending(false);
       })
-      .catch(function(error) {
-        // console.log(error.response.status);
+      .catch(function (error) {
+        // // console.log(error.response.status);
         if (error.response) {
           if (error.response.status === 429) {
             formEl.current.reset();
 
-            setSnackbarMsg("We accept limited feedback!");
+            setSnackbarMsg('We accept limited feedback!');
           }
         }
         setIsSending(false);
@@ -64,13 +64,13 @@ const FeedbackForm = () => {
   };
 
   React.useEffect(() => {
-    loadReCaptcha("6Le1toEUAAAAAITyNwqEMaz3hFAYzciSJDMomrgN");
+    loadReCaptcha('6Le1toEUAAAAAITyNwqEMaz3hFAYzciSJDMomrgN');
   }, []);
 
-  const verifyCallback = token => {
-    // console.log(token);
+  const verifyCallback = (token) => {
+    // // console.log(token);
     captchaToken = token;
-    const captchaBox = document.querySelector(".grecaptcha-badge");
+    const captchaBox = document.querySelector('.grecaptcha-badge');
     captchaBox.remove();
     // remove captcha badge
   };
@@ -83,7 +83,7 @@ const FeedbackForm = () => {
       container
       required
       justify="center"
-      style={{ width: "90%", maxWidth: "500px", margin: "0 auto" }}
+      style={{ width: '90%', maxWidth: '500px', margin: '0 auto' }}
     >
       <ReCaptcha
         sitekey="6Le1toEUAAAAAITyNwqEMaz3hFAYzciSJDMomrgN"
@@ -131,21 +131,21 @@ const FeedbackForm = () => {
       {isSending ? (
         <LinearProgress
           style={{
-            width: "100%",
-            transform: "translateY(-12px)",
-            borderRadius: "2px"
+            width: '100%',
+            transform: 'translateY(-12px)',
+            borderRadius: '2px',
           }}
         />
       ) : null}
       <Button
-        style={{ marginTop: "10px" }}
+        style={{ marginTop: '10px' }}
         variant="outlined"
         color="primary"
         type="submit"
         disabled={isSending ? true : false}
       >
         {/* if sending is true then show circular progress */}
-        {isSending ? "Sending Feedback" : "Send Feedback"}
+        {isSending ? 'Sending Feedback' : 'Send Feedback'}
       </Button>
     </Grid>
   );
