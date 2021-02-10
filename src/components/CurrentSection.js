@@ -4,107 +4,106 @@ import React, {
   useEffect,
   useCallback,
   Suspense,
-  lazy
-} from "react";
+  lazy,
+} from 'react';
 
 import {
   BrowserRouter as Router,
   withRouter,
   Route,
   Link,
-  Switch
-} from "react-router-dom";
+  Switch,
+} from 'react-router-dom';
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from 'framer-motion';
 import {
   Tabs,
   Tab,
   withStyles,
   Grid,
-  CircularProgress
-} from "@material-ui/core";
-
+  CircularProgress,
+} from '@material-ui/core';
 
 import {
   Home,
   Favorite,
   VideoLibrary,
   History,
-  GetApp
-} from "@material-ui/icons/";
+  GetApp,
+} from '@material-ui/icons/';
 
-import { GlobalContext } from "./GlobalState";
+import { GlobalContext } from './GlobalState';
 import {
   getHistory,
   getLikedSongs,
   getDownloadedSongs,
   removeDownloadingState,
-  db
-} from "../external/saveSong";
+  db,
+} from '../external/saveSong';
 
-import SettingsPage from "./sections/SettingsPage";
+import SettingsPage from './sections/SettingsPage';
 // import the db from save song
-import MainPlayer from "../components/player/MainPlayer";
+import MainPlayer from '../components/player/MainPlayer';
 // pages
-const LoginPage = lazy(() => import("./LoginPage"));
-const RenderDatabase = lazy(() => import("./RenderDatabase"));
-const SearchResult = lazy(() => import("./SearchResult"));
-const HomePage = lazy(() => import("./sections/HomePage"));
-const FeedbackForm = lazy(() => import("./sections/FeedbackForm"));
-const PrivacyPage = lazy(() => import("./sections/PrivacyPage"));
-const DonatePage = lazy(() => import("./sections/DonatePage"));
-const ContributorsPage = lazy(() => import("./sections/ContributorsPage"));
+const LoginPage = lazy(() => import('./LoginPage'));
+const RenderDatabase = lazy(() => import('./RenderDatabase'));
+const SearchResult = lazy(() => import('./SearchResult'));
+const HomePage = lazy(() => import('./sections/HomePage'));
+const FeedbackForm = lazy(() => import('./sections/FeedbackForm'));
+const PrivacyPage = lazy(() => import('./sections/PrivacyPage'));
+const DonatePage = lazy(() => import('./sections/DonatePage'));
+const ContributorsPage = lazy(() => import('./sections/ContributorsPage'));
 
 // custom styling the tab menus
 const CustomTab = withStyles({
   root: {
-    background: "#e91e63",
-    position: "fixed",
-    bottom: "0",
+    background: '#e91e63',
+    position: 'fixed',
+    bottom: '0',
     padding: 0,
-    width: "100%",
-    zIndex: 1300
+    width: '100%',
+    zIndex: 1300,
   },
   indicator: {
-    display: "none"
+    display: 'none',
   },
   labelIcon: {
-    margin: 0
-  }
+    margin: 0,
+  },
 })(Tabs);
 
 const CustomTabs = withStyles({
   root: {
-    color: "#FFB2C1",
-    fontSize: ".75rem",
+    color: '#FFB2C1',
+    fontSize: '.75rem',
     margin: 0,
 
-    "&:hover": {
-      color: "#ffffffed",
-      opacity: 1
+    '&:hover': {
+      color: '#ffffffed',
+      opacity: 1,
     },
-    "&$selected": {
-      color: "#fff"
+    '&$selected': {
+      color: '#fff',
     },
-    "&:focus": {
-      color: "#FFFFFF"
-    }
+    '&:focus': {
+      color: '#FFFFFF',
+    },
   },
 
-  selected: {}
+  selected: {},
 })(Tab);
 
 let deferredPrompt = undefined;
 let previousLocation;
 
-window.addEventListener("beforeinstallprompt", e => {
+window.addEventListener('beforeinstallprompt', (e) => {
   // Stash the event so it can be triggered later.
   deferredPrompt = e;
 });
 
 const CurrentSection = ({ history, location }) => {
   const [{ currentVideoSnippet, searchResult }] = useContext(GlobalContext);
-  console.log(currentVideoSnippet);
+  // console.log(currentVideoSnippet);
 
   const [songsHistoryState, setSongsHistory] = useState([]);
   const [songsLikedState, setSongsLiked] = useState([]);
@@ -115,7 +114,7 @@ const CurrentSection = ({ history, location }) => {
 
   const circularLoader = (
     <Grid
-      style={{ height: "100vh" }}
+      style={{ height: '100vh' }}
       container
       justify="center"
       alignItems="center"
@@ -154,41 +153,41 @@ const CurrentSection = ({ history, location }) => {
 
   useEffect(() => {
     fetchSongs();
-    console.log("fetching the songs");
+    // console.log("fetching the songs");
   }, [updateCount, fetchSongs]);
 
   useEffect(() => {
-    db.on("changes", () => {
-      setUpdateCount(c => c + 1);
+    db.on('changes', () => {
+      setUpdateCount((c) => c + 1);
     });
     // will remove all the songs which are downloading in the first place
     removeDownloadingState();
 
-    const isThisNewUser = localStorage.getItem("isThisNew");
-    if (isThisNewUser === "no") {
+    const isThisNewUser = localStorage.getItem('isThisNew');
+    if (isThisNewUser === 'no') {
       setRedirectState(true);
     }
     // if this is not a new user redirect it to home
     previousLocation = location;
-    history.listen(location => {
-      if (location.pathname !== "/play") {
+    history.listen((location) => {
+      if (location.pathname !== '/play') {
         previousLocation = location;
-        console.log(previousLocation);
+        // console.log(previousLocation);
       }
     });
   }, []);
 
   useEffect(() => {
     // we will redirect everytime user comes to root page
-    if (redirectState && history.location.pathname === "/") {
-      history.replace("/home");
+    if (redirectState && history.location.pathname === '/') {
+      history.replace('/home');
     }
 
     // if the location is not play then we will push new location
   }, [setRedirectState, history, redirectState]);
 
   const checkPrevLocation = () => {
-    if (location.pathname === "/play") {
+    if (location.pathname === '/play') {
       return previousLocation;
     } else {
       return location;
@@ -197,28 +196,28 @@ const CurrentSection = ({ history, location }) => {
 
   // we will load the homepage with all the playlists
   const continueToHome = () => {
-    localStorage.setItem("isThisNew", "no");
-    history.replace("/home");
+    localStorage.setItem('isThisNew', 'no');
+    history.replace('/home');
 
     if (deferredPrompt) {
       // show the prompt to install app
       deferredPrompt.prompt();
       // Wait for the user to respond to the prompt
-      deferredPrompt.userChoice.then(choiceResult => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the A2HS prompt");
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          // console.log("User accepted the A2HS prompt");
         } else {
-          console.log("User dismissed the A2HS prompt");
+          // console.log("User dismissed the A2HS prompt");
         }
         deferredPrompt = null;
       });
     }
   };
 
-  const returnMainPlayer = props => {
+  const returnMainPlayer = (props) => {
     // we will return the main player if the path is not the "/"
 
-    if (window.location.pathname !== "/") {
+    if (window.location.pathname !== '/') {
       return <MainPlayer {...props} />;
     } else {
       return null;
@@ -234,24 +233,24 @@ const CurrentSection = ({ history, location }) => {
           <Route
             exact
             path="/"
-            render={props => {
+            render={(props) => {
               return <LoginPage continueToHome={continueToHome} />;
             }}
           />
           <Route
             path="/search"
-            render={props => <SearchResult videos={searchResult} />}
+            render={(props) => <SearchResult videos={searchResult} />}
           />
           <Route
             path="/home"
-            render={props => {
+            render={(props) => {
               setTabValue(0);
               return <HomePage />;
             }}
           />
           <Route
             path="/liked"
-            render={props => {
+            render={(props) => {
               setTabValue(1);
               return (
                 <RenderDatabase
@@ -264,7 +263,7 @@ const CurrentSection = ({ history, location }) => {
           />
           <Route
             path="/downloads"
-            render={props => {
+            render={(props) => {
               setTabValue(2);
               return (
                 <RenderDatabase
@@ -276,7 +275,7 @@ const CurrentSection = ({ history, location }) => {
           />
           <Route
             path="/history"
-            render={props => {
+            render={(props) => {
               setTabValue(3);
               return (
                 <RenderDatabase
@@ -288,9 +287,9 @@ const CurrentSection = ({ history, location }) => {
           />
           <Route
             path="/app"
-            render={props => {
+            render={(props) => {
               window.location.replace(
-                "https://play.google.com/store/apps/details?id=com.ylightmusic.app"
+                'https://play.google.com/store/apps/details?id=com.ylightmusic.app'
               );
               return <div>Redirecting you to play store</div>;
             }}
@@ -303,9 +302,9 @@ const CurrentSection = ({ history, location }) => {
           <Route path="/donate" component={DonatePage} />
           <Route path="/contributors" component={ContributorsPage} />
         </Switch>
-        <Route path="/" render={props => returnMainPlayer(props)} />
+        <Route path="/" render={(props) => returnMainPlayer(props)} />
 
-        <div style={{ height: currentVideoSnippet.id ? "100px" : "50px" }} />
+        <div style={{ height: currentVideoSnippet.id ? '100px' : '50px' }} />
       </Suspense>
       {/* if the player is on then return 100px else 50px*/}
       <CustomTab

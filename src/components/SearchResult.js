@@ -66,13 +66,13 @@ const SearchResult = ({ videos }) => {
 
   React.useEffect(() => {
     setTimeout(() => {}, 100);
-    console.log('isopen cycle', isOpen);
+    // console.log('isopen cycle', isOpen);
     setisOpen(true);
   }, []);
 
   const renderResult = videos.map((video) => {
     const { snippet } = video;
-    console.log('render result times');
+    // console.log('render result times');
     return (
       <motion.div variants={liVariants} key={video.id.videoId}>
         <ListItem

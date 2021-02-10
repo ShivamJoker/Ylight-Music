@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback } from "react";
+import React, { useContext, useEffect, useCallback } from 'react';
 import {
   Container,
   FormControl,
@@ -7,46 +7,46 @@ import {
   FormGroup,
   FormControlLabel,
   Box,
-  Typography
-} from "@material-ui/core";
+  Typography,
+} from '@material-ui/core';
 
-import { GlobalContext } from "../GlobalState";
+import { GlobalContext } from '../GlobalState';
 
 export const useCheckDarkmode = () => {
   const [, dispatch] = useContext(GlobalContext);
   const setThemeSelectValue = useCallback(
-    data => {
-      dispatch({ type: "setThemeSelectValue", snippet: data });
+    (data) => {
+      dispatch({ type: 'setThemeSelectValue', snippet: data });
     },
     [dispatch]
   );
   const checkDarkMode = () => {
-    const selectedTheme = localStorage.getItem("selectedTheme");
+    const selectedTheme = localStorage.getItem('selectedTheme');
 
     // we will check if system dark mode is enabled or not
 
-    const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
-    colorScheme.addEventListener("change", e => {
+    const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    colorScheme.addEventListener('change', (e) => {
       if (e.matches) {
         // if it matches we will set it to dark else default
-        setThemeSelectValue("Dark");
+        setThemeSelectValue('Dark');
       } else {
-        setThemeSelectValue("Default");
+        setThemeSelectValue('Default');
       }
     });
     if (selectedTheme) {
-      console.log(selectedTheme);
+      // console.log(selectedTheme);
       setThemeSelectValue(selectedTheme);
 
       const date = new Date();
       const hrs = date.getHours();
 
       // if the theme is auto then only do it
-      if (selectedTheme === "Auto") {
+      if (selectedTheme === 'Auto') {
         if (hrs >= 18 || hrs <= 6) {
-          setThemeSelectValue("Dark");
+          setThemeSelectValue('Dark');
         } else {
-          setThemeSelectValue("Default");
+          setThemeSelectValue('Default');
         }
       }
     }
@@ -58,23 +58,22 @@ export const useCheckDarkmode = () => {
 const SettingsPage = () => {
   const [{ themeSelectValue }, dispatch] = useContext(GlobalContext);
   const setThemeSelectValue = useCallback(
-    data => {
-      dispatch({ type: "setThemeSelectValue", snippet: data });
+    (data) => {
+      dispatch({ type: 'setThemeSelectValue', snippet: data });
     },
     [dispatch]
   );
-  const handleThemeChange = e => {
+  const handleThemeChange = (e) => {
     setThemeSelectValue(e.target.value);
-    localStorage.setItem("selectedTheme", e.target.value);
+    localStorage.setItem('selectedTheme', e.target.value);
   };
 
   useEffect(() => {
-    console.log(themeSelectValue);
+    // console.log(themeSelectValue);
   }, [themeSelectValue]);
 
   const selectComp = (
     <Box m={1}>
-      
       <Select
         value={themeSelectValue}
         onChange={handleThemeChange}

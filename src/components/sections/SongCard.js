@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { GlobalContext } from "../GlobalState";
+import React, { useContext } from 'react';
+import { GlobalContext } from '../GlobalState';
 
 import {
   Card,
@@ -9,28 +9,28 @@ import {
   CardMedia,
   Typography,
   LinearProgress,
-  Container
-} from "@material-ui/core";
+  Container,
+} from '@material-ui/core';
 
 const useStyles = makeStyles({
   card: {
     width: 300,
     height: 236,
-    display: "inline-block",
-    margin: "10px",
-    whiteSpace: "pre-wrap"
+    display: 'inline-block',
+    margin: '10px',
+    whiteSpace: 'pre-wrap',
   },
   media: {
-    height: 160
-  }
+    height: 160,
+  },
 });
 const MediaCard = ({ songs, categotyTitle }) => {
   const [{}, dispatch] = useContext(GlobalContext);
-  const setCurrentVideoSnippet = data => {
-    dispatch({ type: "setCurrentVideoSnippet", snippet: data });
+  const setCurrentVideoSnippet = (data) => {
+    dispatch({ type: 'setCurrentVideoSnippet', snippet: data });
   };
 
-  const handleClick = video => {
+  const handleClick = (video) => {
     // set all the info of current clicked video in this object
 
     if (!video.snippet.resourceId) {
@@ -39,7 +39,7 @@ const MediaCard = ({ songs, categotyTitle }) => {
         title: video.snippet.title,
         channelTitle: video.snippet.channelTitle,
         maxThumbnail: `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`,
-        sdThumbnail: `https://img.youtube.com/vi/${video.id}/sddefault.jpg`
+        sdThumbnail: `https://img.youtube.com/vi/${video.id}/sddefault.jpg`,
         // this is the url of the max resolution of thumbnail
       });
     } else {
@@ -48,20 +48,20 @@ const MediaCard = ({ songs, categotyTitle }) => {
         title: video.snippet.title,
         channelTitle: video.snippet.channelTitle,
         maxThumbnail: `https://img.youtube.com/vi/${video.snippet.resourceId.videoId}/maxresdefault.jpg`,
-        sdThumbnail: `https://img.youtube.com/vi/${video.snippet.resourceId.videoId}/sddefault.jpg`
+        sdThumbnail: `https://img.youtube.com/vi/${video.snippet.resourceId.videoId}/sddefault.jpg`,
         // this is the url of the max resolution of thumbnail
       });
     }
 
-    console.log(video);
+    // console.log(video);
   };
 
   const classes = useStyles();
 
-  console.log("card re rendered");
+  // console.log("card re rendered");
 
   if (songs) {
-    const renderCards = songs.map(song => {
+    const renderCards = songs.map((song) => {
       return (
         <Card className={classes.card} key={song.id}>
           <CardActionArea onClick={() => handleClick(song)}>
@@ -73,7 +73,7 @@ const MediaCard = ({ songs, categotyTitle }) => {
             />
             <CardContent>
               <Typography gutterBottom variant="body2" component="p">
-                {song.snippet.title.slice(0, 70) + " ..."}
+                {song.snippet.title.slice(0, 70) + ' ...'}
               </Typography>
             </CardContent>
           </CardActionArea>
@@ -82,15 +82,15 @@ const MediaCard = ({ songs, categotyTitle }) => {
     });
     return (
       <>
-        <Typography variant="h5" style={{ marginLeft: "15px" }}>
+        <Typography variant="h5" style={{ marginLeft: '15px' }}>
           {categotyTitle}
         </Typography>
-        <div className={"cardSlider"}>{renderCards}</div>
+        <div className={'cardSlider'}>{renderCards}</div>
       </>
     );
   } else {
     return (
-      <Container style={{ height: "25vh" }}>
+      <Container style={{ height: '25vh' }}>
         <LinearProgress color="primary" />
       </Container>
     );
