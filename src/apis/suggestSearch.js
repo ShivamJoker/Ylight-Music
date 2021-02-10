@@ -1,13 +1,8 @@
-import axios from "axios";
-import jsonpAdapter from "axios-jsonp"
-
-export default axios.create({
+export default {
   baseURL: "https://suggestqueries.google.com/complete/search?",
-  adapter: jsonpAdapter,
-  crossDomain: true,
   params: {
     hl: "en", // Language
     ds: "yt", // Restrict lookup to youtube
     client: "youtube" // force youtube style response, i.e. jsonp
   }
-});
+};
