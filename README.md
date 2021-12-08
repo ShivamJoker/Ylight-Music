@@ -1,10 +1,13 @@
-# An open source progressive music app made with Javascript using ReactJS and Material-Ui
+## An open source progressive music app made with Javascript using ReactJS and Material-Ui
 ![Ylight music app screenshots](https://i.imgur.com/DKTItwI.png)
 
-### This app is totally free and open source you can take a look to all of the source file to know how it's working behind the scene but in future there will be a video in which I will explain the whole thing how it's working.
-[![Get it on Google Play](https://i.imgur.com/cf4QtEe.png)](https://play.google.com/store/apps/details?id=com.ylightmusic.app)
+## Maintainence Update
+I am sorry to announce that I am dropping support for ylight music
+I have just stopped my backend servers the front-end is still functional you can hook it up to any server.
 
-## [Install PWA on chrome](https://ylight.xyz/) 👈
+**Taking away music creators earning didn't seem like a right thing to do.**
+
+Thank You!
 
 ## Run it locally 
 1. Clone the repo
