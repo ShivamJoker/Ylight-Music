@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'https://server.ylight.xyz',
+     baseURL: 'https://ylight-music-api.vercel.app',
   // baseURL: 'https://ylight.glitch.me',
 });
